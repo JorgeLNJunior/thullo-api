@@ -34,7 +34,7 @@
     "@nestjs/config": "^2.2.0",
     "@nestjs/core": "^9.0.0",
     "@nestjs/mapped-types": "*",
-    "@nestjs/platform-express": "^9.0.0",
+    "@nestjs/platform-fastify": "^9.0.9",
     "@prisma/client": "latest",
     "bcrypt": "^5.0.1",
     "class-transformer": "^0.5.1",

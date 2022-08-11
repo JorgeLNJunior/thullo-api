@@ -1,12 +1,19 @@
 import { ConsoleLogger, ValidationPipe } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
+import {
+  FastifyAdapter,
+  NestFastifyApplication
+} from '@nestjs/platform-fastify'
 import { useContainer } from 'class-validator'
 import { PrismaService } from 'nestjs-prisma'
 
 import { AppModule } from './app.module'
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule)
+  const app = await NestFactory.create<NestFastifyApplication>(
+    AppModule,
+    new FastifyAdapter()
+  )
 
   useContainer(app.select(AppModule), { fallbackOnErrors: true })
 
@@ -25,6 +32,6 @@ async function bootstrap() {
     })
   )
 
-  await app.listen(process.env.APP_PORT || 3000)
+  await app.listen(process.env.APP_PORT || 3000, '0.0.0.0')
 }
 bootstrap()
