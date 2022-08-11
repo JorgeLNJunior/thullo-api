@@ -5,9 +5,11 @@ import {
   FastifyAdapter,
   NestFastifyApplication
 } from '@nestjs/platform-fastify'
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { useContainer } from 'class-validator'
 import { PrismaService } from 'nestjs-prisma'
 
+import { version } from '../package.json'
 import { AppModule } from './app.module'
 
 async function bootstrap() {
@@ -31,7 +33,16 @@ async function bootstrap() {
     })
   )
 
+  const config = new DocumentBuilder()
+    .setTitle('Thullo API')
+    .setDescription('A Trello clone')
+    .setVersion(version)
+    .build()
+  const document = SwaggerModule.createDocument(app, config)
+  SwaggerModule.setup('docs', app, document)
+
   prismaService.enableShutdownHooks(app)
+
   app.enableShutdownHooks()
 
   await app.listen(process.env.APP_PORT || 3000, '0.0.0.0')
