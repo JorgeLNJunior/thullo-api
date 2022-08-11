@@ -1,3 +1,4 @@
+import helmet from '@fastify/helmet'
 import { ConsoleLogger, ValidationPipe } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import {
@@ -14,16 +15,14 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter()
   )
+  const prismaService: PrismaService = app.get(PrismaService)
 
   useContainer(app.select(AppModule), { fallbackOnErrors: true })
 
   app.enableCors()
   app.useLogger(new ConsoleLogger())
 
-  const prismaService: PrismaService = app.get(PrismaService)
-
-  prismaService.enableShutdownHooks(app)
-  app.enableShutdownHooks()
+  app.register(helmet)
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -31,6 +30,9 @@ async function bootstrap() {
       whitelist: true
     })
   )
+
+  prismaService.enableShutdownHooks(app)
+  app.enableShutdownHooks()
 
   await app.listen(process.env.APP_PORT || 3000, '0.0.0.0')
 }
