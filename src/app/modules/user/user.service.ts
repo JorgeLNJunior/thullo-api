@@ -10,8 +10,7 @@ export class UserService {
   async findMany(query: FindUsersQuery) {
     return this.prisma.user.findMany({
       where: {
-        name: query.name,
-        email: query.email
+        name: query.name
       },
       take: Number(query.take) || 20,
       skip: Number(query.skip)
