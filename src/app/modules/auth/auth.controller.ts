@@ -1,9 +1,9 @@
+import { UserEntity } from '@modules/user/docs/user.entity'
 import { Body, Controller, Post } from '@nestjs/common'
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger'
 import { Throttle } from '@nestjs/throttler'
 
 import { AuthService } from './auth.service'
-import { UserEntity } from './docs/user.entity'
 import { RegisterUserDto } from './dto/registerUser.dto'
 
 @ApiTags('Auth')

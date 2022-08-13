@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker'
-import { UserEntity } from '@modules/auth/docs/user.entity'
 import { RegisterUserDto } from '@modules/auth/dto/registerUser.dto'
+import { UserEntity } from '@modules/user/docs/user.entity'
 import { ValidationPipe } from '@nestjs/common'
 import {
   FastifyAdapter,
