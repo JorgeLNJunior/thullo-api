@@ -50,7 +50,6 @@ describe('UserController/findMany (e2e)', () => {
       password: faker.internet.password(6)
     }
     const query: FindUsersQuery = {
-      email: data.email,
       name: data.name,
       take: '1',
       skip: '0'
