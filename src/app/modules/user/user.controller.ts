@@ -1,12 +1,14 @@
-import { Controller, Get, NotFoundException, Param } from '@nestjs/common'
 import {
-  ApiNotFoundResponse,
-  ApiOkResponse,
-  ApiTags,
-  PartialType
-} from '@nestjs/swagger'
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  Query
+} from '@nestjs/common'
+import { ApiNotFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger'
 
 import { UserEntity } from './docs/user.entity'
+import { FindUsersQuery } from './query/FindUsersQuery'
 import { UserService } from './user.service'
 
 @ApiTags('Users')
@@ -14,10 +16,10 @@ import { UserService } from './user.service'
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  // @Get()
-  // findAll() {
-  //   return this.userService.findAll()
-  // }
+  @Get()
+  findMany(@Query() query: FindUsersQuery) {
+    return this.userService.findMany(query)
+  }
 
   @ApiOkResponse({ description: 'OK', type: UserEntity })
   @ApiNotFoundResponse({
