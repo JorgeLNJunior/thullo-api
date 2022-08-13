@@ -16,6 +16,7 @@ import { UserService } from './user.service'
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @ApiOkResponse({ description: 'OK', type: UserEntity, isArray: true })
   @Get()
   findMany(@Query() query: FindUsersQuery) {
     return this.userService.findMany(query)
