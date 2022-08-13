@@ -28,8 +28,8 @@ export class UserController {
     type: NotFoundException // ! find a way to use exceptions here !
   })
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(id)
+  findById(@Param('id') id: string) {
+    return this.userService.findById(id)
   }
 
   // @Patch(':id')
