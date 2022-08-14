@@ -16,6 +16,8 @@
     "collectCoverageFrom": [
       "<rootDir>/src/**/*.(t|j)s",
       "!<rootDir>/src/main.ts"
-    ]
+    ],
+    "globalSetup": "<rootDir>/test/config/beforeAll.ts",
+    "globalTeardown": "<rootDir>/test/config/afterAll.ts"
 }
   
