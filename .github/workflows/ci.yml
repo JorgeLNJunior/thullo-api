@@ -21,6 +21,12 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
+    container:
+      image: mysql:8
+      env:
+        MYSQL_ROOT_PASSWORD: 'root'
+      ports:
+        - 3306:3306
 
     steps:
       - uses: actions/checkout@v3
