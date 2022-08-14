@@ -11,7 +11,9 @@ import { AppModule } from '@src/app.module'
 import { useContainer } from 'class-validator'
 import { PrismaService } from 'nestjs-prisma'
 
-describe('UserController/findOne (e2e)', () => {
+console.log(process.env.NODE_ENV)
+
+describe('UserController/findById (e2e)', () => {
   let app: NestFastifyApplication
   let prisma: PrismaService
 
