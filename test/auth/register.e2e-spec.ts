@@ -10,6 +10,7 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { AppModule } from '@src/app.module'
 import { useContainer } from 'class-validator'
 import { PrismaService } from 'nestjs-prisma'
+import { randomUUID } from 'node:crypto'
 
 describe('AuthController/register (e2e)', () => {
   let app: NestFastifyApplication
@@ -45,7 +46,7 @@ describe('AuthController/register (e2e)', () => {
   it('/register (POST) Should register an user', async () => {
     const body: RegisterUserDto = {
       name: faker.internet.userName(),
-      email: faker.internet.email(),
+      email: faker.internet.email(randomUUID()),
       password: faker.internet.password(6)
     }
 
@@ -62,7 +63,7 @@ describe('AuthController/register (e2e)', () => {
   it('/register (POST) Should return 400 if a name is not provided', async () => {
     const body: RegisterUserDto = {
       name: undefined, // requires a name
-      email: faker.internet.email(),
+      email: faker.internet.email(randomUUID()),
       password: faker.internet.password(6)
     }
 
@@ -94,7 +95,7 @@ describe('AuthController/register (e2e)', () => {
   it('/register (POST) Should return 400 if the email is already registered', async () => {
     const body: RegisterUserDto = {
       name: faker.internet.userName(),
-      email: faker.internet.email(),
+      email: faker.internet.email(randomUUID()),
       password: faker.internet.password(6)
     }
 
@@ -113,7 +114,7 @@ describe('AuthController/register (e2e)', () => {
   it('/register (POST) Should return 400 if a valid password is not provided', async () => {
     const body: RegisterUserDto = {
       name: faker.internet.userName(),
-      email: faker.internet.email(),
+      email: faker.internet.email(randomUUID()),
       password: faker.internet.password(5) // requires a min length of 6
     }
 

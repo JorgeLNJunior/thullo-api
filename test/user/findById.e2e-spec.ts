@@ -10,6 +10,7 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { AppModule } from '@src/app.module'
 import { useContainer } from 'class-validator'
 import { PrismaService } from 'nestjs-prisma'
+import { randomUUID } from 'node:crypto'
 
 describe('UserController/findById (e2e)', () => {
   let app: NestFastifyApplication
@@ -45,7 +46,7 @@ describe('UserController/findById (e2e)', () => {
   it('/users (GET) Should return a user', async () => {
     const data: RegisterUserDto = {
       name: faker.internet.userName(),
-      email: faker.internet.email(),
+      email: faker.internet.email(randomUUID()),
       password: faker.internet.password(6)
     }
 
