@@ -1,5 +1,12 @@
 import { UserEntity } from '@modules/user/docs/user.entity'
-import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  HttpCode,
+  Post,
+  Request,
+  UseGuards
+} from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger'
 import { Throttle } from '@nestjs/throttler'
@@ -21,6 +28,7 @@ export class AuthController {
   }
 
   @UseGuards(AuthGuard('local'))
+  @HttpCode(200)
   @Post('login')
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async login(@Request() req, @Body() dto: LoginDto) {
