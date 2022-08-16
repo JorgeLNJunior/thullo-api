@@ -7,6 +7,7 @@ import { BcryptService } from '@services/bcrypt.service'
 import { AuthController } from './auth.controller'
 import { AuthService } from './auth.service'
 import { IsEmailAlreadyRegisteredConstraint } from './decorators/IsEmailAlreadyRegistered'
+import { JwtStrategy } from './strategies/jwt.strategy'
 import { LocalStrategy } from './strategies/local.strategy'
 
 @Module({
@@ -27,7 +28,8 @@ import { LocalStrategy } from './strategies/local.strategy'
     AuthService,
     BcryptService,
     IsEmailAlreadyRegisteredConstraint,
-    LocalStrategy
+    LocalStrategy,
+    JwtStrategy
   ]
 })
 export class AuthModule {}
