@@ -13,6 +13,8 @@ import { useContainer } from 'class-validator'
 import { PrismaService } from 'nestjs-prisma'
 import { randomUUID } from 'node:crypto'
 
+import { generateAccessToken } from '../../helpers/auth.helper'
+
 describe('UserController/findMany (e2e)', () => {
   let app: NestFastifyApplication
   let prisma: PrismaService
@@ -56,12 +58,17 @@ describe('UserController/findMany (e2e)', () => {
       skip: '0'
     }
 
-    await prisma.user.create({ data: data })
+    const user = await prisma.user.create({ data: data })
+
+    const token = generateAccessToken(user)
 
     const result = await app.inject({
       method: 'GET',
       path: `/users`,
-      query: query as any
+      query: query as any,
+      headers: {
+        authorization: `Bearer ${token}`
+      }
     })
 
     expect(result.statusCode).toBe(200)

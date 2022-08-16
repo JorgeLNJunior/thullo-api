@@ -1,6 +1,6 @@
 import { execSync } from 'child_process'
 
-const DATABASE_URL = 'mysql://root:root@localhost:3306/thullo_test'
+import { DATABASE_URL, JWT_ACCESS_TOKEN_SECRET } from './envVars'
 
 function executeAllMigrations() {
   execSync(`DATABASE_URL=${DATABASE_URL} npx prisma migrate deploy`)
@@ -8,7 +8,7 @@ function executeAllMigrations() {
 
 function setTestEnvVariables() {
   process.env.DATABASE_URL = DATABASE_URL
-  process.env.JWT_ACCESS_TOKEN_SECRET = 'fh37flsjf8'
+  process.env.JWT_ACCESS_TOKEN_SECRET = JWT_ACCESS_TOKEN_SECRET
 }
 
 export = () => {

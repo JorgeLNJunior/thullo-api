@@ -12,6 +12,8 @@ import { useContainer } from 'class-validator'
 import { PrismaService } from 'nestjs-prisma'
 import { randomUUID } from 'node:crypto'
 
+import { generateAccessToken } from '../../helpers/auth.helper'
+
 describe('UserController/findById (e2e)', () => {
   let app: NestFastifyApplication
   let prisma: PrismaService
@@ -52,9 +54,14 @@ describe('UserController/findById (e2e)', () => {
 
     const user = await prisma.user.create({ data: data })
 
+    const token = generateAccessToken(user)
+
     const result = await app.inject({
       method: 'GET',
-      path: `/users/${user.id}`
+      path: `/users/${user.id}`,
+      headers: {
+        authorization: `Bearer ${token}`
+      }
     })
 
     expect(result.statusCode).toBe(200)
@@ -62,11 +69,23 @@ describe('UserController/findById (e2e)', () => {
   })
 
   it('/users (GET) Should return 404 if the user was not found', async () => {
+    const data: RegisterUserDto = {
+      name: faker.internet.userName(),
+      email: faker.internet.email(randomUUID()),
+      password: faker.internet.password(6)
+    }
     const id = faker.datatype.uuid()
+
+    const user = await prisma.user.create({ data: data })
+
+    const token = generateAccessToken(user)
 
     const result = await app.inject({
       method: 'GET',
-      path: `/users/${id}`
+      path: `/users/${id}`,
+      headers: {
+        authorization: `Bearer ${token}`
+      }
     })
 
     expect(result.statusCode).toBe(404)
