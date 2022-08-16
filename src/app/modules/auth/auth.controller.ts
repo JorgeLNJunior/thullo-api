@@ -8,10 +8,18 @@ import {
   UseGuards
 } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger'
+import {
+  ApiBadRequestResponse,
+  ApiOkResponse,
+  ApiTags,
+  ApiUnauthorizedResponse
+} from '@nestjs/swagger'
 import { Throttle } from '@nestjs/throttler'
+import { BadRequestResponse } from '@src/app/docs/BadRequest.reponse'
+import { UnauthorizedResponse } from '@src/app/docs/Unauthorized.response'
 
 import { AuthService } from './auth.service'
+import { LoginResponse } from './docs/login.response'
 import { LoginDto } from './dto/login.dto'
 import { RegisterUserDto } from './dto/registerUser.dto'
 
@@ -21,12 +29,28 @@ import { RegisterUserDto } from './dto/registerUser.dto'
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @ApiOkResponse({ description: 'CREATED', type: UserEntity })
+  @ApiOkResponse({ description: 'Created', type: UserEntity })
+  @ApiBadRequestResponse({
+    description: 'Validation error',
+    type: BadRequestResponse
+  })
   @Post('register')
   registerUser(@Body() dto: RegisterUserDto) {
     return this.authService.registerUser(dto)
   }
 
+  @ApiOkResponse({
+    description: 'Created',
+    type: LoginResponse
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Invalid password',
+    type: UnauthorizedResponse
+  })
+  @ApiBadRequestResponse({
+    description: 'Email not registered',
+    type: BadRequestResponse
+  })
   @UseGuards(AuthGuard('local'))
   @HttpCode(200)
   @Post('login')
