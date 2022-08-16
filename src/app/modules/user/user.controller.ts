@@ -1,11 +1,6 @@
-import {
-  Controller,
-  Get,
-  NotFoundException,
-  Param,
-  Query
-} from '@nestjs/common'
+import { Controller, Get, Param, Query } from '@nestjs/common'
 import { ApiNotFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger'
+import { NotFoundResponse } from '@src/app/docs/NotFound.response'
 
 import { UserEntity } from './docs/user.entity'
 import { FindUsersQuery } from './query/FindUsersQuery'
@@ -25,7 +20,7 @@ export class UserController {
   @ApiOkResponse({ description: 'OK', type: UserEntity })
   @ApiNotFoundResponse({
     description: 'NOT FOUND',
-    type: NotFoundException // ! find a way to use exceptions here !
+    type: NotFoundResponse
   })
   @Get(':id')
   findById(@Param('id') id: string) {
