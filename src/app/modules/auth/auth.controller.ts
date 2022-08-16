@@ -7,7 +7,6 @@ import {
   Request,
   UseGuards
 } from '@nestjs/common'
-import { AuthGuard } from '@nestjs/passport'
 import {
   ApiBadRequestResponse,
   ApiOkResponse,
@@ -22,6 +21,7 @@ import { AuthService } from './auth.service'
 import { LoginResponse } from './docs/login.response'
 import { LoginDto } from './dto/login.dto'
 import { RegisterUserDto } from './dto/registerUser.dto'
+import { LocalAuthGuard } from './guards/localAuth.guard'
 
 @ApiTags('Auth')
 @Throttle(10, 60)
@@ -51,11 +51,11 @@ export class AuthController {
     description: 'Email not registered',
     type: BadRequestResponse
   })
-  @UseGuards(AuthGuard('local'))
+  @UseGuards(LocalAuthGuard)
   @HttpCode(200)
   @Post('login')
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async login(@Request() req, @Body() dto: LoginDto) {
+  async login(@Request() req, @Body() _dto: LoginDto) {
     const token = await this.authService.login(req.user)
     return {
       access_token: token
