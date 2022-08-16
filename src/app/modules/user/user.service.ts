@@ -13,7 +13,7 @@ export class UserService {
         name: query.name
       },
       take: Number(query.take) || 20,
-      skip: Number(query.skip)
+      skip: Number(query.skip) || 0
     })
   }
 
