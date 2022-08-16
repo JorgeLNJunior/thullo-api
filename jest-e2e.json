@@ -18,6 +18,7 @@
       "!<rootDir>/src/main.ts"
     ],
     "globalSetup": "<rootDir>/test/config/beforeAll.ts",
-    "globalTeardown": "<rootDir>/test/config/afterAll.ts"
+    "globalTeardown": "<rootDir>/test/config/afterAll.ts",
+    "testTimeout": 10000
 }
   

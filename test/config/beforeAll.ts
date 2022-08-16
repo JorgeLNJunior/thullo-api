@@ -8,6 +8,7 @@ function executeAllMigrations() {
 
 function setTestEnvVariables() {
   process.env.DATABASE_URL = DATABASE_URL
+  process.env.JWT_ACCESS_TOKEN_SECRET = 'fh37flsjf8'
 }
 
 export = () => {
