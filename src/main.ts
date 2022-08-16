@@ -37,6 +37,7 @@ async function bootstrap() {
     .setTitle('Thullo API')
     .setDescription('A Trello clone')
     .setVersion(version)
+    .addBearerAuth()
     .build()
   const document = SwaggerModule.createDocument(app, config)
   SwaggerModule.setup('docs', app, document)

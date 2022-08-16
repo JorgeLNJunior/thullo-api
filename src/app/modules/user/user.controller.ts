@@ -1,5 +1,11 @@
-import { Controller, Get, Param, Query } from '@nestjs/common'
-import { ApiNotFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger'
+import { JwtAuthGuard } from '@modules/auth/guards/JwtAuth.guard'
+import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common'
+import {
+  ApiBearerAuth,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiTags
+} from '@nestjs/swagger'
 import { NotFoundResponse } from '@src/app/docs/NotFound.response'
 
 import { UserEntity } from './docs/user.entity'
@@ -7,6 +13,8 @@ import { FindUsersQuery } from './query/FindUsersQuery'
 import { UserService } from './user.service'
 
 @ApiTags('Users')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
