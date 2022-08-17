@@ -8,11 +8,15 @@ import {
   UseGuards
 } from '@nestjs/common'
 import {
+  ApiBadRequestResponse,
   ApiBearerAuth,
+  ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiTags
 } from '@nestjs/swagger'
+import { BadRequestResponse } from '@src/app/docs/BadRequest.reponse'
+import { ForbiddenResponse } from '@src/app/docs/Forbidden.response'
 import { NotFoundResponse } from '@src/app/docs/NotFound.response'
 
 import { DeleteUserResponse } from './docs/deleteUser.response'
@@ -49,6 +53,12 @@ export class UserController {
   //   return this.userService.update(+id, updateUserDto)
   // }
 
+  @ApiOkResponse({ description: 'Deleted', type: DeleteUserResponse })
+  @ApiBadRequestResponse({
+    description: 'Invalid id',
+    type: BadRequestResponse
+  })
+  @ApiForbiddenResponse({ description: 'Forbidden', type: ForbiddenResponse })
   @UseGuards(CanModifyUserGuard)
   @Delete(':id')
   async remove(@Param('id') id: string) {
