@@ -51,6 +51,12 @@ export class UserController {
     return this.userService.findById(id)
   }
 
+  @ApiOkResponse({ description: 'Updated', type: UserEntity })
+  @ApiBadRequestResponse({
+    description: 'Validation error',
+    type: BadRequestResponse
+  })
+  @ApiForbiddenResponse({ description: 'Forbidden', type: ForbiddenResponse })
   @UseGuards(CanModifyUserGuard)
   @Patch(':id')
   update(@Param('id') id: string, @Body() dto: UpdateUserDto) {
