@@ -46,7 +46,7 @@ describe('AuthController/login (e2e)', () => {
     await app.close()
   })
 
-  it('/login (POST) Should return an access token', async () => {
+  it('/login (POST) Should return an access and refresh token', async () => {
     const data: RegisterUserDto = {
       name: faker.internet.userName(),
       email: faker.internet.email(randomUUID()),
@@ -76,6 +76,7 @@ describe('AuthController/login (e2e)', () => {
 
     expect(result.statusCode).toBe(200)
     expect(result.json().access_token).toBeDefined()
+    expect(result.json().refresh_token).toBeDefined()
   })
 
   it('/login (POST) Should return 400 if the email is not registered', async () => {

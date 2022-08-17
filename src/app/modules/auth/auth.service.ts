@@ -3,6 +3,7 @@ import {
   Injectable,
   UnauthorizedException
 } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
 import { User } from '@prisma/client'
 import { BcryptService } from '@services/bcrypt.service'
@@ -15,7 +16,8 @@ export class AuthService {
   constructor(
     private prisma: PrismaService,
     private jwtService: JwtService,
-    private bcrypt: BcryptService
+    private bcrypt: BcryptService,
+    private config: ConfigService
   ) {}
 
   async registerUser(dto: RegisterUserDto): Promise<User> {
@@ -28,7 +30,28 @@ export class AuthService {
 
   async login(user: User) {
     const payload = { user_id: user.id }
-    return this.jwtService.sign(payload)
+
+    const accessToken = this.jwtService.sign(payload)
+    const refreshToken = this.jwtService.sign(payload, {
+      expiresIn: '1w',
+      secret: this.config.get('JWT_REFRESH_TOKEN_SECRET')
+    })
+
+    const storedToken = await this.prisma.refreshToken.findFirst({
+      where: { userId: user.id }
+    })
+    if (storedToken) {
+      await this.prisma.refreshToken.delete({ where: { id: storedToken.id } })
+    }
+
+    await this.prisma.refreshToken.create({
+      data: { token: refreshToken, userId: user.id }
+    })
+
+    return {
+      access_token: accessToken,
+      refresh_token: refreshToken
+    }
   }
 
   async validateUser(email: string, password: string) {
