@@ -1,9 +1,11 @@
 import { JwtAuthGuard } from '@modules/auth/guards/JwtAuth.guard'
 import {
+  Body,
   Controller,
   Delete,
   Get,
   Param,
+  Patch,
   Query,
   UseGuards
 } from '@nestjs/common'
@@ -21,6 +23,7 @@ import { NotFoundResponse } from '@src/app/docs/NotFound.response'
 
 import { DeleteUserResponse } from './docs/deleteUser.response'
 import { UserEntity } from './docs/user.entity'
+import { UpdateUserDto } from './dto/updateUser.dto'
 import { CanModifyUserGuard } from './guards/canModifyUser.guard'
 import { FindUsersQuery } from './query/FindUsersQuery'
 import { UserService } from './user.service'
@@ -48,10 +51,11 @@ export class UserController {
     return this.userService.findById(id)
   }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-  //   return this.userService.update(+id, updateUserDto)
-  // }
+  @UseGuards(CanModifyUserGuard)
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() dto: UpdateUserDto) {
+    return this.userService.update(id, dto)
+  }
 
   @ApiOkResponse({ description: 'Deleted', type: DeleteUserResponse })
   @ApiBadRequestResponse({
