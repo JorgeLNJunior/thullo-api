@@ -27,7 +27,7 @@ export class AuthService {
   }
 
   async login(user: User) {
-    const payload = { id: user.id }
+    const payload = { user_id: user.id }
     return this.jwtService.sign(payload)
   }
 
@@ -36,7 +36,7 @@ export class AuthService {
       where: { email: email }
     })
 
-    if (!user) throw new BadRequestException('email not registered')
+    if (!user) throw new BadRequestException(['email not registered'])
 
     const isSamePassword = await this.bcrypt.compare(password, user.password)
 

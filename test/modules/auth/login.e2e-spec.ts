@@ -91,7 +91,7 @@ describe('AuthController/login (e2e)', () => {
     })
 
     expect(result.statusCode).toBe(400)
-    expect(result.json().message).toBe('email not registered')
+    expect(result.json().message[0]).toBe('email not registered')
   })
 
   it("/login (POST) Should return 401 if the password don't match", async () => {
