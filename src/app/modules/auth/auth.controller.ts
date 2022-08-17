@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common'
 import {
   ApiBadRequestResponse,
+  ApiCreatedResponse,
   ApiOkResponse,
   ApiTags,
   ApiUnauthorizedResponse
@@ -29,7 +30,7 @@ import { LocalAuthGuard } from './guards/localAuth.guard'
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @ApiOkResponse({ description: 'Created', type: UserEntity })
+  @ApiCreatedResponse({ description: 'Created', type: UserEntity })
   @ApiBadRequestResponse({
     description: 'Validation error',
     type: BadRequestResponse
