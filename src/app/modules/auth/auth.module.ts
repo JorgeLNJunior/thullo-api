@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config'
 import { JwtModule } from '@nestjs/jwt'
 import { PassportModule } from '@nestjs/passport'
 import { BcryptService } from '@services/bcrypt.service'
+import { UnsplashService } from '@services/unsplash.service'
 
 import { AuthController } from './auth.controller'
 import { AuthService } from './auth.service'
@@ -27,6 +28,7 @@ import { LocalStrategy } from './strategies/local.strategy'
   providers: [
     AuthService,
     BcryptService,
+    UnsplashService,
     IsEmailAlreadyRegisteredConstraint,
     LocalStrategy,
     JwtStrategy

@@ -8,6 +8,7 @@ import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
 import { User } from '@prisma/client'
 import { BcryptService } from '@services/bcrypt.service'
+import { UnsplashService } from '@services/unsplash.service'
 import { PrismaService } from 'nestjs-prisma'
 
 import { RegisterUserDto } from './dto/registerUser.dto'
@@ -19,14 +20,20 @@ export class AuthService {
     private prisma: PrismaService,
     private jwtService: JwtService,
     private bcrypt: BcryptService,
-    private config: ConfigService
+    private config: ConfigService,
+    private unsplash: UnsplashService
   ) {}
 
   async registerUser(dto: RegisterUserDto): Promise<User> {
     dto.password = await this.bcrypt.hash(dto.password)
 
+    const profileImage = await this.unsplash.findRandomUserAvatar()
+
     return this.prisma.user.create({
-      data: dto
+      data: {
+        profileImage: profileImage,
+        ...dto
+      }
     })
   }
 
