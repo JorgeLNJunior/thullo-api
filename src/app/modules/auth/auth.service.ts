@@ -95,4 +95,21 @@ export class AuthService {
       throw error
     }
   }
+
+  /**
+   * Revoke a refresh token.
+   * @throws `BadRequestException` - Token not found.
+   * @param token The refresh token to be revoked.
+   */
+  async revoke(token: string) {
+    const storedToken = await this.prisma.refreshToken.findFirst({
+      where: { token: token }
+    })
+
+    if (!storedToken) throw new BadRequestException(['token not found'])
+
+    await this.prisma.refreshToken.delete({
+      where: { id: storedToken.id }
+    })
+  }
 }

@@ -21,9 +21,11 @@ import { UnauthorizedResponse } from '@src/app/docs/Unauthorized.response'
 import { AuthService } from './auth.service'
 import { LoginResponse } from './docs/login.response'
 import { RefreshResponse } from './docs/refresh.response'
+import { RevokeResponse } from './docs/revoke.response'
 import { LoginDto } from './dto/login.dto'
 import { RefreshDto } from './dto/refresh.dto'
 import { RegisterUserDto } from './dto/registerUser.dto'
+import { RevokeDto } from './dto/revoke.dto'
 import { LocalAuthGuard } from './guards/localAuth.guard'
 
 @ApiTags('Auth')
@@ -78,6 +80,23 @@ export class AuthController {
     )
     return {
       access_token: accessToken
+    }
+  }
+
+  @ApiOkResponse({
+    description: 'Revoked',
+    type: RevokeResponse
+  })
+  @ApiBadRequestResponse({
+    description: 'Token not found',
+    type: BadRequestResponse
+  })
+  @HttpCode(200)
+  @Post('revoke')
+  async revoke(@Body() dto: RevokeDto) {
+    await this.authService.revoke(dto.refresh_token)
+    return {
+      message: 'the token has been revoked'
     }
   }
 }
