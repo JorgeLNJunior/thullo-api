@@ -69,8 +69,6 @@ describe('UserController/update (e2e)', () => {
       }
     })
 
-    console.log(result.json())
-
     expect(result.statusCode).toBe(200)
     expect(result.json()).toMatchObject(UserEntity.prototype)
   })

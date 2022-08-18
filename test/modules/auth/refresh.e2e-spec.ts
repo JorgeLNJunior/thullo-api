@@ -72,8 +72,6 @@ describe('AuthController/refresh (e2e)', () => {
       payload: body
     })
 
-    console.log(result.json())
-
     expect(result.statusCode).toBe(200)
     expect(result.json().access_token).toBeDefined()
   })
