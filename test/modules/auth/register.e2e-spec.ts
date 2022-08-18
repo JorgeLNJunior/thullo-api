@@ -99,7 +99,9 @@ describe('AuthController/register (e2e)', () => {
       password: faker.internet.password(6)
     }
 
-    await prisma.user.create({ data: body })
+    await prisma.user.create({
+      data: { profileImage: faker.internet.avatar(), ...body }
+    })
 
     const result = await app.inject({
       method: 'POST',

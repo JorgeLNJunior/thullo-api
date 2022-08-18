@@ -52,7 +52,9 @@ describe('UserController/findById (e2e)', () => {
       password: faker.internet.password(6)
     }
 
-    const user = await prisma.user.create({ data: data })
+    const user = await prisma.user.create({
+      data: { profileImage: faker.internet.avatar(), ...data }
+    })
 
     const token = generateAccessToken(user)
 
@@ -76,7 +78,9 @@ describe('UserController/findById (e2e)', () => {
     }
     const id = faker.datatype.uuid()
 
-    const user = await prisma.user.create({ data: data })
+    const user = await prisma.user.create({
+      data: { profileImage: faker.internet.avatar(), ...data }
+    })
 
     const token = generateAccessToken(user)
 

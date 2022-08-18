@@ -53,7 +53,7 @@ describe('AuthController/revoke (e2e)', () => {
     }
 
     const user = await prisma.user.create({
-      data: data
+      data: { profileImage: faker.internet.avatar(), ...data }
     })
 
     const refreshToken = generateRefreshToken(user)
@@ -84,7 +84,7 @@ describe('AuthController/revoke (e2e)', () => {
     }
 
     const user = await prisma.user.create({
-      data: data
+      data: { profileImage: faker.internet.avatar(), ...data }
     })
 
     const body: RevokeDto = {

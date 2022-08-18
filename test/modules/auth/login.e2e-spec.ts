@@ -59,7 +59,8 @@ describe('AuthController/login (e2e)', () => {
       data: {
         email: data.email,
         name: data.name,
-        password: hash
+        password: hash,
+        profileImage: faker.internet.avatar()
       }
     })
 
@@ -108,7 +109,8 @@ describe('AuthController/login (e2e)', () => {
       data: {
         email: data.email,
         name: data.name,
-        password: hash
+        password: hash,
+        profileImage: faker.internet.avatar()
       }
     })
 

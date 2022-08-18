@@ -58,7 +58,9 @@ describe('UserController/findMany (e2e)', () => {
       skip: '0'
     }
 
-    const user = await prisma.user.create({ data: data })
+    const user = await prisma.user.create({
+      data: { profileImage: faker.internet.avatar(), ...data }
+    })
 
     const token = generateAccessToken(user)
 

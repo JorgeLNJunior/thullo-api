@@ -53,7 +53,10 @@ describe('AuthController/refresh (e2e)', () => {
     }
 
     const user = await prisma.user.create({
-      data: data
+      data: {
+        profileImage: faker.internet.avatar(),
+        ...data
+      }
     })
 
     const refreshToken = generateRefreshToken(user)

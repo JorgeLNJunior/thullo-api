@@ -51,7 +51,9 @@ describe('UserController/remove (e2e)', () => {
       password: faker.internet.password(6)
     }
 
-    const user = await prisma.user.create({ data: data })
+    const user = await prisma.user.create({
+      data: { profileImage: faker.internet.avatar(), ...data }
+    })
 
     const token = generateAccessToken(user)
 
@@ -74,7 +76,9 @@ describe('UserController/remove (e2e)', () => {
       password: faker.internet.password(6)
     }
 
-    const user = await prisma.user.create({ data: data })
+    const user = await prisma.user.create({
+      data: { profileImage: faker.internet.avatar(), ...data }
+    })
 
     const token = generateAccessToken(user)
 
@@ -104,9 +108,11 @@ describe('UserController/remove (e2e)', () => {
       password: faker.internet.password(6)
     }
 
-    const user = await prisma.user.create({ data: data })
+    const user = await prisma.user.create({
+      data: { profileImage: faker.internet.avatar(), ...data }
+    })
     const unauthorizedUser = await prisma.user.create({
-      data: unauthorizedUserdata
+      data: { profileImage: faker.internet.avatar(), ...unauthorizedUserdata }
     })
 
     const token = generateAccessToken(unauthorizedUser)
