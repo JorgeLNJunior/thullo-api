@@ -54,6 +54,7 @@ describe('UserController/findMany (e2e)', () => {
     }
     const query: FindUsersQuery = {
       name: data.name,
+      email: data.email,
       take: '1',
       skip: '0'
     }
