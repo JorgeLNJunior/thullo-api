@@ -20,7 +20,9 @@ import { UnauthorizedResponse } from '@src/app/docs/Unauthorized.response'
 
 import { AuthService } from './auth.service'
 import { LoginResponse } from './docs/login.response'
+import { RefreshResponse } from './docs/refresh.response'
 import { LoginDto } from './dto/login.dto'
+import { RefreshDto } from './dto/refresh.dto'
 import { RegisterUserDto } from './dto/registerUser.dto'
 import { LocalAuthGuard } from './guards/localAuth.guard'
 
@@ -58,5 +60,24 @@ export class AuthController {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async login(@Request() req, @Body() _dto: LoginDto) {
     return await this.authService.login(req.user)
+  }
+
+  @ApiOkResponse({
+    description: 'Refreshed',
+    type: RefreshResponse
+  })
+  @ApiBadRequestResponse({
+    description: 'Invalid token',
+    type: BadRequestResponse
+  })
+  @HttpCode(200)
+  @Post('refresh')
+  async refresh(@Body() dto: RefreshDto) {
+    const accessToken = await this.authService.refreshAccessToken(
+      dto.refresh_token
+    )
+    return {
+      access_token: accessToken
+    }
   }
 }

@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   UnauthorizedException
 } from '@nestjs/common'
@@ -10,6 +11,7 @@ import { BcryptService } from '@services/bcrypt.service'
 import { PrismaService } from 'nestjs-prisma'
 
 import { RegisterUserDto } from './dto/registerUser.dto'
+import { RefreshToken } from './interfaces/tokens.interface'
 
 @Injectable()
 export class AuthService {
@@ -66,5 +68,31 @@ export class AuthService {
     if (!isSamePassword) throw new UnauthorizedException('invalid password')
 
     return user
+  }
+
+  async refreshAccessToken(refreshToken: string) {
+    try {
+      await this.jwtService.verifyAsync(refreshToken, {
+        secret: this.config.get('JWT_REFRESH_TOKEN_SECRET')
+      })
+
+      const decoded: RefreshToken = this.jwtService.decode(refreshToken) as any
+
+      const storedToken = await this.prisma.refreshToken.findFirst({
+        where: { userId: decoded.user_id }
+      })
+
+      if (storedToken.token !== refreshToken)
+        throw new ForbiddenException('invalid refresh token')
+
+      const payload = { user_id: decoded.user_id }
+
+      return this.jwtService.sign(payload)
+    } catch (error) {
+      if (error.name === 'JsonWebTokenError')
+        throw new BadRequestException(error.message)
+
+      throw error
+    }
   }
 }
