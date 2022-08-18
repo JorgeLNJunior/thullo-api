@@ -8,6 +8,10 @@ export class FindUsersQuery {
 
   @ApiProperty({ required: false })
   @IsOptional()
+  email?: string
+
+  @ApiProperty({ required: false })
+  @IsOptional()
   @IsNumberString()
   take?: string
 
