@@ -33,4 +33,22 @@ export class UnsplashService {
       throw new InternalServerErrorException()
     }
   }
+
+  /**
+   *
+   * @returns a random unsplash image with landscape orientation and 1080px width.
+   */
+  async findRandomBoardCover(): Promise<string> {
+    try {
+      const response = await this.axios.get('/photos/random', {
+        params: {
+          orientation: 'landscape'
+        }
+      })
+      return response.data.urls.regular
+    } catch (error) {
+      this.logger.error(error.message, error.stack)
+      throw new InternalServerErrorException()
+    }
+  }
 }
