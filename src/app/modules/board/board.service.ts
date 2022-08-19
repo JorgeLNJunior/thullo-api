@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
+import { Board } from '@prisma/client'
 import { UnsplashService } from '@services/unsplash.service'
 import { PrismaService } from 'nestjs-prisma'
 
@@ -11,7 +12,13 @@ export class BoardService {
     private unsplash: UnsplashService
   ) {}
 
-  async create(ownerId: string, dto: CreateBoardDto) {
+  /**
+   *
+   * @param ownerId
+   * @param dto
+   * @returns the created board data.
+   */
+  async create(ownerId: string, dto: CreateBoardDto): Promise<Board> {
     const coverImage = await this.unsplash.findRandomBoardCover()
 
     return this.prima.board.create({
@@ -27,9 +34,21 @@ export class BoardService {
   //   return `This action returns all board`
   // }
 
-  // findOne(id: number) {
-  //   return `This action returns a #${id} board`
-  // }
+  /**
+   *
+   * @param id
+   * @returns a board that matches the received id.
+   * @throws `NotFoundException`
+   */
+  async findById(id: string): Promise<Board> {
+    const board = await this.prima.board.findUnique({
+      where: { id: id }
+    })
+
+    if (!board) throw new NotFoundException('board not found')
+
+    return board
+  }
 
   // update(id: number, updateBoardDto: UpdateBoardDto) {
   //   return `This action updates a #${id} board`

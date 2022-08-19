@@ -1,12 +1,22 @@
 import { JwtAuthGuard } from '@modules/auth/guards/JwtAuth.guard'
-import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Request,
+  UseGuards
+} from '@nestjs/common'
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiCreatedResponse,
+  ApiNotFoundResponse,
   ApiTags
 } from '@nestjs/swagger'
 import { BadRequestResponse } from '@src/app/docs/BadRequest.reponse'
+import { NotFoundResponse } from '@src/app/docs/NotFound.response'
 
 import { BoardService } from './board.service'
 import { BoardEntity } from './docs/board.entity'
@@ -34,10 +44,15 @@ export class BoardController {
   //   return this.boardService.findAll()
   // }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.boardService.findOne(+id)
-  // }
+  @ApiCreatedResponse({ description: 'Ok', type: BoardEntity })
+  @ApiNotFoundResponse({
+    description: 'Board not found',
+    type: NotFoundResponse
+  })
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.boardService.findById(id)
+  }
 
   // @Patch(':id')
   // update(@Param('id') id: string, @Body() updateBoardDto: UpdateBoardDto) {
