@@ -6,6 +6,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
   Query,
   Request,
   UseGuards
@@ -13,10 +14,12 @@ import {
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
+  ApiBody,
   ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
+  ApiOperation,
   ApiTags,
   ApiUnauthorizedResponse
 } from '@nestjs/swagger'
@@ -28,7 +31,10 @@ import { UnauthorizedResponse } from '@src/app/docs/Unauthorized.response'
 import { BoardService } from './board.service'
 import { BoardEntity } from './docs/board.entity'
 import { DeleteBoardResponse } from './docs/deleteBoard.response'
+import { MemberEntity } from './docs/member.entity'
+import { AddMemberDto } from './dto/addMember.dto'
 import { CreateBoardDto } from './dto/createBoard.dto'
+import { CanAddMembersGuard } from './guards/canAddMembers.guard'
 import { CanDeleteBoardGuard } from './guards/canDeleteBoard.guard'
 import { FindBoardsQuery } from './query/findBoards.query'
 
@@ -91,5 +97,23 @@ export class BoardController {
     return {
       message: 'the board has been deleted'
     }
+  }
+
+  @ApiOperation({ summary: 'Add a member to a board' })
+  @ApiBody({ type: AddMemberDto, required: false })
+  @ApiOkResponse({ description: 'Member added', type: MemberEntity })
+  @ApiBadRequestResponse({
+    description: 'Invalid params',
+    type: BadRequestResponse
+  })
+  @ApiForbiddenResponse({ description: 'Forbidden', type: ForbiddenResponse })
+  @UseGuards(CanAddMembersGuard)
+  @Put(':id/members/:userId')
+  async addMember(
+    @Param('id') boardId: string,
+    @Param('userId') userId: string,
+    @Body() dto?: AddMemberDto
+  ) {
+    return this.boardService.addMember(boardId, userId, dto)
   }
 }

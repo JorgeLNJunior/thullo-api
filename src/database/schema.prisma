@@ -25,6 +25,7 @@ model User {
   profileImage String
   tokens       RefreshToken[]
   boards       Board[]
+  memberIn     Member[]
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
 }
@@ -36,6 +37,23 @@ model Board {
   coverImage  String
   ownerId     String
   owner       User     @relation(fields: [ownerId], references: [id])
+  members     Member[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model Member {
+  id        String    @id @default(uuid())
+  userId    String
+  boardId   String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  board     Board     @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  role      BoardRole @default(MEMBER)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+enum BoardRole {
+  ADMIN
+  MEMBER
 }

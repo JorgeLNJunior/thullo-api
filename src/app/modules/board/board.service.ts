@@ -3,10 +3,11 @@ import {
   Injectable,
   NotFoundException
 } from '@nestjs/common'
-import { Board } from '@prisma/client'
+import { Board, BoardRole, Member } from '@prisma/client'
 import { UnsplashService } from '@services/unsplash.service'
 import { PrismaService } from 'nestjs-prisma'
 
+import { AddMemberDto } from './dto/addMember.dto'
 import { CreateBoardDto } from './dto/createBoard.dto'
 import { FindBoardsQuery } from './query/findBoards.query'
 
@@ -26,13 +27,23 @@ export class BoardService {
   async create(ownerId: string, dto: CreateBoardDto): Promise<Board> {
     const coverImage = await this.unsplash.findRandomBoardCover()
 
-    return this.prisma.board.create({
+    const board = await this.prisma.board.create({
       data: {
         ownerId: ownerId,
         coverImage: coverImage,
         ...dto
       }
     })
+
+    await this.prisma.member.create({
+      data: {
+        boardId: board.id,
+        userId: ownerId,
+        role: BoardRole.ADMIN
+      }
+    })
+
+    return board
   }
 
   /**
@@ -83,6 +94,27 @@ export class BoardService {
 
     await this.prisma.board.delete({
       where: { id: id }
+    })
+  }
+
+  /**
+   * Add a new member to a board
+   * @param boardId The id of the Board wich the User will be added.
+   * @param userId The id of the User to be added to the Board.
+   * @param dto The data to add a Member to a Board.
+   * @returns The created `Member`object.
+   */
+  async addMember(
+    boardId: string,
+    userId: string,
+    dto?: AddMemberDto
+  ): Promise<Member> {
+    return this.prisma.member.create({
+      data: {
+        boardId: boardId,
+        userId: userId,
+        role: dto.role
+      }
     })
   }
 }
