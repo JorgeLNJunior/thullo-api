@@ -2,6 +2,7 @@ import { JwtAuthGuard } from '@modules/auth/guards/JwtAuth.guard'
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -13,20 +14,30 @@ import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiCreatedResponse,
+  ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
-  ApiTags
+  ApiTags,
+  ApiUnauthorizedResponse
 } from '@nestjs/swagger'
 import { BadRequestResponse } from '@src/app/docs/BadRequest.reponse'
+import { ForbiddenResponse } from '@src/app/docs/Forbidden.response'
 import { NotFoundResponse } from '@src/app/docs/NotFound.response'
+import { UnauthorizedResponse } from '@src/app/docs/Unauthorized.response'
 
 import { BoardService } from './board.service'
 import { BoardEntity } from './docs/board.entity'
+import { DeleteBoardResponse } from './docs/deleteBoard.response'
 import { CreateBoardDto } from './dto/createBoard.dto'
+import { CanDeleteBoardGuard } from './guards/canDeleteBoard.guard'
 import { FindBoardsQuery } from './query/findBoards.query'
 
 @ApiTags('Boards')
 @ApiBearerAuth()
+@ApiUnauthorizedResponse({
+  description: 'Unauthorized',
+  type: UnauthorizedResponse
+})
 @UseGuards(JwtAuthGuard)
 @Controller('boards')
 export class BoardController {
@@ -67,8 +78,18 @@ export class BoardController {
   //   return this.boardService.update(+id, updateBoardDto)
   // }
 
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.boardService.remove(+id)
-  // }
+  @ApiOkResponse({ description: 'Deleted', type: DeleteBoardResponse })
+  @ApiForbiddenResponse({ description: 'Forbidden', type: ForbiddenResponse })
+  @ApiBadRequestResponse({
+    description: 'Invalid board id',
+    type: BadRequestResponse
+  })
+  @UseGuards(CanDeleteBoardGuard)
+  @Delete(':id')
+  async delete(@Param('id') id: string) {
+    await this.boardService.delete(id)
+    return {
+      message: 'the board has been deleted'
+    }
+  }
 }

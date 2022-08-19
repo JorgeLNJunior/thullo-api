@@ -15,11 +15,13 @@ import {
   ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
-  ApiTags
+  ApiTags,
+  ApiUnauthorizedResponse
 } from '@nestjs/swagger'
 import { BadRequestResponse } from '@src/app/docs/BadRequest.reponse'
 import { ForbiddenResponse } from '@src/app/docs/Forbidden.response'
 import { NotFoundResponse } from '@src/app/docs/NotFound.response'
+import { UnauthorizedResponse } from '@src/app/docs/Unauthorized.response'
 
 import { DeleteUserResponse } from './docs/deleteUser.response'
 import { UserEntity } from './docs/user.entity'
@@ -30,6 +32,10 @@ import { UserService } from './user.service'
 
 @ApiTags('Users')
 @ApiBearerAuth()
+@ApiUnauthorizedResponse({
+  description: 'Unauthorized',
+  type: UnauthorizedResponse
+})
 @UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UserController {

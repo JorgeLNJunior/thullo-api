@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException
+} from '@nestjs/common'
 import { Board } from '@prisma/client'
 import { UnsplashService } from '@services/unsplash.service'
 import { PrismaService } from 'nestjs-prisma'
@@ -9,7 +13,7 @@ import { FindBoardsQuery } from './query/findBoards.query'
 @Injectable()
 export class BoardService {
   constructor(
-    private prima: PrismaService,
+    private prisma: PrismaService,
     private unsplash: UnsplashService
   ) {}
 
@@ -22,7 +26,7 @@ export class BoardService {
   async create(ownerId: string, dto: CreateBoardDto): Promise<Board> {
     const coverImage = await this.unsplash.findRandomBoardCover()
 
-    return this.prima.board.create({
+    return this.prisma.board.create({
       data: {
         ownerId: ownerId,
         coverImage: coverImage,
@@ -37,7 +41,7 @@ export class BoardService {
    * @returns A list of Boards, 20 results by default.
    */
   findMany(query: FindBoardsQuery): Promise<Board[]> {
-    return this.prima.board.findMany({
+    return this.prisma.board.findMany({
       where: {
         ownerId: query.ownerId
       },
@@ -53,7 +57,7 @@ export class BoardService {
    * @throws `NotFoundException`
    */
   async findById(id: string): Promise<Board> {
-    const board = await this.prima.board.findUnique({
+    const board = await this.prisma.board.findUnique({
       where: { id: id }
     })
 
@@ -66,7 +70,19 @@ export class BoardService {
   //   return `This action updates a #${id} board`
   // }
 
-  // remove(id: number) {
-  //   return `This action removes a #${id} board`
-  // }
+  /**
+   * Delete a Board.
+   * @param id The id of the Board to be deleted.
+   * @throws `BadRequestException` if it receives an invalid board id.
+   */
+  async delete(id: string) {
+    const board = await this.prisma.board.findUnique({
+      where: { id: id }
+    })
+    if (!board) throw new BadRequestException(['invalid board id'])
+
+    await this.prisma.board.delete({
+      where: { id: id }
+    })
+  }
 }
