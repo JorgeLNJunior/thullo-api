@@ -1,5 +1,5 @@
+import { IsNumberString, IsOptional } from '@nestjs/class-validator'
 import { ApiProperty } from '@nestjs/swagger'
-import { IsNumberString, IsOptional } from 'class-validator'
 
 export class FindUsersQuery {
   @ApiProperty({ required: false })

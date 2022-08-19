@@ -1,4 +1,5 @@
 import helmet from '@fastify/helmet'
+import { useContainer } from '@nestjs/class-validator'
 import { ConsoleLogger, ValidationPipe } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import {
@@ -6,7 +7,6 @@ import {
   NestFastifyApplication
 } from '@nestjs/platform-fastify'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
-import { useContainer } from 'class-validator'
 import { PrismaService } from 'nestjs-prisma'
 
 import { version } from '../package.json'

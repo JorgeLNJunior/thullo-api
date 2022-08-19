@@ -1,5 +1,5 @@
+import { MaxLength } from '@nestjs/class-validator'
 import { ApiProperty } from '@nestjs/swagger'
-import { MaxLength } from 'class-validator'
 
 export class CreateBoardDto {
   @ApiProperty({ maxLength: 30 })

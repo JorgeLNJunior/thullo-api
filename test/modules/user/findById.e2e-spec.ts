@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker'
 import { RegisterUserDto } from '@modules/auth/dto/registerUser.dto'
 import { UserEntity } from '@modules/user/docs/user.entity'
+import { useContainer } from '@nestjs/class-validator'
 import { ValidationPipe } from '@nestjs/common'
 import {
   FastifyAdapter,
@@ -8,7 +9,6 @@ import {
 } from '@nestjs/platform-fastify'
 import { Test, TestingModule } from '@nestjs/testing'
 import { AppModule } from '@src/app.module'
-import { useContainer } from 'class-validator'
 import { PrismaService } from 'nestjs-prisma'
 import { randomUUID } from 'node:crypto'
 

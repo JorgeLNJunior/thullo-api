@@ -1,5 +1,5 @@
+import { Allow } from '@nestjs/class-validator'
 import { ApiProperty } from '@nestjs/swagger'
-import { Allow } from 'class-validator'
 
 export class LoginDto {
   @ApiProperty()

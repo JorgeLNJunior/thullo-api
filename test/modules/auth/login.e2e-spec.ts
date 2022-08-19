@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker'
 import { LoginDto } from '@modules/auth/dto/login.dto'
 import { RegisterUserDto } from '@modules/auth/dto/registerUser.dto'
+import { useContainer } from '@nestjs/class-validator'
 import { ValidationPipe } from '@nestjs/common'
 import {
   FastifyAdapter,
@@ -9,7 +10,6 @@ import {
 import { Test, TestingModule } from '@nestjs/testing'
 import { BcryptService } from '@services/bcrypt.service'
 import { AppModule } from '@src/app.module'
-import { useContainer } from 'class-validator'
 import { PrismaService } from 'nestjs-prisma'
 import { randomUUID } from 'node:crypto'
 
