@@ -8,9 +8,12 @@ import {
   NestFastifyApplication
 } from '@nestjs/platform-fastify'
 import { Test, TestingModule } from '@nestjs/testing'
+import { UnsplashService } from '@services/unsplash.service'
 import { AppModule } from '@src/app.module'
 import { PrismaService } from 'nestjs-prisma'
 import { randomUUID } from 'node:crypto'
+
+import { UnsplashServiceMock } from '../../mocks/unsplash.service.mock'
 
 describe('AuthController/register (e2e)', () => {
   let app: NestFastifyApplication
@@ -19,7 +22,10 @@ describe('AuthController/register (e2e)', () => {
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule]
-    }).compile()
+    })
+      .overrideProvider(UnsplashService)
+      .useClass(UnsplashServiceMock)
+      .compile()
 
     app = moduleFixture.createNestApplication<NestFastifyApplication>(
       new FastifyAdapter()
