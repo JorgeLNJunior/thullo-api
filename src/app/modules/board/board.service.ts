@@ -4,6 +4,7 @@ import { UnsplashService } from '@services/unsplash.service'
 import { PrismaService } from 'nestjs-prisma'
 
 import { CreateBoardDto } from './dto/createBoard.dto'
+import { FindBoardsQuery } from './query/findBoards.query'
 
 @Injectable()
 export class BoardService {
@@ -13,10 +14,10 @@ export class BoardService {
   ) {}
 
   /**
-   *
-   * @param ownerId
-   * @param dto
-   * @returns the created board data.
+   * Create a Board.
+   * @param ownerId The id of the user who wants to create the board.
+   * @param dto The data needed to create a board.
+   * @returns The created board data.
    */
   async create(ownerId: string, dto: CreateBoardDto): Promise<Board> {
     const coverImage = await this.unsplash.findRandomBoardCover()
@@ -30,14 +31,25 @@ export class BoardService {
     })
   }
 
-  // findAll() {
-  //   return `This action returns all board`
-  // }
+  /**
+   * Find many Boards.
+   * @param query A query object to filter Boards.
+   * @returns A list of Boards, 20 results by default.
+   */
+  findMany(query: FindBoardsQuery): Promise<Board[]> {
+    return this.prima.board.findMany({
+      where: {
+        ownerId: query.ownerId
+      },
+      take: Number(query.take) || 20,
+      skip: Number(query.skip) || 0
+    })
+  }
 
   /**
    *
-   * @param id
-   * @returns a board that matches the received id.
+   * @param id The Board id.
+   * @returns A Board that matches the received id.
    * @throws `NotFoundException`
    */
   async findById(id: string): Promise<Board> {

@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Post,
+  Query,
   Request,
   UseGuards
 } from '@nestjs/common'
@@ -13,6 +14,7 @@ import {
   ApiBearerAuth,
   ApiCreatedResponse,
   ApiNotFoundResponse,
+  ApiOkResponse,
   ApiTags
 } from '@nestjs/swagger'
 import { BadRequestResponse } from '@src/app/docs/BadRequest.reponse'
@@ -21,6 +23,7 @@ import { NotFoundResponse } from '@src/app/docs/NotFound.response'
 import { BoardService } from './board.service'
 import { BoardEntity } from './docs/board.entity'
 import { CreateBoardDto } from './dto/createBoard.dto'
+import { FindBoardsQuery } from './query/findBoards.query'
 
 @ApiTags('Boards')
 @ApiBearerAuth()
@@ -39,12 +42,17 @@ export class BoardController {
     return this.boardService.create(req.user.id, dto)
   }
 
-  // @Get()
-  // findAll() {
-  //   return this.boardService.findAll()
-  // }
+  @ApiOkResponse({ description: 'Ok', type: BoardEntity, isArray: true })
+  @ApiBadRequestResponse({
+    description: 'Query validation error',
+    type: BadRequestResponse
+  })
+  @Get()
+  findMany(@Query() query: FindBoardsQuery) {
+    return this.boardService.findMany(query)
+  }
 
-  @ApiCreatedResponse({ description: 'Ok', type: BoardEntity })
+  @ApiOkResponse({ description: 'Ok', type: BoardEntity })
   @ApiNotFoundResponse({
     description: 'Board not found',
     type: NotFoundResponse
