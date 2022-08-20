@@ -32,10 +32,12 @@ import { BoardService } from './board.service'
 import { BoardEntity } from './docs/board.entity'
 import { DeleteBoardResponse } from './docs/deleteBoard.response'
 import { MemberEntity } from './docs/member.entity'
+import { RemoveMemberResponse } from './docs/removeMember.response'
 import { AddMemberDto } from './dto/addMember.dto'
 import { CreateBoardDto } from './dto/createBoard.dto'
 import { CanAddMembersGuard } from './guards/canAddMembers.guard'
 import { CanDeleteBoardGuard } from './guards/canDeleteBoard.guard'
+import { CanRemoveMembersGuard } from './guards/canRemoveMembers.guard'
 import { FindBoardsQuery } from './query/findBoards.query'
 
 @ApiTags('Boards')
@@ -115,5 +117,24 @@ export class BoardController {
     @Body() dto?: AddMemberDto
   ) {
     return this.boardService.addMember(boardId, userId, dto)
+  }
+
+  @ApiOperation({ summary: 'Remove a member from a board' })
+  @ApiOkResponse({ description: 'Member removed', type: RemoveMemberResponse })
+  @ApiBadRequestResponse({
+    description: 'Invalid params',
+    type: BadRequestResponse
+  })
+  @ApiForbiddenResponse({ description: 'Forbidden', type: ForbiddenResponse })
+  @UseGuards(CanRemoveMembersGuard)
+  @Delete(':id/members/:userId')
+  async removeMember(
+    @Param('id') boardId: string,
+    @Param('userId') userId: string
+  ) {
+    await this.boardService.removeMember(boardId, userId)
+    return {
+      message: 'the member has been removed'
+    }
   }
 }

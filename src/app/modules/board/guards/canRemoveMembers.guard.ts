@@ -9,7 +9,7 @@ import { BoardRole } from '@prisma/client'
 import { PrismaService } from 'nestjs-prisma'
 
 @Injectable()
-export class CanAddMembersGuard implements CanActivate {
+export class CanRemoveMembersGuard implements CanActivate {
   constructor(private prisma: PrismaService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -18,27 +18,16 @@ export class CanAddMembersGuard implements CanActivate {
     const boardIdParam = request.params.id
     const userIdParam = request.params.userId
 
-    // User to be added validation
-    const user = await this.prisma.user.findUnique({
-      where: { id: userIdParam }
-    })
-    if (!user) throw new BadRequestException(['user not found'])
-
-    // Board validation
-    const board = await this.prisma.board.findUnique({
-      where: { id: boardIdParam }
-    })
-    if (!board) throw new BadRequestException(['board not found'])
-
-    const isAlreadymember = await this.prisma.member.findFirst({
+    // User to be removed validation
+    const isMember = await this.prisma.member.findFirst({
       where: {
         boardId: boardIdParam,
         userId: userIdParam
       }
     })
-    if (isAlreadymember) {
+    if (!isMember) {
       throw new BadRequestException([
-        'this user is already a member of this board'
+        'this user is is not a member of this board'
       ])
     }
 

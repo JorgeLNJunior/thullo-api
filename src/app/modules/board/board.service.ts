@@ -117,4 +117,18 @@ export class BoardService {
       }
     })
   }
+
+  /**
+   * Remove a member from a board
+   * @param boardId The id of the Board wich the User will be removed.
+   * @param userId The id of the User to be removed from the Board.
+   */
+  async removeMember(boardId: string, userId: string) {
+    await this.prisma.member.deleteMany({
+      where: {
+        boardId: boardId,
+        userId: userId
+      }
+    })
+  }
 }
