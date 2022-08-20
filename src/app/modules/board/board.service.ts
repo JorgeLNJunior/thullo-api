@@ -9,6 +9,7 @@ import { PrismaService } from 'nestjs-prisma'
 
 import { AddMemberDto } from './dto/addMember.dto'
 import { CreateBoardDto } from './dto/createBoard.dto'
+import { UpdateMemberRoleDto } from './dto/updateRole.dto'
 import { FindBoardsQuery } from './query/findBoards.query'
 
 @Injectable()
@@ -125,6 +126,34 @@ export class BoardService {
    */
   async removeMember(boardId: string, userId: string) {
     await this.prisma.member.deleteMany({
+      where: {
+        boardId: boardId,
+        userId: userId
+      }
+    })
+  }
+
+  /**
+   * Update the role of board member.
+   * @param boardId The id of the board.
+   * @param userId The id of the user.
+   * @param dto The needed data to update the role.
+   * @returns The updated `Member` object.
+   */
+  async updateMemberRole(
+    boardId: string,
+    userId: string,
+    dto: UpdateMemberRoleDto
+  ): Promise<Member> {
+    await this.prisma.member.updateMany({
+      where: {
+        boardId: boardId,
+        userId: userId
+      },
+      data: dto
+    })
+
+    return this.prisma.member.findFirst({
       where: {
         boardId: boardId,
         userId: userId

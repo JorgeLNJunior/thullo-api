@@ -35,6 +35,7 @@ import { MemberEntity } from './docs/member.entity'
 import { RemoveMemberResponse } from './docs/removeMember.response'
 import { AddMemberDto } from './dto/addMember.dto'
 import { CreateBoardDto } from './dto/createBoard.dto'
+import { UpdateMemberRoleDto } from './dto/updateRole.dto'
 import { CanAddMembersGuard } from './guards/canAddMembers.guard'
 import { CanDeleteBoardGuard } from './guards/canDeleteBoard.guard'
 import { CanRemoveMembersGuard } from './guards/canRemoveMembers.guard'
@@ -136,5 +137,25 @@ export class BoardController {
     return {
       message: 'the member has been removed'
     }
+  }
+
+  @ApiOperation({ summary: 'Update a member role' })
+  @ApiOkResponse({
+    description: 'Member role updated',
+    type: MemberEntity
+  })
+  @ApiBadRequestResponse({
+    description: 'Invalid params',
+    type: BadRequestResponse
+  })
+  @ApiForbiddenResponse({ description: 'Forbidden', type: ForbiddenResponse })
+  @UseGuards(CanRemoveMembersGuard) // using it to prevent code duplication
+  @Put(':id/members/:userId/roles')
+  async updateMemberRole(
+    @Param('id') boardId: string,
+    @Param('userId') userId: string,
+    @Body() dto: UpdateMemberRoleDto
+  ) {
+    return this.boardService.updateMemberRole(boardId, userId, dto)
   }
 }
