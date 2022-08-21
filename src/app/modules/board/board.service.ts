@@ -9,6 +9,7 @@ import { PrismaService } from 'nestjs-prisma'
 
 import { AddMemberDto } from './dto/addMember.dto'
 import { CreateBoardDto } from './dto/createBoard.dto'
+import { UpdateBoardDto } from './dto/update-board.dto'
 import { UpdateMemberRoleDto } from './dto/updateRole.dto'
 import { FindBoardMembersQuery } from './query/findBoardMembers.query'
 import { FindBoardsQuery } from './query/findBoards.query'
@@ -79,9 +80,18 @@ export class BoardService {
     return board
   }
 
-  // update(id: number, updateBoardDto: UpdateBoardDto) {
-  //   return `This action updates a #${id} board`
-  // }
+  /**
+   * Update a board data.
+   * @param id The board id.
+   * @param dto The data to be updated.
+   * @returns The updated board.
+   */
+  update(id: string, dto: UpdateBoardDto) {
+    return this.prisma.board.update({
+      where: { id: id },
+      data: dto
+    })
+  }
 
   /**
    * Delete a Board.

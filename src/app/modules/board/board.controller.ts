@@ -5,6 +5,7 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Put,
   Query,
@@ -36,10 +37,12 @@ import { MemberWithUserEntity } from './docs/memberWithUser.entity'
 import { RemoveMemberResponse } from './docs/removeMember.response'
 import { AddMemberDto } from './dto/addMember.dto'
 import { CreateBoardDto } from './dto/createBoard.dto'
+import { UpdateBoardDto } from './dto/update-board.dto'
 import { UpdateMemberRoleDto } from './dto/updateRole.dto'
 import { CanAddMembersGuard } from './guards/canAddMembers.guard'
 import { CanDeleteBoardGuard } from './guards/canDeleteBoard.guard'
 import { CanRemoveMembersGuard } from './guards/canRemoveMembers.guard'
+import { IsBoardAdminGuard } from './guards/isBoardAdmin.guard'
 import { FindBoardMembersQuery } from './query/findBoardMembers.query'
 import { FindBoardsQuery } from './query/findBoards.query'
 
@@ -84,10 +87,17 @@ export class BoardController {
     return this.boardService.findById(id)
   }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateBoardDto: UpdateBoardDto) {
-  //   return this.boardService.update(+id, updateBoardDto)
-  // }
+  @ApiOkResponse({ description: 'Deleted', type: BoardEntity })
+  @ApiForbiddenResponse({ description: 'Forbidden', type: ForbiddenResponse })
+  @ApiBadRequestResponse({
+    description: 'Invalid board id',
+    type: BadRequestResponse
+  })
+  @UseGuards(IsBoardAdminGuard)
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateBoardDto: UpdateBoardDto) {
+    return this.boardService.update(id, updateBoardDto)
+  }
 
   @ApiOkResponse({ description: 'Deleted', type: DeleteBoardResponse })
   @ApiForbiddenResponse({ description: 'Forbidden', type: ForbiddenResponse })

@@ -3,7 +3,7 @@ import {
   InternalServerErrorException,
   Logger
 } from '@nestjs/common'
-import axios, { AxiosInstance } from 'axios'
+import axios, { AxiosError, AxiosInstance } from 'axios'
 
 @Injectable()
 export class UnsplashService {
@@ -17,7 +17,7 @@ export class UnsplashService {
   private axios: AxiosInstance
 
   /**
-   *
+   * Find a ramdom unsplash image to be used as user profile image.
    * @returns a random unsplash image with squarish orientation and 400px width.
    */
   async findRandomUserAvatar(): Promise<string> {
@@ -36,7 +36,7 @@ export class UnsplashService {
   }
 
   /**
-   *
+   * Find a ramdom unsplash image to be used as board cover.
    * @returns a random unsplash image with landscape orientation and 1080px width.
    */
   async findRandomBoardCover(): Promise<string> {
@@ -49,6 +49,26 @@ export class UnsplashService {
       })
       return response.data.urls.regular
     } catch (error) {
+      this.logger.error(error.message, error.stack)
+      throw new InternalServerErrorException()
+    }
+  }
+
+  /**
+   * Verify if a given url is a valid unsplash image url.
+   * @param url The url to be verified.
+   * @returns `true` if the url is a valid unsplash image, `false` if not.
+   */
+  async isUnsplashImageUrl(url: string): Promise<boolean> {
+    if (!url.startsWith('https://images.unsplash.com/photo-')) return false
+
+    try {
+      await axios.create().get(url)
+      return true
+    } catch (error) {
+      if (error instanceof AxiosError && error.response.status === 404) {
+        return false
+      }
       this.logger.error(error.message, error.stack)
       throw new InternalServerErrorException()
     }
