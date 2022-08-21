@@ -57,6 +57,7 @@ import { FindBoardsQuery } from './query/findBoards.query'
 export class BoardController {
   constructor(private readonly boardService: BoardService) {}
 
+  @ApiOperation({ summary: 'Create a board' })
   @ApiCreatedResponse({ description: 'Created', type: BoardEntity })
   @ApiBadRequestResponse({
     description: 'Validation error',
@@ -67,6 +68,7 @@ export class BoardController {
     return this.boardService.create(req.user.id, dto)
   }
 
+  @ApiOperation({ summary: 'Find many boards' })
   @ApiOkResponse({ description: 'Ok', type: BoardEntity, isArray: true })
   @ApiBadRequestResponse({
     description: 'Query validation error',
@@ -77,6 +79,7 @@ export class BoardController {
     return this.boardService.findMany(query)
   }
 
+  @ApiOperation({ summary: 'Find a board by ID' })
   @ApiOkResponse({ description: 'Ok', type: BoardEntity })
   @ApiNotFoundResponse({
     description: 'Board not found',
@@ -87,6 +90,7 @@ export class BoardController {
     return this.boardService.findById(id)
   }
 
+  @ApiOperation({ summary: 'Update a board' })
   @ApiOkResponse({ description: 'Deleted', type: BoardEntity })
   @ApiForbiddenResponse({ description: 'Forbidden', type: ForbiddenResponse })
   @ApiBadRequestResponse({
@@ -99,6 +103,7 @@ export class BoardController {
     return this.boardService.update(id, updateBoardDto)
   }
 
+  @ApiOperation({ summary: 'Delete a board' })
   @ApiOkResponse({ description: 'Deleted', type: DeleteBoardResponse })
   @ApiForbiddenResponse({ description: 'Forbidden', type: ForbiddenResponse })
   @ApiBadRequestResponse({
@@ -114,7 +119,7 @@ export class BoardController {
     }
   }
 
-  @ApiOperation({ summary: 'Find board members' })
+  @ApiOperation({ summary: 'Find members from a board' })
   @ApiOkResponse({
     description: 'Member added',
     type: MemberWithUserEntity,

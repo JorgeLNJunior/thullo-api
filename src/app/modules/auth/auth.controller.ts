@@ -11,6 +11,7 @@ import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiOkResponse,
+  ApiOperation,
   ApiTags,
   ApiUnauthorizedResponse
 } from '@nestjs/swagger'
@@ -34,6 +35,7 @@ import { LocalAuthGuard } from './guards/localAuth.guard'
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @ApiOperation({ summary: 'Register a user' })
   @ApiCreatedResponse({ description: 'Created', type: UserEntity })
   @ApiBadRequestResponse({
     description: 'Validation error',
@@ -44,6 +46,7 @@ export class AuthController {
     return this.authService.registerUser(dto)
   }
 
+  @ApiOperation({ summary: 'Get an access and refresh token' })
   @ApiOkResponse({
     description: 'Created',
     type: LoginResponse
@@ -64,6 +67,7 @@ export class AuthController {
     return await this.authService.login(req.user)
   }
 
+  @ApiOperation({ summary: 'Refresh an access token' })
   @ApiOkResponse({
     description: 'Refreshed',
     type: RefreshResponse
@@ -83,6 +87,7 @@ export class AuthController {
     }
   }
 
+  @ApiOperation({ summary: 'Revoke a refresh token' })
   @ApiOkResponse({
     description: 'Revoked',
     type: RevokeResponse

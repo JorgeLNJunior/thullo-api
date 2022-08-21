@@ -15,6 +15,7 @@ import {
   ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
+  ApiOperation,
   ApiTags,
   ApiUnauthorizedResponse
 } from '@nestjs/swagger'
@@ -41,12 +42,14 @@ import { UserService } from './user.service'
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @ApiOperation({ summary: 'Find many users' })
   @ApiOkResponse({ description: 'OK', type: UserEntity, isArray: true })
   @Get()
   findMany(@Query() query: FindUsersQuery) {
     return this.userService.findMany(query)
   }
 
+  @ApiOperation({ summary: 'Find a user by ID' })
   @ApiOkResponse({ description: 'OK', type: UserEntity })
   @ApiNotFoundResponse({
     description: 'NOT FOUND',
@@ -57,6 +60,7 @@ export class UserController {
     return this.userService.findById(id)
   }
 
+  @ApiOperation({ summary: 'Update a user' })
   @ApiOkResponse({ description: 'Updated', type: UserEntity })
   @ApiBadRequestResponse({
     description: 'Validation error',
@@ -69,6 +73,7 @@ export class UserController {
     return this.userService.update(id, dto)
   }
 
+  @ApiOperation({ summary: 'Delete a user' })
   @ApiOkResponse({ description: 'Deleted', type: DeleteUserResponse })
   @ApiBadRequestResponse({
     description: 'Invalid id',
