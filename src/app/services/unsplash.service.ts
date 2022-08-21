@@ -24,7 +24,8 @@ export class UnsplashService {
     try {
       const response = await this.axios.get('/photos/random', {
         params: {
-          orientation: 'squarish'
+          orientation: 'squarish',
+          content_filter: 'high'
         }
       })
       return response.data.urls.small
@@ -42,7 +43,8 @@ export class UnsplashService {
     try {
       const response = await this.axios.get('/photos/random', {
         params: {
-          orientation: 'landscape'
+          orientation: 'landscape',
+          content_filter: 'high'
         }
       })
       return response.data.urls.regular
