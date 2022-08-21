@@ -45,6 +45,11 @@ export class UserService {
     const user = await this.prisma.user.findUnique({ where: { id: id } })
     if (!user) throw new BadRequestException(['invalid user id'])
 
-    await this.prisma.user.delete({ where: { id: id } })
+    await this.prisma.refreshToken.deleteMany({
+      where: { userId: id }
+    })
+    await this.prisma.user.delete({
+      where: { id: id }
+    })
   }
 }
