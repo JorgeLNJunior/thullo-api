@@ -32,6 +32,7 @@ import { BoardService } from './board.service'
 import { BoardEntity } from './docs/board.entity'
 import { DeleteBoardResponse } from './docs/deleteBoard.response'
 import { MemberEntity } from './docs/member.entity'
+import { MemberWithUserEntity } from './docs/memberWithUser.entity'
 import { RemoveMemberResponse } from './docs/removeMember.response'
 import { AddMemberDto } from './dto/addMember.dto'
 import { CreateBoardDto } from './dto/createBoard.dto'
@@ -39,6 +40,7 @@ import { UpdateMemberRoleDto } from './dto/updateRole.dto'
 import { CanAddMembersGuard } from './guards/canAddMembers.guard'
 import { CanDeleteBoardGuard } from './guards/canDeleteBoard.guard'
 import { CanRemoveMembersGuard } from './guards/canRemoveMembers.guard'
+import { FindBoardMembersQuery } from './query/findBoardMembers.query'
 import { FindBoardsQuery } from './query/findBoards.query'
 
 @ApiTags('Boards')
@@ -100,6 +102,24 @@ export class BoardController {
     return {
       message: 'the board has been deleted'
     }
+  }
+
+  @ApiOperation({ summary: 'Find board members' })
+  @ApiOkResponse({
+    description: 'Member added',
+    type: MemberWithUserEntity,
+    isArray: true
+  })
+  @ApiBadRequestResponse({
+    description: 'Invalid params',
+    type: BadRequestResponse
+  })
+  @Get(':id/members')
+  async findMembers(
+    @Param(':id') id: string,
+    @Query() query?: FindBoardMembersQuery
+  ) {
+    return this.boardService.findMembers(id, query)
   }
 
   @ApiOperation({ summary: 'Add a member to a board' })

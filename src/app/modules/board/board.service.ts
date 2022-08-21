@@ -10,6 +10,7 @@ import { PrismaService } from 'nestjs-prisma'
 import { AddMemberDto } from './dto/addMember.dto'
 import { CreateBoardDto } from './dto/createBoard.dto'
 import { UpdateMemberRoleDto } from './dto/updateRole.dto'
+import { FindBoardMembersQuery } from './query/findBoardMembers.query'
 import { FindBoardsQuery } from './query/findBoards.query'
 
 @Injectable()
@@ -95,6 +96,25 @@ export class BoardService {
 
     await this.prisma.board.delete({
       where: { id: id }
+    })
+  }
+
+  /**
+   * Find the members of a board.
+   * @param boardId The id of the board
+   * @returns A list of `Members`.
+   */
+  async findMembers(boardId: string, query?: FindBoardMembersQuery) {
+    return this.prisma.member.findMany({
+      where: {
+        boardId: boardId,
+        role: query.role
+      },
+      include: {
+        user: true
+      },
+      take: Number(query.take) || 20,
+      skip: Number(query.skip) || 0
     })
   }
 
