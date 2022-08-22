@@ -151,7 +151,7 @@ describe('BoardController/addMember (e2e)', () => {
     expect(result.statusCode).toBe(400)
   })
 
-  it('/boards/:id/members/:userId (PUT) Should return 400 if it receives an invalid user id', async () => {
+  it('/boards/:id/members/:userId (PUT) Should return 404 if it receives an invalid user id', async () => {
     const id = faker.datatype.uuid()
 
     const ownerUser = await prisma.user.create({
@@ -172,6 +172,14 @@ describe('BoardController/addMember (e2e)', () => {
       }
     })
 
+    await prisma.member.create({
+      data: {
+        userId: ownerUser.id,
+        boardId: board.id,
+        role: BoardRole.ADMIN
+      }
+    })
+
     const token = generateAccessToken(ownerUser)
 
     const result = await app.inject({
@@ -182,11 +190,11 @@ describe('BoardController/addMember (e2e)', () => {
       }
     })
 
-    expect(result.statusCode).toBe(400)
-    expect(result.json().message[0]).toBe('user not found')
+    expect(result.statusCode).toBe(404)
+    expect(result.json().message).toBe('user not found')
   })
 
-  it('/boards/:id/members/:userId (PUT) Should return 400 if it receives an invalid board id', async () => {
+  it('/boards/:id/members/:userId (PUT) Should return 404 if it receives an invalid board id', async () => {
     const id = faker.datatype.uuid()
 
     const user = await prisma.user.create({
@@ -208,8 +216,8 @@ describe('BoardController/addMember (e2e)', () => {
       }
     })
 
-    expect(result.statusCode).toBe(400)
-    expect(result.json().message[0]).toBe('board not found')
+    expect(result.statusCode).toBe(404)
+    expect(result.json().message).toBe('board not found')
   })
 
   it('/boards/:id/members/:userId (PUT) Should return 400 if the user is already a member of the board', async () => {

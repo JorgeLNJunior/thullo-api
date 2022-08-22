@@ -7,6 +7,7 @@ import {
   NestFastifyApplication
 } from '@nestjs/platform-fastify'
 import { Test, TestingModule } from '@nestjs/testing'
+import { BoardRole } from '@prisma/client'
 import { AppModule } from '@src/app.module'
 import { PrismaService } from 'nestjs-prisma'
 import { randomUUID } from 'node:crypto'
@@ -67,6 +68,14 @@ describe('BoardController/delete (e2e)', () => {
       }
     })
 
+    await prisma.member.create({
+      data: {
+        userId: user.id,
+        boardId: board.id,
+        role: BoardRole.ADMIN
+      }
+    })
+
     const token = generateAccessToken(user)
 
     const result = await app.inject({
@@ -81,7 +90,7 @@ describe('BoardController/delete (e2e)', () => {
     expect(result.json().message).toBe('the board has been deleted')
   })
 
-  it('/boards (POST) Should return 400 if it receives an invalid board id', async () => {
+  it('/boards (POST) Should return 404 if it receives an invalid board id', async () => {
     const id = faker.datatype.uuid()
 
     const user = await prisma.user.create({
@@ -103,8 +112,8 @@ describe('BoardController/delete (e2e)', () => {
       }
     })
 
-    expect(result.statusCode).toBe(400)
-    expect(result.json().message[0]).toBe('invalid board id')
+    expect(result.statusCode).toBe(404)
+    expect(result.json().message).toBe('board not found')
   })
 
   it('/boards (POST) Should return 403 if the user do not have delete rights', async () => {
@@ -139,6 +148,13 @@ describe('BoardController/delete (e2e)', () => {
       }
     })
 
+    await prisma.member.create({
+      data: {
+        userId: unauthorizedUser.id,
+        boardId: board.id
+      }
+    })
+
     const token = generateAccessToken(unauthorizedUser)
 
     const result = await app.inject({
@@ -150,6 +166,8 @@ describe('BoardController/delete (e2e)', () => {
     })
 
     expect(result.statusCode).toBe(403)
-    expect(result.json().message).toBe('you do not have delete rights')
+    expect(result.json().message).toBe(
+      'you are not an administrator of this board'
+    )
   })
 })
