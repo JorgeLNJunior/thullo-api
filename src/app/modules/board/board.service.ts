@@ -99,11 +99,6 @@ export class BoardService {
    * @throws `BadRequestException` if it receives an invalid board id.
    */
   async delete(id: string) {
-    const board = await this.prisma.board.findUnique({
-      where: { id: id }
-    })
-    if (!board) throw new BadRequestException(['invalid board id'])
-
     await this.prisma.board.delete({
       where: { id: id }
     })
@@ -138,8 +133,20 @@ export class BoardService {
   async addMember(
     boardId: string,
     userId: string,
-    dto?: AddMemberDto
+    dto: AddMemberDto
   ): Promise<Member> {
+    const isMember = await this.prisma.member.findFirst({
+      where: {
+        boardId: boardId,
+        userId: userId
+      }
+    })
+    if (isMember) {
+      throw new BadRequestException([
+        'this user is already a member of this board'
+      ])
+    }
+
     return this.prisma.member.create({
       data: {
         boardId: boardId,
@@ -155,6 +162,18 @@ export class BoardService {
    * @param userId The id of the User to be removed from the Board.
    */
   async removeMember(boardId: string, userId: string) {
+    const isMember = await this.prisma.member.findFirst({
+      where: {
+        boardId: boardId,
+        userId: userId
+      }
+    })
+    if (!isMember) {
+      throw new BadRequestException([
+        'this user is is not a member of this board'
+      ])
+    }
+
     await this.prisma.member.deleteMany({
       where: {
         boardId: boardId,
@@ -169,12 +188,25 @@ export class BoardService {
    * @param userId The id of the user.
    * @param dto The needed data to update the role.
    * @returns The updated `Member` object.
+   * @throws `BadRequestException`
    */
   async updateMemberRole(
     boardId: string,
     userId: string,
     dto: UpdateMemberRoleDto
   ): Promise<Member> {
+    const isMember = await this.prisma.member.findFirst({
+      where: {
+        boardId: boardId,
+        userId: userId
+      }
+    })
+    if (!isMember) {
+      throw new BadRequestException([
+        'this user is is not a member of this board'
+      ])
+    }
+
     await this.prisma.member.updateMany({
       where: {
         boardId: boardId,

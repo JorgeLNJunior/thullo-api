@@ -17,6 +17,7 @@ export class IsBoardAdminGuard implements CanActivate {
     const autenticatedUserId = request.user.id
     const boardIdParam = request.params.id
 
+    // Board validation
     const board = await this.prisma.board.findUnique({
       where: { id: boardIdParam }
     })

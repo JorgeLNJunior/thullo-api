@@ -1,4 +1,5 @@
 import { JwtAuthGuard } from '@modules/auth/guards/JwtAuth.guard'
+import { IsValidUserPipe } from '@modules/user/pipes/isValidUser.pipe'
 import {
   Body,
   Controller,
@@ -39,10 +40,8 @@ import { AddMemberDto } from './dto/addMember.dto'
 import { CreateBoardDto } from './dto/createBoard.dto'
 import { UpdateBoardDto } from './dto/update-board.dto'
 import { UpdateMemberRoleDto } from './dto/updateRole.dto'
-import { CanAddMembersGuard } from './guards/canAddMembers.guard'
-import { CanDeleteBoardGuard } from './guards/canDeleteBoard.guard'
-import { CanRemoveMembersGuard } from './guards/canRemoveMembers.guard'
 import { IsBoardAdminGuard } from './guards/isBoardAdmin.guard'
+import { IsValidBoardPipe } from './pipes/isValidBoard.pipe'
 import { FindBoardMembersQuery } from './query/findBoardMembers.query'
 import { FindBoardsQuery } from './query/findBoards.query'
 
@@ -93,9 +92,9 @@ export class BoardController {
   @ApiOperation({ summary: 'Update a board' })
   @ApiOkResponse({ description: 'Deleted', type: BoardEntity })
   @ApiForbiddenResponse({ description: 'Forbidden', type: ForbiddenResponse })
-  @ApiBadRequestResponse({
-    description: 'Invalid board id',
-    type: BadRequestResponse
+  @ApiNotFoundResponse({
+    description: 'Board not found',
+    type: NotFoundResponse
   })
   @UseGuards(IsBoardAdminGuard)
   @Patch(':id')
@@ -106,11 +105,11 @@ export class BoardController {
   @ApiOperation({ summary: 'Delete a board' })
   @ApiOkResponse({ description: 'Deleted', type: DeleteBoardResponse })
   @ApiForbiddenResponse({ description: 'Forbidden', type: ForbiddenResponse })
-  @ApiBadRequestResponse({
-    description: 'Invalid board id',
-    type: BadRequestResponse
+  @ApiNotFoundResponse({
+    description: 'Board not found',
+    type: NotFoundResponse
   })
-  @UseGuards(CanDeleteBoardGuard)
+  @UseGuards(IsBoardAdminGuard)
   @Delete(':id')
   async delete(@Param('id') id: string) {
     await this.boardService.delete(id)
@@ -129,9 +128,13 @@ export class BoardController {
     description: 'Invalid params',
     type: BadRequestResponse
   })
+  @ApiNotFoundResponse({
+    description: 'Board not found',
+    type: NotFoundResponse
+  })
   @Get(':id/members')
   async findMembers(
-    @Param(':id') id: string,
+    @Param(':id', IsValidBoardPipe) id: string,
     @Query() query?: FindBoardMembersQuery
   ) {
     return this.boardService.findMembers(id, query)
@@ -140,17 +143,21 @@ export class BoardController {
   @ApiOperation({ summary: 'Add a member to a board' })
   @ApiBody({ type: AddMemberDto, required: false })
   @ApiOkResponse({ description: 'Member added', type: MemberEntity })
+  @ApiForbiddenResponse({ description: 'Forbidden', type: ForbiddenResponse })
+  @ApiNotFoundResponse({
+    description: 'Board or user not found',
+    type: NotFoundResponse
+  })
   @ApiBadRequestResponse({
-    description: 'Invalid params',
+    description: 'Validation error',
     type: BadRequestResponse
   })
-  @ApiForbiddenResponse({ description: 'Forbidden', type: ForbiddenResponse })
-  @UseGuards(CanAddMembersGuard)
+  @UseGuards(IsBoardAdminGuard)
   @Put(':id/members/:userId')
   async addMember(
     @Param('id') boardId: string,
-    @Param('userId') userId: string,
-    @Body() dto?: AddMemberDto
+    @Param('userId', IsValidUserPipe) userId: string,
+    @Body() dto: AddMemberDto
   ) {
     return this.boardService.addMember(boardId, userId, dto)
   }
@@ -158,11 +165,15 @@ export class BoardController {
   @ApiOperation({ summary: 'Remove a member from a board' })
   @ApiOkResponse({ description: 'Member removed', type: RemoveMemberResponse })
   @ApiBadRequestResponse({
-    description: 'Invalid params',
+    description: 'Invalid userId param',
     type: BadRequestResponse
   })
   @ApiForbiddenResponse({ description: 'Forbidden', type: ForbiddenResponse })
-  @UseGuards(CanRemoveMembersGuard)
+  @ApiNotFoundResponse({
+    description: 'Board not found',
+    type: NotFoundResponse
+  })
+  @UseGuards(IsBoardAdminGuard)
   @Delete(':id/members/:userId')
   async removeMember(
     @Param('id') boardId: string,
@@ -180,11 +191,15 @@ export class BoardController {
     type: MemberEntity
   })
   @ApiBadRequestResponse({
-    description: 'Invalid params',
+    description: 'Invalid userId param',
     type: BadRequestResponse
   })
   @ApiForbiddenResponse({ description: 'Forbidden', type: ForbiddenResponse })
-  @UseGuards(CanRemoveMembersGuard) // using it to prevent code duplication
+  @ApiNotFoundResponse({
+    description: 'Board not found',
+    type: NotFoundResponse
+  })
+  @UseGuards(IsBoardAdminGuard)
   @Put(':id/members/:userId/roles')
   async updateMemberRole(
     @Param('id') boardId: string,
