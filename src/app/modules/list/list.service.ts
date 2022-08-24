@@ -40,13 +40,16 @@ export class ListService {
     })
   }
 
-  // findAll() {
-  //   return `This action returns all list`
-  // }
-
-  // findOne(id: number) {
-  //   return `This action returns a #${id} list`
-  // }
+  /**
+   * Find all the lists of a board.
+   * @param boardId The id of the board.
+   * @returns A list of `List`
+   */
+  findBoardLists(boardId: string) {
+    return this.prisma.list.findMany({
+      where: { boardId: boardId }
+    })
+  }
 
   // update(id: number, updateListDto: UpdateListDto) {
   //   return `This action updates a #${id} list`
