@@ -13,7 +13,8 @@
     "paths": {
       "@modules/*": ["src/app/modules/*"],
       "@services/*": ["src/app/services/*"],
-      "@src/*": ["src/*"]
+      "@src/*": ["src/*"],
+      "@test/*": ["test/*"]
     },
     "incremental": true,
     "skipLibCheck": true,

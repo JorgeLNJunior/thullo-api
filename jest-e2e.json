@@ -9,7 +9,8 @@
     "moduleNameMapper": {
       "@modules/(.*)": "<rootDir>/src/app/modules/$1",
       "@services/(.*)": "<rootDir>/src/app/services/$1",
-      "@src/(.*)": "<rootDir>/src/$1"
+      "@src/(.*)": "<rootDir>/src/$1",
+      "@test/(.*)": "<rootDir>/test/$1"
     },
     "verbose": true,
     "coverageDirectory": "./coverage",
