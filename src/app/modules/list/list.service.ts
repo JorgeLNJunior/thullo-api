@@ -113,7 +113,13 @@ export class ListService {
     })
   }
 
-  // remove(id: number) {
-  //   return `This action removes a #${id} list`
-  // }
+  /**
+   * Delete a list
+   * @param listId The id of the list
+   */
+  async delete(listId: string) {
+    await this.prisma.list.delete({
+      where: { id: listId }
+    })
+  }
 }

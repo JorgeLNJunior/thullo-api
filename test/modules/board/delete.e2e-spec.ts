@@ -45,7 +45,7 @@ describe('BoardController/delete (e2e)', () => {
     await app.close()
   })
 
-  it('/boards (POST) Should delete a board', async () => {
+  it('/boards (DELETE) Should delete a board', async () => {
     const data: CreateBoardDto = {
       title: faker.lorem.words(2),
       description: faker.lorem.sentence()
@@ -90,7 +90,7 @@ describe('BoardController/delete (e2e)', () => {
     expect(result.json().message).toBe('the board has been deleted')
   })
 
-  it('/boards (POST) Should return 404 if it receives an invalid board id', async () => {
+  it('/boards (DELETE) Should return 404 if it receives an invalid board id', async () => {
     const id = faker.datatype.uuid()
 
     const user = await prisma.user.create({
@@ -116,7 +116,7 @@ describe('BoardController/delete (e2e)', () => {
     expect(result.json().message).toBe('board not found')
   })
 
-  it('/boards (POST) Should return 403 if the user do not have delete rights', async () => {
+  it('/boards (DELETE) Should return 403 if the user do not have delete rights', async () => {
     const data: CreateBoardDto = {
       title: faker.lorem.words(2),
       description: faker.lorem.sentence()
