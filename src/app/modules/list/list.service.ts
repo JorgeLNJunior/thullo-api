@@ -41,11 +41,26 @@ export class ListService {
   }
 
   /**
+   * Find a list by id.
+   * @param listId The id of the list
+   * @returns A `List` object.
+   * @throws `NotFoundException`
+   */
+  async findById(listId: string): Promise<List> {
+    const list = await this.prisma.list.findUnique({
+      where: { id: listId }
+    })
+    if (!list) throw new NotFoundException('list not found')
+
+    return list
+  }
+
+  /**
    * Find all the lists of a board.
    * @param boardId The id of the board.
    * @returns A list of `List`
    */
-  findBoardLists(boardId: string) {
+  findBoardLists(boardId: string): Promise<List[]> {
     return this.prisma.list.findMany({
       where: { boardId: boardId }
     })
@@ -58,7 +73,11 @@ export class ListService {
    * @param dto The data to be updated
    * @returns A `List`object.
    */
-  async update(boardId: string, listId: string, dto: UpdateListDto) {
+  async update(
+    boardId: string,
+    listId: string,
+    dto: UpdateListDto
+  ): Promise<List> {
     const board = await this.prisma.board.findUnique({
       where: { id: boardId },
       include: { lists: true }
@@ -117,7 +136,7 @@ export class ListService {
    * Delete a list
    * @param listId The id of the list
    */
-  async delete(listId: string) {
+  async delete(listId: string): Promise<void> {
     await this.prisma.list.delete({
       where: { id: listId }
     })
