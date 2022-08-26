@@ -1,6 +1,7 @@
 import { JwtAuthGuard } from '@modules/auth/guards/JwtAuth.guard'
 import { IsBoardMemberGuard } from '@modules/board/guards/isBoardMember.guard'
 import { IsValidBoardPipe } from '@modules/board/pipes/isValidBoard.pipe'
+import { DeleteListResponse } from '@modules/list/docs/deleteList.response'
 import { ListEntity } from '@modules/list/docs/list.entity'
 import { CreateListDto } from '@modules/list/dto/createList.dto'
 import { UpdateListDto } from '@modules/list/dto/updateList.dto'
@@ -9,6 +10,7 @@ import { IsValidListPipe } from '@modules/list/pipes/isValidList.pipe'
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -19,6 +21,7 @@ import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiCreatedResponse,
+  ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -26,6 +29,7 @@ import {
   ApiUnauthorizedResponse
 } from '@nestjs/swagger'
 import { BadRequestResponse } from '@src/app/docs/BadRequest.reponse'
+import { ForbiddenResponse } from '@src/app/docs/Forbidden.response'
 import { NotFoundResponse } from '@src/app/docs/NotFound.response'
 import { UnauthorizedResponse } from '@src/app/docs/Unauthorized.response'
 
@@ -81,5 +85,21 @@ export class BoardListController {
     @Body() dto: UpdateListDto
   ) {
     return this.listService.update(boardId, listId, dto)
+  }
+
+  @ApiOperation({ summary: 'Delete a list' })
+  @ApiOkResponse({ description: 'Deleted', type: DeleteListResponse })
+  @ApiForbiddenResponse({ description: 'Forbidden', type: ForbiddenResponse })
+  @ApiNotFoundResponse({
+    description: 'List not found',
+    type: NotFoundResponse
+  })
+  @UseGuards(IsBoardMemberGuard)
+  @Delete(':listId')
+  async remove(@Param('listId', IsValidListPipe) listId: string) {
+    await this.listService.delete(listId)
+    return {
+      message: 'the list has been deleted'
+    }
   }
 }
