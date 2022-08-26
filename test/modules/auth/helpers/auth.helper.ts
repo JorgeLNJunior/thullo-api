@@ -1,10 +1,9 @@
 import { JwtService } from '@nestjs/jwt'
 import { User } from '@prisma/client'
-
 import {
   JWT_ACCESS_TOKEN_SECRET,
   JWT_REFRESH_TOKEN_SECRET
-} from '../config/envVars'
+} from '@test/config/envVars'
 
 export function generateAccessToken(user: User) {
   return new JwtService({

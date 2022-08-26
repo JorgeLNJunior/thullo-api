@@ -14,8 +14,8 @@ import { AppModule } from '@src/app.module'
 import { PrismaService } from 'nestjs-prisma'
 import { randomUUID } from 'node:crypto'
 
-import { generateAccessToken } from '../../helpers/auth.helper'
 import { UnsplashServiceMock } from '../../mocks/unsplash.service.mock'
+import { generateAccessToken } from '../auth/helpers/auth.helper'
 
 describe('BoardController/update (e2e)', () => {
   let app: NestFastifyApplication

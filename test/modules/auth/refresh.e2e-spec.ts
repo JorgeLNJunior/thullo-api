@@ -12,7 +12,7 @@ import { AppModule } from '@src/app.module'
 import { PrismaService } from 'nestjs-prisma'
 import { randomUUID } from 'node:crypto'
 
-import { generateRefreshToken } from '../../helpers/auth.helper'
+import { generateRefreshToken } from './helpers/auth.helper'
 
 describe('AuthController/refresh (e2e)', () => {
   let app: NestFastifyApplication

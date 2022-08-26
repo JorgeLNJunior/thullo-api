@@ -7,15 +7,15 @@ import {
 } from '@nestjs/platform-fastify'
 import { Test, TestingModule } from '@nestjs/testing'
 import { AppModule } from '@src/app.module'
-import { BoardBuilder } from '@test/builders/board.builder'
-import { ListBuilder } from '@test/builders/list.builder'
-import { MemberBuilder } from '@test/builders/member.builder'
-import { UserBuilder } from '@test/builders/user.builder'
+import { BoardBuilder } from '@test/modules/board/builder/board.builder'
+import { ListBuilder } from '@test/modules/list/builder/list.builder'
+import { MemberBuilder } from '@test/modules/member/builder/member.builder'
+import { UserBuilder } from '@test/modules/user/builder/user.builder'
 import { PrismaService } from 'nestjs-prisma'
 
-import { generateAccessToken } from '../../helpers/auth.helper'
+import { generateAccessToken } from '../auth/helpers/auth.helper'
 
-describe('ListController/findBoardLists (e2e)', () => {
+describe('BoardListController/findBoardLists (e2e)', () => {
   let app: NestFastifyApplication
   let prisma: PrismaService
 

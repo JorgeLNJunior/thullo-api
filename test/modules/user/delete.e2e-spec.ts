@@ -11,7 +11,7 @@ import { AppModule } from '@src/app.module'
 import { PrismaService } from 'nestjs-prisma'
 import { randomUUID } from 'node:crypto'
 
-import { generateAccessToken } from '../../helpers/auth.helper'
+import { generateAccessToken } from '../auth/helpers/auth.helper'
 
 describe('UserController/remove (e2e)', () => {
   let app: NestFastifyApplication
