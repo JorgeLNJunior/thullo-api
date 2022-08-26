@@ -80,4 +80,33 @@ describe('ListController/update (e2e)', () => {
     expect(result.statusCode).toBe(200)
     expect(result.json()).toMatchObject(ListEntity.prototype)
   })
+
+  it('/boards/:boardId/lists (PATCH) Should return 403 if the user is not a member of the board', async () => {
+    const body: UpdateListDto = {
+      title: faker.lorem.word(),
+      position: 0
+    }
+
+    const user = await new UserBuilder().persist(prisma)
+    const board = await new BoardBuilder().setOwner(user.id).persist(prisma)
+    await new ListBuilder().setBoard(board.id).persist(prisma)
+    const list = await new ListBuilder()
+      .setBoard(board.id)
+      .setPosition(1)
+      .persist(prisma)
+
+    const token = generateAccessToken(user)
+
+    const result = await app.inject({
+      method: 'PATCH',
+      path: `/boards/${board.id}/lists/${list.id}`,
+      payload: body,
+      headers: {
+        authorization: `Bearer ${token}`
+      }
+    })
+
+    expect(result.statusCode).toBe(403)
+    expect(result.json().message).toBe('you are not a member of this board')
+  })
 })

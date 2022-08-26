@@ -122,4 +122,27 @@ describe('ListController/create (e2e)', () => {
 
     expect(result.statusCode).toBe(400)
   })
+
+  it('/boards/:boardId/lists (POST) Should return 403 if the user is not a board member', async () => {
+    const body: CreateListDto = {
+      title: faker.lorem.word()
+    }
+
+    const user = await new UserBuilder().persist(prisma)
+    const board = await new BoardBuilder().setOwner(user.id).persist(prisma)
+
+    const token = generateAccessToken(user)
+
+    const result = await app.inject({
+      method: 'POST',
+      path: `/boards/${board.id}/lists`,
+      payload: body,
+      headers: {
+        authorization: `Bearer ${token}`
+      }
+    })
+
+    expect(result.statusCode).toBe(403)
+    expect(result.json().message).toBe('you are not a member of this board')
+  })
 })
