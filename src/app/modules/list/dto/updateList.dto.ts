@@ -1,5 +1,14 @@
-import { PartialType } from '@nestjs/swagger'
+import { IsInt, IsOptional, MaxLength } from '@nestjs/class-validator'
+import { ApiProperty } from '@nestjs/swagger'
 
-import { CreateListDto } from './createList.dto'
+export class UpdateListDto {
+  @ApiProperty({ maxLength: 30 })
+  @MaxLength(30)
+  @IsOptional()
+  title: string
 
-export class UpdateListDto extends PartialType(CreateListDto) {}
+  @ApiProperty({ minimum: 0 })
+  @IsInt()
+  @IsOptional()
+  position: number
+}

@@ -7,7 +7,7 @@ export class ListBuilder {
   private list: List = {
     id: randomUUID(),
     title: faker.lorem.word(),
-    position: 1,
+    position: 0,
     boardId: randomUUID(),
     createdAt: new Date(),
     updatedAt: new Date()
@@ -27,6 +27,15 @@ export class ListBuilder {
    */
   setBoard(id: string): ListBuilder {
     this.list.boardId = id
+    return this
+  }
+
+  /**
+   * Set the position of the list.
+   * @param position The position of the list.
+   */
+  setPosition(position: number): ListBuilder {
+    this.list.position = position
     return this
   }
 

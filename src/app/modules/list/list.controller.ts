@@ -1,6 +1,14 @@
 import { JwtAuthGuard } from '@modules/auth/guards/JwtAuth.guard'
 import { IsValidBoardPipe } from '@modules/board/pipes/isValidBoard.pipe'
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards
+} from '@nestjs/common'
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -17,7 +25,9 @@ import { UnauthorizedResponse } from '@src/app/docs/Unauthorized.response'
 
 import { ListEntity } from './docs/list.entity'
 import { CreateListDto } from './dto/createList.dto'
+import { UpdateListDto } from './dto/updateList.dto'
 import { ListService } from './list.service'
+import { IsValidListPipe } from './pipes/isValidList.pipe'
 
 @ApiTags('Boards', 'Lists')
 @ApiBearerAuth()
@@ -59,10 +69,20 @@ export class ListController {
     return this.listService.findBoardLists(boardId)
   }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateListDto: UpdateListDto) {
-  //   return this.listService.update(+id, updateListDto)
-  // }
+  @ApiOperation({ summary: 'Update a board list' })
+  @ApiOkResponse({ description: 'Updated', type: ListEntity })
+  @ApiNotFoundResponse({
+    description: 'Board not or list found',
+    type: NotFoundResponse
+  })
+  @Patch(':listId')
+  update(
+    @Param('boardId', IsValidBoardPipe) boardId: string,
+    @Param('listId', IsValidListPipe) listId: string,
+    @Body() dto: UpdateListDto
+  ) {
+    return this.listService.update(boardId, listId, dto)
+  }
 
   // @Delete(':id')
   // remove(@Param('id') id: string) {
