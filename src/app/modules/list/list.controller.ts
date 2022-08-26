@@ -1,5 +1,6 @@
 import { JwtAuthGuard } from '@modules/auth/guards/JwtAuth.guard'
 import { IsValidBoardPipe } from '@modules/board/pipes/isValidBoard.pipe'
+import { IsBoardMemberGuard } from '@modules/list/guards/isBoardMember.guard'
 import {
   Body,
   Controller,
@@ -50,11 +51,9 @@ export class ListController {
     description: 'Board not found',
     type: NotFoundResponse
   })
+  @UseGuards(IsBoardMemberGuard)
   @Post()
-  create(
-    @Param('boardId', IsValidBoardPipe) boardId: string,
-    @Body() dto: CreateListDto
-  ) {
+  create(@Param('boardId') boardId: string, @Body() dto: CreateListDto) {
     return this.listService.create(boardId, dto)
   }
 
@@ -75,9 +74,10 @@ export class ListController {
     description: 'Board not or list found',
     type: NotFoundResponse
   })
+  @UseGuards(IsBoardMemberGuard)
   @Patch(':listId')
   update(
-    @Param('boardId', IsValidBoardPipe) boardId: string,
+    @Param('boardId') boardId: string,
     @Param('listId', IsValidListPipe) listId: string,
     @Body() dto: UpdateListDto
   ) {
