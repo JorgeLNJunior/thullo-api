@@ -39,19 +39,13 @@ export class CardService {
     })
   }
 
-  // findAll() {
-  //   return `This action returns all card`
-  // }
-
-  // findOne(id: string) {
-  //   return `This action returns a #${id} card`
-  // }
-
-  // update(id: string, updateCardDto: UpdateCardDto) {
-  //   return `This action updates a #${id} card`
-  // }
-
-  // remove(id: string) {
-  //   return `This action removes a #${id} card`
-  // }
+  /**
+   * Delete a card.
+   * @param cardId The id of the card
+   */
+  async delete(cardId: string) {
+    await this.prisma.card.delete({
+      where: { id: cardId }
+    })
+  }
 }
