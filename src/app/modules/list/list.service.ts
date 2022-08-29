@@ -159,4 +159,10 @@ export class ListService {
     if (board) return board
     return null
   }
+
+  async findCards(listId: string) {
+    return this.prisma.card.findMany({
+      where: { listId: listId }
+    })
+  }
 }

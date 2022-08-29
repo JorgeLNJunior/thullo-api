@@ -7,6 +7,7 @@ import {
   Body,
   Controller,
   ForbiddenException,
+  Get,
   Param,
   Post,
   Request,
@@ -18,6 +19,7 @@ import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
+  ApiOkResponse,
   ApiOperation,
   ApiTags,
   ApiUnauthorizedResponse
@@ -73,6 +75,35 @@ export class ListCardController {
     }
 
     return this.cardService.create(listId, createCardDto)
+  }
+
+  @ApiOperation({ summary: 'Find all cards from a list' })
+  @ApiOkResponse({
+    description: 'Created',
+    type: CardEntity,
+    isArray: true
+  })
+  @ApiNotFoundResponse({
+    description: 'List not found',
+    type: NotFoundResponse
+  })
+  @ApiForbiddenResponse({ description: 'Forbidden', type: ForbiddenResponse })
+  @Get()
+  async findCardsByListId(
+    @Param('listId', IsValidListPipe) listId: string,
+    @Request() req
+  ) {
+    const board = await this.listService.findBoardByListId(listId)
+
+    const isBoardMember = await this.memberService.isBoardMember(
+      req.user.id,
+      board.id
+    )
+    if (!isBoardMember) {
+      throw new ForbiddenException('you are not a member of this board')
+    }
+
+    return this.listService.findCards(listId)
   }
 
   // @Get()
