@@ -65,6 +65,18 @@ model List {
   position  Int
   boardId   String
   board     Board    @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  cards     Card[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Card {
+  id          String   @id @default(uuid())
+  title       String   @db.VarChar(30)
+  description String?   @db.VarChar(1500)
+  position    Int
+  listId      String
+  list        List     @relation(fields: [listId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

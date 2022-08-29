@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
-import { List } from '@prisma/client'
+import { Board, List } from '@prisma/client'
 import { PrismaService } from 'nestjs-prisma'
 
 import { CreateListDto } from './dto/createList.dto'
@@ -140,5 +140,23 @@ export class ListService {
     await this.prisma.list.delete({
       where: { id: listId }
     })
+  }
+
+  /**
+   * Find a board by the id of a list.
+   * @param listId The id of the list.
+   * @returns a `Board` object.
+   */
+  async findBoardByListId(listId: string): Promise<Board | null> {
+    const list = await this.prisma.list.findUnique({
+      where: { id: listId }
+    })
+
+    const board = await this.prisma.board.findUnique({
+      where: { id: list.boardId }
+    })
+
+    if (board) return board
+    return null
   }
 }
