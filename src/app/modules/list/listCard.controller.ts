@@ -3,6 +3,7 @@ import { CardService } from '@modules/card/card.service'
 import { CardEntity } from '@modules/card/docs/card.entity'
 import { DeleteCardResponse } from '@modules/card/docs/delete.response'
 import { CreateCardDto } from '@modules/card/dto/createCard.dto'
+import { UpdateCardDto } from '@modules/card/dto/updateCard.dto'
 import { IsValidCardPipe } from '@modules/card/pipes/isValidCard.pipe'
 import { MemberService } from '@modules/member/member.service'
 import {
@@ -12,6 +13,7 @@ import {
   ForbiddenException,
   Get,
   Param,
+  Patch,
   Post,
   Request,
   UseGuards
@@ -109,6 +111,40 @@ export class ListCardController {
     return this.listService.findCards(listId)
   }
 
+  @ApiOperation({ summary: 'Update a card' })
+  @ApiOkResponse({
+    description: 'Updated',
+    type: CardEntity
+  })
+  @ApiNotFoundResponse({
+    description: 'List not found',
+    type: NotFoundResponse
+  })
+  @ApiForbiddenResponse({ description: 'Forbidden', type: ForbiddenResponse })
+  @Patch(':cardId')
+  async update(
+    @Param('listId', IsValidListPipe) listId: string,
+    @Param('cardId', IsValidCardPipe) cardId: string,
+    @Body() dto: UpdateCardDto,
+    @Request() req
+  ) {
+    const board = await this.listService.findBoardByListId(listId)
+
+    const isBoardMember = await this.memberService.isBoardMember(
+      req.user.id,
+      board.id
+    )
+    if (!isBoardMember) {
+      throw new ForbiddenException('you are not a member of this board')
+    }
+
+    await this.cardService.update(cardId, dto)
+
+    return {
+      message: 'the card has been deleted'
+    }
+  }
+
   @ApiOperation({ summary: 'Delete a card' })
   @ApiOkResponse({
     description: 'Delted',
@@ -141,24 +177,4 @@ export class ListCardController {
       message: 'the card has been deleted'
     }
   }
-
-  // @Get()
-  // findAll() {
-  //   return this.cardService.findAll()
-  // }
-
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.cardService.findOne(+id)
-  // }
-
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateCardDto: UpdateCardDto) {
-  //   return this.cardService.update(+id, updateCardDto)
-  // }
-
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.cardService.remove(+id)
-  // }
 }
