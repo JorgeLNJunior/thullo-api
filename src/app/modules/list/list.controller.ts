@@ -4,6 +4,7 @@ import {
   ApiBearerAuth,
   ApiNotFoundResponse,
   ApiOkResponse,
+  ApiOperation,
   ApiTags,
   ApiUnauthorizedResponse
 } from '@nestjs/swagger'
@@ -24,6 +25,7 @@ import { ListService } from './list.service'
 export class ListController {
   constructor(private readonly listService: ListService) {}
 
+  @ApiOperation({ summary: 'Find a list' })
   @ApiOkResponse({ description: 'OK', type: ListEntity })
   @ApiNotFoundResponse({
     description: 'List not found',
