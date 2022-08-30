@@ -16,7 +16,7 @@ import { generateAccessToken } from '../auth/helpers/auth.helper'
 import { ListBuilder } from '../list/builder/list.builder'
 import { CardBuilder } from './builder/card.builder'
 
-describe('ListCardController/findCardsByListId (e2e)', () => {
+describe('CardController/findCardsByListId (e2e)', () => {
   let app: NestFastifyApplication
   let prisma: PrismaService
 

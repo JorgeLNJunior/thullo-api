@@ -17,7 +17,7 @@ import { PrismaService } from 'nestjs-prisma'
 import { generateAccessToken } from '../auth/helpers/auth.helper'
 import { ListBuilder } from '../list/builder/list.builder'
 
-describe('ListCardController/create (e2e)', () => {
+describe('CardController/create (e2e)', () => {
   let app: NestFastifyApplication
   let prisma: PrismaService
 
