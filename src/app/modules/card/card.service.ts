@@ -41,12 +41,23 @@ export class CardService {
   }
 
   /**
+   * Find a card by id.
+   * @param cardId The if of the card
+   * @returns A `Card` object.
+   */
+  async findById(cardId: string): Promise<Card> {
+    return this.prisma.card.findUnique({
+      where: { id: cardId }
+    })
+  }
+
+  /**
    * Update a card.
    * @param cardId The if of the card.
    * @param dto The data to be updated.
    * @returns A `Card` object.
    */
-  async update(cardId: string, dto: UpdateCardDto) {
+  async update(cardId: string, dto: UpdateCardDto): Promise<Card> {
     const card = await this.prisma.card.findUnique({
       where: { id: cardId }
     })
@@ -106,7 +117,7 @@ export class CardService {
    * Delete a card.
    * @param cardId The id of the card
    */
-  async delete(cardId: string) {
+  async delete(cardId: string): Promise<void> {
     await this.prisma.card.delete({
       where: { id: cardId }
     })

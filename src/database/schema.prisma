@@ -26,6 +26,7 @@ model User {
   tokens       RefreshToken[]
   boards       Board[]
   memberIn     Member[]
+  comments     Comment[]
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
 }
@@ -77,6 +78,18 @@ model Card {
   position    Int
   listId      String
   list        List     @relation(fields: [listId], references: [id], onDelete: Cascade)
+  comments    Comment[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Comment {
+  id          String   @id @default(uuid())
+  content     String   @db.VarChar(500)
+  userId      String
+  cardId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  card        Card     @relation(fields: [cardId], references: [id], onDelete: Cascade)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }

@@ -4,6 +4,7 @@ import { Module } from '@nestjs/common'
 
 import { BoardModule } from './app/modules/board/board.module'
 import { CardModule } from './app/modules/card/card.module'
+import { CommentModule } from './app/modules/comment/comment.module'
 import { ListModule } from './app/modules/list/list.module'
 import { ConfigModule } from './modules/config.module'
 import { PrismaModule } from './modules/prisma.module'
@@ -18,7 +19,8 @@ import { RateLimitModule } from './modules/rateLimit.module'
     UserModule,
     BoardModule,
     ListModule,
-    CardModule
+    CardModule,
+    CommentModule
   ]
 })
 export class AppModule {}
