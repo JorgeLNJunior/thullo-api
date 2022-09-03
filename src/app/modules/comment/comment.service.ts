@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common'
-import { Comment } from '@prisma/client'
+import { Card, Comment } from '@prisma/client'
 import { PrismaService } from 'nestjs-prisma'
 
 import { CreateCommentDto } from './dto/createComment.dto'
+import { CommentByCardIdQuery } from './query/commentByCardId.query'
 
 @Injectable()
 export class CommentService {
@@ -26,6 +27,23 @@ export class CommentService {
         userId: userId,
         ...dto
       }
+    })
+  }
+
+  /**
+   * Find comments by the id of the card.
+   * @param cardId The id of the card.
+   * @param query Query params.
+   * @returns A list of `Comment`
+   */
+  findByCardId(
+    cardId: string,
+    query?: CommentByCardIdQuery
+  ): Promise<Comment[]> {
+    return this.prisma.comment.findMany({
+      where: { cardId: cardId, userId: query.userId },
+      take: Number(query.take) || 20,
+      skip: Number(query.skip) || 0
     })
   }
 

@@ -7,9 +7,11 @@ import {
   Body,
   Controller,
   ForbiddenException,
+  Get,
   NotFoundException,
   Param,
   Post,
+  Query,
   Request,
   UseGuards
 } from '@nestjs/common'
@@ -31,6 +33,7 @@ import { UnauthorizedResponse } from '@src/app/docs/Unauthorized.response'
 import { CommentService } from './comment.service'
 import { CommentEntity } from './docs/comment.entity'
 import { CreateCommentDto } from './dto/createComment.dto'
+import { CommentByCardIdQuery } from './query/commentByCardId.query'
 
 @ApiTags('Cards', 'Comments')
 @ApiBearerAuth()
@@ -56,7 +59,7 @@ export class CommentController {
     type: BadRequestResponse
   })
   @ApiNotFoundResponse({
-    description: 'List not found',
+    description: 'Card not found',
     type: NotFoundResponse
   })
   @ApiForbiddenResponse({ description: 'Forbidden', type: ForbiddenResponse })
@@ -81,6 +84,40 @@ export class CommentController {
     }
 
     return this.commentService.create(cardId, req.user.id, dto)
+  }
+
+  @ApiOperation({ summary: 'Find comments by card id' })
+  @ApiCreatedResponse({ description: 'OK', type: CommentEntity, isArray: true })
+  @ApiBadRequestResponse({
+    description: 'Validation error',
+    type: BadRequestResponse
+  })
+  @ApiNotFoundResponse({
+    description: 'Card not found',
+    type: NotFoundResponse
+  })
+  @ApiForbiddenResponse({ description: 'Forbidden', type: ForbiddenResponse })
+  @Get()
+  async findByCardId(
+    @Param('cardId') cardId: string,
+    @Query() query: CommentByCardIdQuery,
+    @Request() req
+  ) {
+    const card = await this.cardService.findById(cardId)
+    if (!card) throw new NotFoundException('card not found')
+
+    const list = await this.listService.findById(card.listId)
+    const board = await this.boardService.findById(list.boardId)
+
+    const isBoardMember = await this.memberService.isBoardMember(
+      req.user.id,
+      board.id
+    )
+    if (!isBoardMember) {
+      throw new ForbiddenException('you are not a member of this board')
+    }
+
+    return this.commentService.findByCardId(cardId, query)
   }
 
   // @Get()
