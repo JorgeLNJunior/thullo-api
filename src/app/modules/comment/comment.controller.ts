@@ -10,6 +10,7 @@ import {
   Get,
   NotFoundException,
   Param,
+  Patch,
   Post,
   Query,
   Request,
@@ -33,6 +34,7 @@ import { UnauthorizedResponse } from '@src/app/docs/Unauthorized.response'
 import { CommentService } from './comment.service'
 import { CommentEntity } from './docs/comment.entity'
 import { CreateCommentDto } from './dto/createComment.dto'
+import { UpdateCommentDto } from './dto/updateComment.dto'
 import { CommentByCardIdQuery } from './query/commentByCardId.query'
 
 @ApiTags('Cards', 'Comments')
@@ -118,6 +120,49 @@ export class CommentController {
     }
 
     return this.commentService.findByCardId(cardId, query)
+  }
+
+  @ApiOperation({ summary: 'Update a comment' })
+  @ApiCreatedResponse({ description: 'OK', type: CommentEntity })
+  @ApiBadRequestResponse({
+    description: 'Validation error',
+    type: BadRequestResponse
+  })
+  @ApiNotFoundResponse({
+    description: 'Card not found',
+    type: NotFoundResponse
+  })
+  @ApiForbiddenResponse({ description: 'Forbidden', type: ForbiddenResponse })
+  @Patch(':commentId')
+  async update(
+    @Param('cardId') cardId: string,
+    @Param('commentId') commentId: string,
+    @Body() dto: UpdateCommentDto,
+    @Request() req
+  ) {
+    const card = await this.cardService.findById(cardId)
+    if (!card) throw new NotFoundException('card not found')
+
+    const list = await this.listService.findById(card.listId)
+    const board = await this.boardService.findById(list.boardId)
+
+    const isBoardMember = await this.memberService.isBoardMember(
+      req.user.id,
+      board.id
+    )
+    if (!isBoardMember) {
+      throw new ForbiddenException('you are not a member of this board')
+    }
+
+    const isCommentAuthor = await this.commentService.isCommentAuthor(
+      commentId,
+      req.user.id
+    )
+    if (!isCommentAuthor) {
+      throw new ForbiddenException('you are not the comment author')
+    }
+
+    return this.commentService.update(commentId, dto)
   }
 
   // @Get()
