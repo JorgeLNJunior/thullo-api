@@ -6,6 +6,7 @@ import { MemberService } from '@modules/member/member.service'
 import {
   Body,
   Controller,
+  Delete,
   ForbiddenException,
   Get,
   NotFoundException,
@@ -33,6 +34,7 @@ import { UnauthorizedResponse } from '@src/app/docs/Unauthorized.response'
 
 import { CommentService } from './comment.service'
 import { CommentEntity } from './docs/comment.entity'
+import { DeleteCommentResponse } from './docs/deleteComment.response'
 import { CreateCommentDto } from './dto/createComment.dto'
 import { UpdateCommentDto } from './dto/updateComment.dto'
 import { CommentByCardIdQuery } from './query/commentByCardId.query'
@@ -123,7 +125,7 @@ export class CommentController {
   }
 
   @ApiOperation({ summary: 'Update a comment' })
-  @ApiCreatedResponse({ description: 'OK', type: CommentEntity })
+  @ApiCreatedResponse({ description: 'Updated', type: CommentEntity })
   @ApiBadRequestResponse({
     description: 'Validation error',
     type: BadRequestResponse
@@ -165,23 +167,47 @@ export class CommentController {
     return this.commentService.update(commentId, dto)
   }
 
-  // @Get()
-  // findAll() {
-  //   return this.commentService.findAll()
-  // }
+  @ApiOperation({ summary: 'Delete a comment' })
+  @ApiCreatedResponse({ description: 'Deleted', type: DeleteCommentResponse })
+  @ApiBadRequestResponse({
+    description: 'Validation error',
+    type: BadRequestResponse
+  })
+  @ApiNotFoundResponse({
+    description: 'Card not found',
+    type: NotFoundResponse
+  })
+  @ApiForbiddenResponse({ description: 'Forbidden', type: ForbiddenResponse })
+  @Delete(':commentId')
+  async delete(
+    @Param('cardId') cardId: string,
+    @Param('commentId') commentId: string,
+    @Request() req
+  ) {
+    const card = await this.cardService.findById(cardId)
+    if (!card) throw new NotFoundException('card not found')
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.commentService.findOne(+id)
-  // }
+    const list = await this.listService.findById(card.listId)
+    const board = await this.boardService.findById(list.boardId)
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateCommentDto: UpdateCommentDto) {
-  //   return this.commentService.update(+id, updateCommentDto)
-  // }
+    const isBoardMember = await this.memberService.isBoardMember(
+      req.user.id,
+      board.id
+    )
+    if (!isBoardMember) {
+      throw new ForbiddenException('you are not a member of this board')
+    }
 
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.commentService.remove(+id)
-  // }
+    const isCommentAuthor = await this.commentService.isCommentAuthor(
+      commentId,
+      req.user.id
+    )
+    if (!isCommentAuthor) {
+      throw new ForbiddenException('you are not the comment author')
+    }
+
+    await this.commentService.delete(commentId)
+
+    return { message: 'the comment has been deleted' }
+  }
 }

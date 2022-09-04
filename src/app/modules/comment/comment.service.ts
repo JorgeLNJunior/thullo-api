@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { Card, Comment } from '@prisma/client'
+import { Comment } from '@prisma/client'
 import { PrismaService } from 'nestjs-prisma'
 
 import { CreateCommentDto } from './dto/createComment.dto'
@@ -62,6 +62,16 @@ export class CommentService {
   }
 
   /**
+   * Delete a comment.
+   * @param commentId The id of the comment.
+   */
+  async delete(commentId: string): Promise<void> {
+    await this.prisma.comment.delete({
+      where: { id: commentId }
+    })
+  }
+
+  /**
    * Check if an user is the author of a comment.
    * @param commentId The id of the comment.
    * @param userId The id of the user
@@ -74,20 +84,4 @@ export class CommentService {
     if (comment.userId === userId) return true
     return false
   }
-
-  // findAll() {
-  //   return `This action returns all comment`
-  // }
-
-  // findOne(id: number) {
-  //   return `This action returns a #${id} comment`
-  // }
-
-  // update(id: number, updateCommentDto: UpdateCommentDto) {
-  //   return `This action updates a #${id} comment`
-  // }
-
-  // remove(id: number) {
-  //   return `This action removes a #${id} comment`
-  // }
 }
