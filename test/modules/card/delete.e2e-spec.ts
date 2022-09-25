@@ -34,7 +34,9 @@ describe('CardController/delete (e2e)', () => {
     app.useGlobalPipes(
       new ValidationPipe({
         forbidNonWhitelisted: true,
-        whitelist: true
+        whitelist: true,
+        validatorPackage: require('@nestjs/class-validator'),
+        transformerPackage: require('@nestjs/class-transformer')
       })
     )
 
