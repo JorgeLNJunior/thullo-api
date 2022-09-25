@@ -1,3 +1,5 @@
+import { randomUUID } from 'node:crypto'
+
 import { faker } from '@faker-js/faker'
 import { RegisterUserDto } from '@modules/auth/dto/registerUser.dto'
 import { UserEntity } from '@modules/user/docs/user.entity'
@@ -11,7 +13,6 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { UnsplashService } from '@services/unsplash.service'
 import { AppModule } from '@src/app.module'
 import { PrismaService } from 'nestjs-prisma'
-import { randomUUID } from 'node:crypto'
 
 import { UnsplashServiceMock } from '../../mocks/unsplash.service.mock'
 

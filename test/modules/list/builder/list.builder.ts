@@ -1,7 +1,8 @@
+import { randomUUID } from 'node:crypto'
+
 import { faker } from '@faker-js/faker'
 import { List } from '@prisma/client'
 import { PrismaService } from 'nestjs-prisma'
-import { randomUUID } from 'node:crypto'
 
 export class ListBuilder {
   private list: List = {

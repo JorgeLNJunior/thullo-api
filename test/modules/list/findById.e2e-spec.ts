@@ -1,3 +1,5 @@
+import { randomUUID } from 'node:crypto'
+
 import { faker } from '@faker-js/faker'
 import { ListEntity } from '@modules/list/docs/list.entity'
 import { CreateListDto } from '@modules/list/dto/createList.dto'
@@ -14,7 +16,6 @@ import { ListBuilder } from '@test/modules/list/builder/list.builder'
 import { MemberBuilder } from '@test/modules/member/builder/member.builder'
 import { UserBuilder } from '@test/modules/user/builder/user.builder'
 import { PrismaService } from 'nestjs-prisma'
-import { randomUUID } from 'node:crypto'
 
 import { generateAccessToken } from '../auth/helpers/auth.helper'
 

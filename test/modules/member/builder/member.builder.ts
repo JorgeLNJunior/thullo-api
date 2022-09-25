@@ -1,6 +1,7 @@
+import { randomUUID } from 'node:crypto'
+
 import { BoardRole, Member } from '@prisma/client'
 import { PrismaService } from 'nestjs-prisma'
-import { randomUUID } from 'node:crypto'
 
 export class MemberBuilder {
   private member: Member = {

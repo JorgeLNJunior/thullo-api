@@ -1,3 +1,5 @@
+import { randomUUID } from 'node:crypto'
+
 import { faker } from '@faker-js/faker'
 import { RegisterUserDto } from '@modules/auth/dto/registerUser.dto'
 import { RevokeDto } from '@modules/auth/dto/revoke.dto'
@@ -10,7 +12,6 @@ import {
 import { Test, TestingModule } from '@nestjs/testing'
 import { AppModule } from '@src/app.module'
 import { PrismaService } from 'nestjs-prisma'
-import { randomUUID } from 'node:crypto'
 
 import { generateRefreshToken } from './helpers/auth.helper'
 

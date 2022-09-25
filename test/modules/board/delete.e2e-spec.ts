@@ -1,3 +1,5 @@
+import { randomUUID } from 'node:crypto'
+
 import { faker } from '@faker-js/faker'
 import { CreateBoardDto } from '@modules/board/dto/createBoard.dto'
 import { useContainer } from '@nestjs/class-validator'
@@ -10,7 +12,6 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { BoardRole } from '@prisma/client'
 import { AppModule } from '@src/app.module'
 import { PrismaService } from 'nestjs-prisma'
-import { randomUUID } from 'node:crypto'
 
 import { generateAccessToken } from '../auth/helpers/auth.helper'
 
