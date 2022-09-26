@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: 'typescript-boilerplate',
+      name: 'Thullo API',
       script: 'dist/src/main.js',
       instances: 'max',
       exec_mode: 'cluster',
