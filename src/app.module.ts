@@ -2,6 +2,7 @@ import { AuthModule } from '@modules/auth/auth.module'
 import { UserModule } from '@modules/user/user.module'
 import { Module } from '@nestjs/common'
 
+import { AppController } from './app.controller'
 import { BoardModule } from './app/modules/board/board.module'
 import { CardModule } from './app/modules/card/card.module'
 import { CommentModule } from './app/modules/comment/comment.module'
@@ -21,6 +22,7 @@ import { RateLimitModule } from './modules/rateLimit.module'
     ListModule,
     CardModule,
     CommentModule
-  ]
+  ],
+  controllers: [AppController]
 })
 export class AppModule {}
