@@ -65,13 +65,8 @@ jobs:
     if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v3
-      - shell: bash
-        env:
-          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
-          RENDER_APP_ID: ${{ secrets.RENDER_APP_ID }}
-        run: |
-          curl --request POST \
-          --url "https://api.render.com/v1/services/$RENDER_APP_ID/deploys" \
-          --header "Accept: application/json" \
-          --header "Authorization: Bearer $RENDER_API_KEY"
+      - uses: JorgeLNJunior/render-deploy@v1.1.0
+        with:
+          service_id: ${{ secrets.RENDER_SERVICE_ID }}
+          api_key: ${{ secrets.RENDER_API_KEY }}
 
