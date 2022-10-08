@@ -1,4 +1,5 @@
 import { JwtAuthGuard } from '@modules/auth/guards/JwtAuth.guard'
+import { BoardEntity } from '@modules/board/docs/board.entity'
 import {
   Body,
   Controller,
@@ -28,6 +29,8 @@ import { DeleteUserResponse } from './docs/deleteUser.response'
 import { UserEntity } from './docs/user.entity'
 import { UpdateUserDto } from './dto/updateUser.dto'
 import { CanModifyUserGuard } from './guards/canModifyUser.guard'
+import { IsValidUserPipe } from './pipes/isValidUser.pipe'
+import { FindUserBoardsQuery } from './query/FindUserBoardsQuery'
 import { FindUsersQuery } from './query/FindUsersQuery'
 import { UserService } from './user.service'
 
@@ -87,5 +90,19 @@ export class UserController {
     return {
       message: 'The user has been deleted'
     }
+  }
+
+  @ApiOperation({ summary: 'Find user boards' })
+  @ApiOkResponse({ description: 'OK', type: BoardEntity, isArray: true })
+  @ApiNotFoundResponse({
+    description: 'User Not Found',
+    type: NotFoundResponse
+  })
+  @Get(':id/boards')
+  boards(
+    @Param('id', IsValidUserPipe) id: string,
+    @Query() query: FindUserBoardsQuery
+  ) {
+    return this.userService.boards(id, query)
   }
 }

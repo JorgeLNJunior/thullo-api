@@ -3,9 +3,11 @@ import {
   Injectable,
   NotFoundException
 } from '@nestjs/common'
+import { Board } from '@prisma/client'
 import { PrismaService } from 'nestjs-prisma'
 
 import { UpdateUserDto } from './dto/updateUser.dto'
+import { FindUserBoardsQuery } from './query/FindUserBoardsQuery'
 import { FindUsersQuery } from './query/FindUsersQuery'
 
 @Injectable()
@@ -50,6 +52,21 @@ export class UserService {
     })
     await this.prisma.user.delete({
       where: { id: id }
+    })
+  }
+
+  async boards(userId: string, query: FindUserBoardsQuery): Promise<Board[]> {
+    if (query.rule === 'MEMBER') {
+      return this.prisma.board.findMany({
+        where: { members: { every: { userId: userId } } },
+        take: Number(query.take) || 20,
+        skip: Number(query.skip) || 0
+      })
+    }
+    return this.prisma.board.findMany({
+      where: { ownerId: userId },
+      take: Number(query.take) || 20,
+      skip: Number(query.skip) || 0
     })
   }
 }
