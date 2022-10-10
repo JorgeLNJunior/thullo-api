@@ -28,12 +28,13 @@ export class BoardService {
    * @returns The created board data.
    */
   async create(ownerId: string, dto: CreateBoardDto): Promise<Board> {
-    const coverImage = await this.unsplash.findRandomBoardCover()
+    if (!dto.coverImage) {
+      dto.coverImage = await this.unsplash.findRandomBoardCover()
+    }
 
     const board = await this.prisma.board.create({
       data: {
         ownerId: ownerId,
-        coverImage: coverImage,
         ...dto
       }
     })
