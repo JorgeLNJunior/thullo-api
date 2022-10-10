@@ -51,8 +51,8 @@ describe('UserController/boards (e2e)', () => {
   it('/users/:id/boards (GET) Should return a list of boards', async () => {
     const query: FindUserBoardsQuery = {
       rule: 'MEMBER',
-      take: '10',
-      skip: '0'
+      take: 10,
+      skip: 0
     }
 
     const user = await new UserBuilder().persist(prisma)
@@ -83,8 +83,8 @@ describe('UserController/boards (e2e)', () => {
   it('/users/:id/boards (GET) Should return all user boards', async () => {
     const query: FindUserBoardsQuery = {
       rule: 'OWNER',
-      take: '10',
-      skip: '0'
+      take: 10,
+      skip: 0
     }
 
     const user = await new UserBuilder().persist(prisma)
