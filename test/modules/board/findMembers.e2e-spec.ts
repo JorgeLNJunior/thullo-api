@@ -52,8 +52,8 @@ describe('BoardController/findMembers (e2e)', () => {
   it('/boards (GET) Should return a list of members', async () => {
     const query: FindBoardMembersQuery = {
       role: BoardRole.MEMBER,
-      take: '1',
-      skip: '0'
+      take: 1,
+      skip: 0
     }
 
     const user = await prisma.user.create({

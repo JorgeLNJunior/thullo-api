@@ -15,6 +15,7 @@ import { AppModule } from '@src/app.module'
 import { PrismaService } from 'nestjs-prisma'
 
 import { generateAccessToken } from '../auth/helpers/auth.helper'
+import { UserBuilder } from './builder/user.builder'
 
 describe('UserController/findMany (e2e)', () => {
   let app: NestFastifyApplication
@@ -50,21 +51,14 @@ describe('UserController/findMany (e2e)', () => {
   })
 
   it('/users (GET) Should return a list of users', async () => {
-    const data: RegisterUserDto = {
-      name: faker.internet.userName(),
-      email: faker.internet.email(randomUUID()),
-      password: faker.internet.password(6)
-    }
-    const query: FindUsersQuery = {
-      name: data.name,
-      email: data.email,
-      take: '1',
-      skip: '0'
-    }
+    const user = await new UserBuilder().persist(prisma)
 
-    const user = await prisma.user.create({
-      data: { profileImage: faker.internet.avatar(), ...data }
-    })
+    const query: FindUsersQuery = {
+      name: user.name,
+      email: user.email,
+      take: 1,
+      skip: 0
+    }
 
     const token = generateAccessToken(user)
 

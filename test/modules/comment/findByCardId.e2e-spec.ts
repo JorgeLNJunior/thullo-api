@@ -66,8 +66,8 @@ describe('CommentController/findByCardId (e2e)', () => {
 
     const query: CommentByCardIdQuery = {
       userId: user.id,
-      take: '10',
-      skip: '0'
+      take: 10,
+      skip: 0
     }
 
     const result = await app.inject({
@@ -93,8 +93,8 @@ describe('CommentController/findByCardId (e2e)', () => {
 
     const query: CommentByCardIdQuery = {
       userId: user.id,
-      take: '10',
-      skip: '0'
+      take: 10,
+      skip: 0
     }
 
     const result = await app.inject({
