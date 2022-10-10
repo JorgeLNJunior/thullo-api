@@ -1,5 +1,7 @@
-import { IsNotEmpty, MaxLength } from '@nestjs/class-validator'
+import { IsNotEmpty, IsOptional, MaxLength } from '@nestjs/class-validator'
 import { ApiProperty } from '@nestjs/swagger'
+
+import { IsUnsplashImageUrl } from '../decorators/isUnsplashImageUrl.decorator'
 
 export class CreateBoardDto {
   @ApiProperty({ maxLength: 30 })
@@ -11,4 +13,9 @@ export class CreateBoardDto {
   @IsNotEmpty()
   @MaxLength(1500)
   description: string
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsUnsplashImageUrl()
+  coverImage: string
 }
