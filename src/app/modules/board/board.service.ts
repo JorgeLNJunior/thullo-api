@@ -59,8 +59,8 @@ export class BoardService {
       where: {
         ownerId: query.ownerId
       },
-      take: Number(query.take) || 20,
-      skip: Number(query.skip) || 0
+      take: query.take || 20,
+      skip: query.skip || 0
     })
   }
 
@@ -118,8 +118,8 @@ export class BoardService {
       include: {
         user: true
       },
-      take: Number(query.take) || 20,
-      skip: Number(query.skip) || 0
+      take: query.take || 20,
+      skip: query.skip || 0
     })
   }
 

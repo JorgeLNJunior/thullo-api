@@ -20,8 +20,8 @@ export class UserService {
         name: query.name,
         email: query.email
       },
-      take: Number(query.take) || 20,
-      skip: Number(query.skip) || 0
+      take: query.take || 20,
+      skip: query.skip || 0
     })
   }
 
@@ -59,14 +59,14 @@ export class UserService {
     if (query.rule === 'MEMBER') {
       return this.prisma.board.findMany({
         where: { members: { every: { userId: userId } } },
-        take: Number(query.take) || 20,
-        skip: Number(query.skip) || 0
+        take: query.take || 20,
+        skip: query.skip || 0
       })
     }
     return this.prisma.board.findMany({
       where: { ownerId: userId },
-      take: Number(query.take) || 20,
-      skip: Number(query.skip) || 0
+      take: query.take || 20,
+      skip: query.skip || 0
     })
   }
 }

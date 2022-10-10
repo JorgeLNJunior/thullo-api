@@ -1,17 +1,21 @@
-import { IsEnum, IsNumberString } from '@nestjs/class-validator'
+import { Type } from '@nestjs/class-transformer'
+import { IsEnum, IsOptional } from '@nestjs/class-validator'
 import { ApiProperty } from '@nestjs/swagger'
 import { BoardRole } from '@prisma/client'
 
 export class FindBoardMembersQuery {
   @ApiProperty({ enum: BoardRole, required: false })
+  @IsOptional()
   @IsEnum(BoardRole)
   role?: BoardRole
 
   @ApiProperty({ required: false })
-  @IsNumberString()
-  take?: string
+  @IsOptional()
+  @Type(() => Number)
+  take?: number
 
   @ApiProperty({ required: false })
-  @IsNumberString()
-  skip?: string
+  @IsOptional()
+  @Type(() => Number)
+  skip?: number
 }
