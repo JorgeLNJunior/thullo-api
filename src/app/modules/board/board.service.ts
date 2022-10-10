@@ -35,6 +35,7 @@ export class BoardService {
     const board = await this.prisma.board.create({
       data: {
         ownerId: ownerId,
+        coverImage: dto.coverImage,
         ...dto
       }
     })
