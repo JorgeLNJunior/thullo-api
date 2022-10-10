@@ -43,8 +43,8 @@ export class CommentService {
   ): Promise<Comment[]> {
     return this.prisma.comment.findMany({
       where: { cardId: cardId, userId: query.userId },
-      take: Number(query.take) || 20,
-      skip: Number(query.skip) || 0
+      take: query.take || 20,
+      skip: query.skip || 0
     })
   }
 

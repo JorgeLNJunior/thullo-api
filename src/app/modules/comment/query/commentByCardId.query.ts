@@ -1,14 +1,19 @@
-import { IsNumberString, IsOptional } from '@nestjs/class-validator'
+import { Type } from '@nestjs/class-transformer'
+import { IsOptional } from '@nestjs/class-validator'
+import { ApiProperty } from '@nestjs/swagger'
 
 export class CommentByCardIdQuery {
+  @ApiProperty({ required: false })
   @IsOptional()
-  userId: string
+  userId?: string
 
+  @ApiProperty({ required: false })
   @IsOptional()
-  @IsNumberString()
-  take?: string
+  @Type(() => Number)
+  take?: number
 
+  @ApiProperty({ required: false })
   @IsOptional()
-  @IsNumberString()
-  skip?: string
+  @Type(() => Number)
+  skip?: number
 }
