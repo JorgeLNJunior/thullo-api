@@ -17,7 +17,7 @@ export class UnsplashService {
   private axios: AxiosInstance
 
   /**
-   * Find a ramdom unsplash image to be used as user profile image.
+   * Find a random unsplash image to be used as user profile image.
    * @returns a random unsplash image with squarish orientation and 400px width.
    */
   async findRandomUserAvatar(): Promise<string> {
@@ -36,7 +36,7 @@ export class UnsplashService {
   }
 
   /**
-   * Find a ramdom unsplash image to be used as board cover.
+   * Find a random unsplash image to be used as board cover.
    * @returns a random unsplash image with landscape orientation and 1080px width.
    */
   async findRandomBoardCover(): Promise<string> {
