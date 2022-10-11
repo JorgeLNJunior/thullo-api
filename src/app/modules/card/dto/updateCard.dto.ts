@@ -1,11 +1,19 @@
-import { IsNumber, IsOptional } from '@nestjs/class-validator'
-import { ApiProperty, PartialType } from '@nestjs/swagger'
+import { IsNumber, IsOptional, IsString } from '@nestjs/class-validator'
+import { ApiProperty } from '@nestjs/swagger'
 
-import { CreateCardDto } from './createCard.dto'
+export class UpdateCardDto {
+  @ApiProperty({ maxLength: 30 })
+  @IsOptional()
+  @IsString()
+  title: string
 
-export class UpdateCardDto extends PartialType(CreateCardDto) {
-  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  @ApiProperty({ maxLength: 1500, required: false })
+  description?: string
+
+  @ApiProperty({ required: false })
   @IsOptional()
   @IsNumber()
-  position: number
+  position?: number
 }
