@@ -54,7 +54,7 @@ describe('CardController/update (e2e)', () => {
   it('/lists/:id/cards (PATCH) Should update a card', async () => {
     const body: UpdateCardDto = {
       title: faker.lorem.word(),
-      description: faker.lorem.paragraph(),
+      description: faker.lorem.paragraph(1),
       position: 1
     }
 
@@ -85,7 +85,7 @@ describe('CardController/update (e2e)', () => {
   it('/lists/:id/cards (PATCH) Should return 403 if the user is not a member of the board', async () => {
     const body: UpdateCardDto = {
       title: faker.lorem.word(),
-      description: faker.lorem.paragraph(),
+      description: faker.lorem.paragraph(1),
       position: 1
     }
 

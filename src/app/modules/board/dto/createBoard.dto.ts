@@ -17,5 +17,5 @@ export class CreateBoardDto {
   @ApiProperty({ required: false })
   @IsOptional()
   @IsUnsplashImageUrl()
-  coverImage: string
+  coverImage?: string
 }
