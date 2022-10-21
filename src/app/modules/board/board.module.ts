@@ -1,3 +1,4 @@
+import { LabelService } from '@modules/label/label.service'
 import { ListService } from '@modules/list/list.service'
 import { Module } from '@nestjs/common'
 import { UnsplashService } from '@services/unsplash.service'
@@ -14,7 +15,8 @@ import { IsUnsplashImageUrlConstraint } from './decorators/isUnsplashImageUrl.de
     BoardService,
     UnsplashService,
     IsUnsplashImageUrlConstraint,
-    ListService
+    ListService,
+    LabelService
   ]
 })
 export class BoardModule {}

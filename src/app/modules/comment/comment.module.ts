@@ -1,5 +1,6 @@
 import { BoardService } from '@modules/board/board.service'
 import { CardService } from '@modules/card/card.service'
+import { LabelService } from '@modules/label/label.service'
 import { ListService } from '@modules/list/list.service'
 import { MemberService } from '@modules/member/member.service'
 import { Module } from '@nestjs/common'
@@ -16,7 +17,8 @@ import { CommentService } from './comment.service'
     ListService,
     MemberService,
     CardService,
-    UnsplashService
+    UnsplashService,
+    LabelService
   ]
 })
 export class CommentModule {}

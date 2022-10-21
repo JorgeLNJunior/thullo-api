@@ -1,3 +1,4 @@
+import { LabelService } from '@modules/label/label.service'
 import {
   BadRequestException,
   Injectable,
@@ -18,7 +19,8 @@ import { FindBoardsQuery } from './query/findBoards.query'
 export class BoardService {
   constructor(
     private prisma: PrismaService,
-    private unsplash: UnsplashService
+    private unsplash: UnsplashService,
+    private labelService: LabelService
   ) {}
 
   /**
@@ -47,6 +49,8 @@ export class BoardService {
         role: BoardRole.ADMIN
       }
     })
+
+    await this.labelService.createDefaultLabels(board.id)
 
     return board
   }
