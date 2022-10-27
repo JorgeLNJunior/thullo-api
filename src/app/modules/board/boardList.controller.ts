@@ -39,7 +39,8 @@ import { UnauthorizedResponse } from '@src/app/docs/Unauthorized.response'
   description: 'Unauthorized',
   type: UnauthorizedResponse
 })
-@UseGuards(JwtAuthGuard)
+@ApiForbiddenResponse({ description: 'Forbidden', type: ForbiddenResponse })
+@UseGuards(JwtAuthGuard, IsBoardMemberGuard)
 @Controller('boards/:boardId/lists')
 export class BoardListController {
   constructor(private readonly listService: ListService) {}
@@ -54,7 +55,6 @@ export class BoardListController {
     description: 'Board not found',
     type: NotFoundResponse
   })
-  @UseGuards(IsBoardMemberGuard)
   @Post()
   create(@Param('boardId') boardId: string, @Body() dto: CreateListDto) {
     return this.listService.create(boardId, dto)
@@ -77,7 +77,6 @@ export class BoardListController {
     description: 'Board not or list found',
     type: NotFoundResponse
   })
-  @UseGuards(IsBoardMemberGuard)
   @Patch(':listId')
   update(
     @Param('boardId') boardId: string,
@@ -89,12 +88,10 @@ export class BoardListController {
 
   @ApiOperation({ summary: 'Delete a list' })
   @ApiOkResponse({ description: 'Deleted', type: DeleteListResponse })
-  @ApiForbiddenResponse({ description: 'Forbidden', type: ForbiddenResponse })
   @ApiNotFoundResponse({
     description: 'List not found',
     type: NotFoundResponse
   })
-  @UseGuards(IsBoardMemberGuard)
   @Delete(':listId')
   async remove(@Param('listId', IsValidListPipe) listId: string) {
     await this.listService.delete(listId)
