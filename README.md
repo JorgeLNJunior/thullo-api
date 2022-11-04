@@ -1,73 +1,72 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+<div align="center" id="short-description-and-logo">
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+  <!-- Logo -->
+  <img width="300" src=".github/images/Logo.svg"> 
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+  Um clone do Trello.
 
-## Description
+</div>
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+<!-- Badges -->
+<div align="center" id="badges">
 
-## Installation
+[![Actions Build And Test](https://img.shields.io/github/workflow/status/JorgeLNJunior/thullo-api/CI/main)](https://github.com/JorgeLNJunior/thullo-api/actions/workflows/ci.yml)
+[![Coverage Status](https://coveralls.io/repos/github/JorgeLNJunior/thullo-api/badge.svg?branch=main)](https://coveralls.io/github/JorgeLNJunior/thullo-api?branch=main)
+[![License](https://img.shields.io/github/license/JorgeLNJunior/thullo-api)](https://github.com/JorgeLNJunior/thullo-api/blob/main/LICENSE.md)
+[![Release](https://img.shields.io/github/v/release/JorgeLNJunior/thullo-api?color=lgreen)](https://github.com/JorgeLNJunior/thullo-api/releases)
 
-```bash
-$ npm install
-```
+</div>
 
-## Running the app
+<div align="center">
 
-```bash
-# development
-$ npm run start
+  [Trello](https://trello.com/b/wzYnhzaN/thullo) |
+  [Front](https://github.com/JorgeLNJunior/thullo)
 
-# watch mode
-$ npm run start:dev
+  Thullo é um clone do [Trello »](https://trello.com) construído para um desafio do [DevChallenges »](https://devchallenges.io/challenges/wP0LbGgEeKhpFHUpPpDh). Iniciei o desenvolvimento deste projeto para melhorar minhas habilidades em Frontend, REST APIs e conhecer mais sobre o PrismaORM.
 
-# production mode
-$ npm run start:prod
-```
+  O projeto ainda está em construção, até a chegada da versão `1.0` as rotas da API podem ser drasticamente alteradas.
 
-## Test
+  A documentação da API pode ser encontrada [Aqui »](https://thullo-api-alf2.onrender.com/docs).
 
-```bash
-# unit tests
-$ npm run test
+</div>
 
-# e2e tests
-$ npm run test:e2e
+## Tabela de Conteúdos
 
-# test coverage
-$ npm run test:cov
-```
+- [Tecnologias](#tecnologias)
+- [Instalação e Configuração](#instala%C3%A7%C3%A3o-e-configura%C3%A7%C3%A3o)
+  - [Requisitos](#requisitos)
+  - [Instalação](#instala%C3%A7%C3%A3o)
+- [Licença](#licen%C3%A7a)
 
-## Support
+## Tecnologias
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Este projeto foi construído com as seguintes tecnologias:
 
-## Stay in touch
+- [Node.js »](https://nodejs.org)
+- [Nest.js »](https://nestjs.com)
+- [PrismaORM »](https://prisma.io/)
+- [Typescript »](https://www.typescriptlang.org)
+- [Jest »](https://jestjs.io)
+- [GitHub Actions »](https://github.com/features/actions)
+- [Swagger »](https://swagger.io)
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## Instalação e configuração
 
-## License
+### Requisitos
 
-Nest is [MIT licensed](LICENSE).
+Escreva aqui os requisitos para rodar o projeto, ex:
+
+- [Node.js »](https://nodejs.org/en/download) na sua versão LTS
+- Um Banco de dados [MySQL »](https://www.mysql.com/)
+
+### Instalação
+
+1. Clone o projeto: `git clone https://github.com/JorgeLNJunior/thullo-api.git`.
+2. Instale as dependências: `npm install`.
+3. Crie um arquivo `.env` e cole o conteúdo do `.env.example`. 
+4. Para iniciar a aplicação execute `npm run build` e `npm run start:prod`.
+5. Para iniciar os testes execute `npm run test:e2e`.
+
+## Licença
+
+Projeto sob a licença [MIT »](/LICENSE)
