@@ -12,7 +12,7 @@
     "baseUrl": "./",
     "paths": {
       "@modules/*": ["src/app/modules/*"],
-      "@services/*": ["src/app/services/*"],
+      "@services/*": ["src/services/*"],
       "@src/*": ["src/*"],
       "@test/*": ["test/*"]
     },
