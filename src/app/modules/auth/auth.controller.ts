@@ -16,7 +16,7 @@ import {
   ApiUnauthorizedResponse
 } from '@nestjs/swagger'
 import { Throttle } from '@nestjs/throttler'
-import { BadRequestResponse } from '@src/app/docs/BadRequest.reponse'
+import { BadRequestResponse } from '@src/app/docs/BadRequest.response'
 import { UnauthorizedResponse } from '@src/app/docs/Unauthorized.response'
 
 import { AuthService } from './auth.service'

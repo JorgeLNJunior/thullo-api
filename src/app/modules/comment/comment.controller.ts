@@ -27,7 +27,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse
 } from '@nestjs/swagger'
-import { BadRequestResponse } from '@src/app/docs/BadRequest.reponse'
+import { BadRequestResponse } from '@src/app/docs/BadRequest.response'
 import { ForbiddenResponse } from '@src/app/docs/Forbidden.response'
 import { NotFoundResponse } from '@src/app/docs/NotFound.response'
 import { UnauthorizedResponse } from '@src/app/docs/Unauthorized.response'
