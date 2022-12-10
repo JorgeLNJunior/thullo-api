@@ -1,11 +1,3 @@
-import { JwtAuthGuard } from '@modules/auth/guards/JwtAuth.guard'
-import { CardService } from '@modules/card/card.service'
-import { CardEntity } from '@modules/card/docs/card.entity'
-import { DeleteCardResponse } from '@modules/card/docs/delete.response'
-import { CreateCardDto } from '@modules/card/dto/createCard.dto'
-import { UpdateCardDto } from '@modules/card/dto/updateCard.dto'
-import { IsValidCardPipe } from '@modules/card/pipes/isValidCard.pipe'
-import { MemberService } from '@modules/member/member.service'
 import {
   Body,
   Controller,
@@ -33,6 +25,14 @@ import { BadRequestResponse } from '@src/app/docs/BadRequest.response'
 import { ForbiddenResponse } from '@src/app/docs/Forbidden.response'
 import { NotFoundResponse } from '@src/app/docs/NotFound.response'
 import { UnauthorizedResponse } from '@src/app/docs/Unauthorized.response'
+import { JwtAuthGuard } from '@src/app/http/auth/guards/JwtAuth.guard'
+import { CardService } from '@src/app/http/card/card.service'
+import { CardEntity } from '@src/app/http/card/docs/card.entity'
+import { DeleteCardResponse } from '@src/app/http/card/docs/delete.response'
+import { CreateCardDto } from '@src/app/http/card/dto/createCard.dto'
+import { UpdateCardDto } from '@src/app/http/card/dto/updateCard.dto'
+import { IsValidCardPipe } from '@src/app/http/card/pipes/isValidCard.pipe'
+import { MemberService } from '@src/app/http/member/member.service'
 
 import { ListService } from '../list/list.service'
 import { IsValidListPipe } from '../list/pipes/isValidList.pipe'

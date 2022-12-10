@@ -1,4 +1,3 @@
-import { CardEntity } from '@modules/card/docs/card.entity'
 import { useContainer } from '@nestjs/class-validator'
 import { ValidationPipe } from '@nestjs/common'
 import {
@@ -7,6 +6,7 @@ import {
 } from '@nestjs/platform-fastify'
 import { Test, TestingModule } from '@nestjs/testing'
 import { AppModule } from '@src/app.module'
+import { CardEntity } from '@src/app/http/card/docs/card.entity'
 import { BoardBuilder } from '@test/modules/board/builder/board.builder'
 import { MemberBuilder } from '@test/modules/member/builder/member.builder'
 import { UserBuilder } from '@test/modules/user/builder/user.builder'

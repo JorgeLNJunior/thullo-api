@@ -1,8 +1,3 @@
-import { JwtAuthGuard } from '@modules/auth/guards/JwtAuth.guard'
-import { BoardService } from '@modules/board/board.service'
-import { CardService } from '@modules/card/card.service'
-import { ListService } from '@modules/list/list.service'
-import { MemberService } from '@modules/member/member.service'
 import {
   Body,
   Controller,
@@ -31,6 +26,11 @@ import { BadRequestResponse } from '@src/app/docs/BadRequest.response'
 import { ForbiddenResponse } from '@src/app/docs/Forbidden.response'
 import { NotFoundResponse } from '@src/app/docs/NotFound.response'
 import { UnauthorizedResponse } from '@src/app/docs/Unauthorized.response'
+import { JwtAuthGuard } from '@src/app/http/auth/guards/JwtAuth.guard'
+import { BoardService } from '@src/app/http/board/board.service'
+import { CardService } from '@src/app/http/card/card.service'
+import { ListService } from '@src/app/http/list/list.service'
+import { MemberService } from '@src/app/http/member/member.service'
 
 import { CommentService } from './comment.service'
 import { CommentEntity } from './docs/comment.entity'

@@ -1,8 +1,3 @@
-import { JwtAuthGuard } from '@modules/auth/guards/JwtAuth.guard'
-import { LabelEntity } from '@modules/label/docs/label.entity'
-import { UpdateLabelDto } from '@modules/label/dto/updateLabel.dto'
-import { LabelService } from '@modules/label/label.service'
-import { IsValidLabelPipe } from '@modules/label/pipes/isValidLabel.pipe'
 import { Body, Controller, Param, Patch, UseGuards } from '@nestjs/common'
 import {
   ApiBearerAuth,
@@ -14,6 +9,11 @@ import {
 } from '@nestjs/swagger'
 import { NotFoundResponse } from '@src/app/docs/NotFound.response'
 import { UnauthorizedResponse } from '@src/app/docs/Unauthorized.response'
+import { JwtAuthGuard } from '@src/app/http/auth/guards/JwtAuth.guard'
+import { LabelEntity } from '@src/app/http/label/docs/label.entity'
+import { UpdateLabelDto } from '@src/app/http/label/dto/updateLabel.dto'
+import { LabelService } from '@src/app/http/label/label.service'
+import { IsValidLabelPipe } from '@src/app/http/label/pipes/isValidLabel.pipe'
 
 import { IsBoardMemberGuard } from './guards/isBoardMember.guard'
 

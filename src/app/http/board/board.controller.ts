@@ -1,4 +1,3 @@
-import { JwtAuthGuard } from '@modules/auth/guards/JwtAuth.guard'
 import {
   Body,
   Controller,
@@ -26,6 +25,7 @@ import { BadRequestResponse } from '@src/app/docs/BadRequest.response'
 import { ForbiddenResponse } from '@src/app/docs/Forbidden.response'
 import { NotFoundResponse } from '@src/app/docs/NotFound.response'
 import { UnauthorizedResponse } from '@src/app/docs/Unauthorized.response'
+import { JwtAuthGuard } from '@src/app/http/auth/guards/JwtAuth.guard'
 
 import { BoardService } from './board.service'
 import { BoardEntity } from './docs/board.entity'

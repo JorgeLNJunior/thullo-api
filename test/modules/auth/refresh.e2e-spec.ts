@@ -1,8 +1,6 @@
 import { randomUUID } from 'node:crypto'
 
 import { faker } from '@faker-js/faker'
-import { RefreshDto } from '@modules/auth/dto/refresh.dto'
-import { RegisterUserDto } from '@modules/auth/dto/registerUser.dto'
 import { useContainer } from '@nestjs/class-validator'
 import { ValidationPipe } from '@nestjs/common'
 import {
@@ -11,6 +9,8 @@ import {
 } from '@nestjs/platform-fastify'
 import { Test, TestingModule } from '@nestjs/testing'
 import { AppModule } from '@src/app.module'
+import { RefreshDto } from '@src/app/http/auth/dto/refresh.dto'
+import { RegisterUserDto } from '@src/app/http/auth/dto/registerUser.dto'
 import { PrismaService } from 'nestjs-prisma'
 
 import { generateRefreshToken } from './helpers/auth.helper'

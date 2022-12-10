@@ -1,6 +1,4 @@
 import { faker } from '@faker-js/faker'
-import { LabelEntity } from '@modules/label/docs/label.entity'
-import { UpdateLabelDto } from '@modules/label/dto/updateLabel.dto'
 import { useContainer } from '@nestjs/class-validator'
 import { ValidationPipe } from '@nestjs/common'
 import {
@@ -9,6 +7,8 @@ import {
 } from '@nestjs/platform-fastify'
 import { Test, TestingModule } from '@nestjs/testing'
 import { AppModule } from '@src/app.module'
+import { LabelEntity } from '@src/app/http/label/docs/label.entity'
+import { UpdateLabelDto } from '@src/app/http/label/dto/updateLabel.dto'
 import { PrismaService } from 'nestjs-prisma'
 
 import { generateAccessToken } from '../auth/helpers/auth.helper'

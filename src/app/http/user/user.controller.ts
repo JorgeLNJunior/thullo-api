@@ -1,5 +1,3 @@
-import { JwtAuthGuard } from '@modules/auth/guards/JwtAuth.guard'
-import { BoardEntity } from '@modules/board/docs/board.entity'
 import {
   Body,
   Controller,
@@ -24,6 +22,8 @@ import { BadRequestResponse } from '@src/app/docs/BadRequest.response'
 import { ForbiddenResponse } from '@src/app/docs/Forbidden.response'
 import { NotFoundResponse } from '@src/app/docs/NotFound.response'
 import { UnauthorizedResponse } from '@src/app/docs/Unauthorized.response'
+import { JwtAuthGuard } from '@src/app/http/auth/guards/JwtAuth.guard'
+import { BoardEntity } from '@src/app/http/board/docs/board.entity'
 
 import { DeleteUserResponse } from './docs/deleteUser.response'
 import { UserEntity } from './docs/user.entity'

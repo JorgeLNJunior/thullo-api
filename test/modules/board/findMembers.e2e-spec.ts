@@ -1,8 +1,6 @@
 import { randomUUID } from 'node:crypto'
 
 import { faker } from '@faker-js/faker'
-import { MemberWithUserEntity } from '@modules/board/docs/memberWithUser.entity'
-import { FindBoardMembersQuery } from '@modules/board/query/findBoardMembers.query'
 import { useContainer } from '@nestjs/class-validator'
 import { ValidationPipe } from '@nestjs/common'
 import {
@@ -12,6 +10,8 @@ import {
 import { Test, TestingModule } from '@nestjs/testing'
 import { BoardRole } from '@prisma/client'
 import { AppModule } from '@src/app.module'
+import { MemberWithUserEntity } from '@src/app/http/board/docs/memberWithUser.entity'
+import { FindBoardMembersQuery } from '@src/app/http/board/query/findBoardMembers.query'
 import { PrismaService } from 'nestjs-prisma'
 
 import { generateAccessToken } from '../auth/helpers/auth.helper'

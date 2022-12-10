@@ -1,7 +1,7 @@
-import { LabelService } from '@modules/label/label.service'
-import { ListService } from '@modules/list/list.service'
 import { Module } from '@nestjs/common'
 import { UnsplashService } from '@services/unsplash.service'
+import { LabelService } from '@src/app/http/label/label.service'
+import { ListService } from '@src/app/http/list/list.service'
 
 import { BoardController } from './board.controller'
 import { BoardService } from './board.service'

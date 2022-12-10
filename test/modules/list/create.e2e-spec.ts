@@ -1,6 +1,4 @@
 import { faker } from '@faker-js/faker'
-import { ListEntity } from '@modules/list/docs/list.entity'
-import { CreateListDto } from '@modules/list/dto/createList.dto'
 import { useContainer } from '@nestjs/class-validator'
 import { ValidationPipe } from '@nestjs/common'
 import {
@@ -9,6 +7,8 @@ import {
 } from '@nestjs/platform-fastify'
 import { Test, TestingModule } from '@nestjs/testing'
 import { AppModule } from '@src/app.module'
+import { ListEntity } from '@src/app/http/list/docs/list.entity'
+import { CreateListDto } from '@src/app/http/list/dto/createList.dto'
 import { BoardBuilder } from '@test/modules/board/builder/board.builder'
 import { MemberBuilder } from '@test/modules/member/builder/member.builder'
 import { UserBuilder } from '@test/modules/user/builder/user.builder'

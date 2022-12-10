@@ -1,5 +1,3 @@
-import { CommentEntity } from '@modules/comment/docs/comment.entity'
-import { CommentByCardIdQuery } from '@modules/comment/query/commentByCardId.query'
 import { useContainer } from '@nestjs/class-validator'
 import { ValidationPipe } from '@nestjs/common'
 import {
@@ -8,6 +6,8 @@ import {
 } from '@nestjs/platform-fastify'
 import { Test, TestingModule } from '@nestjs/testing'
 import { AppModule } from '@src/app.module'
+import { CommentEntity } from '@src/app/http/comment/docs/comment.entity'
+import { CommentByCardIdQuery } from '@src/app/http/comment/query/commentByCardId.query'
 import { BoardBuilder } from '@test/modules/board/builder/board.builder'
 import { MemberBuilder } from '@test/modules/member/builder/member.builder'
 import { UserBuilder } from '@test/modules/user/builder/user.builder'

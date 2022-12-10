@@ -1,12 +1,3 @@
-import { JwtAuthGuard } from '@modules/auth/guards/JwtAuth.guard'
-import { IsBoardMemberGuard } from '@modules/board/guards/isBoardMember.guard'
-import { IsValidBoardPipe } from '@modules/board/pipes/isValidBoard.pipe'
-import { DeleteListResponse } from '@modules/list/docs/deleteList.response'
-import { ListEntity } from '@modules/list/docs/list.entity'
-import { CreateListDto } from '@modules/list/dto/createList.dto'
-import { UpdateListDto } from '@modules/list/dto/updateList.dto'
-import { ListService } from '@modules/list/list.service'
-import { IsValidListPipe } from '@modules/list/pipes/isValidList.pipe'
 import {
   Body,
   Controller,
@@ -32,6 +23,15 @@ import { BadRequestResponse } from '@src/app/docs/BadRequest.response'
 import { ForbiddenResponse } from '@src/app/docs/Forbidden.response'
 import { NotFoundResponse } from '@src/app/docs/NotFound.response'
 import { UnauthorizedResponse } from '@src/app/docs/Unauthorized.response'
+import { JwtAuthGuard } from '@src/app/http/auth/guards/JwtAuth.guard'
+import { IsBoardMemberGuard } from '@src/app/http/board/guards/isBoardMember.guard'
+import { IsValidBoardPipe } from '@src/app/http/board/pipes/isValidBoard.pipe'
+import { DeleteListResponse } from '@src/app/http/list/docs/deleteList.response'
+import { ListEntity } from '@src/app/http/list/docs/list.entity'
+import { CreateListDto } from '@src/app/http/list/dto/createList.dto'
+import { UpdateListDto } from '@src/app/http/list/dto/updateList.dto'
+import { ListService } from '@src/app/http/list/list.service'
+import { IsValidListPipe } from '@src/app/http/list/pipes/isValidList.pipe'
 
 @ApiTags('Boards', 'Lists')
 @ApiBearerAuth()

@@ -1,4 +1,3 @@
-import { UserEntity } from '@modules/user/docs/user.entity'
 import {
   Body,
   Controller,
@@ -18,6 +17,7 @@ import {
 import { Throttle } from '@nestjs/throttler'
 import { BadRequestResponse } from '@src/app/docs/BadRequest.response'
 import { UnauthorizedResponse } from '@src/app/docs/Unauthorized.response'
+import { UserEntity } from '@src/app/http/user/docs/user.entity'
 
 import { AuthService } from './auth.service'
 import { LoginResponse } from './docs/login.response'
