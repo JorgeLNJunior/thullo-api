@@ -53,7 +53,7 @@ describe('BoardController/create (e2e)', () => {
     await app.close()
   })
 
-  it('/boards (POST) Should create a board', async () => {
+  it('/boards (POST) Should create a public board', async () => {
     const body: CreateBoardDto = {
       title: faker.lorem.words(2),
       description: faker.lorem.sentence(),
@@ -75,6 +75,32 @@ describe('BoardController/create (e2e)', () => {
 
     expect(result.statusCode).toBe(201)
     expect(result.json()).toMatchObject(BoardEntity.prototype)
+    expect(result.json().visibility).toBe(BoardVisibility.PUBLIC)
+  })
+
+  it('/boards (POST) Should create a private board', async () => {
+    const body: CreateBoardDto = {
+      title: faker.lorem.words(2),
+      description: faker.lorem.sentence(),
+      visibility: BoardVisibility.PRIVATE
+    }
+
+    const user = await new UserBuilder().persist(prisma)
+
+    const token = generateAccessToken(user)
+
+    const result = await app.inject({
+      method: 'POST',
+      path: '/boards',
+      payload: body,
+      headers: {
+        authorization: `Bearer ${token}`
+      }
+    })
+
+    expect(result.statusCode).toBe(201)
+    expect(result.json()).toMatchObject(BoardEntity.prototype)
+    expect(result.json().visibility).toBe(BoardVisibility.PRIVATE)
   })
 
   it('/boards (POST) Should return 400 if the title length is more than 30', async () => {
