@@ -1,6 +1,6 @@
-import { randomUUID } from 'node:crypto'
-
 import { faker } from '@faker-js/faker'
+import { UserEntity } from '@http/user/docs/user.entity'
+import { UpdateUserDto } from '@http/user/dto/updateUser.dto'
 import { useContainer } from '@nestjs/class-validator'
 import { ValidationPipe } from '@nestjs/common'
 import {
@@ -9,12 +9,10 @@ import {
 } from '@nestjs/platform-fastify'
 import { Test, TestingModule } from '@nestjs/testing'
 import { AppModule } from '@src/app.module'
-import { RegisterUserDto } from '@src/app/http/auth/dto/registerUser.dto'
-import { UserEntity } from '@src/app/http/user/docs/user.entity'
-import { UpdateUserDto } from '@src/app/http/user/dto/updateUser.dto'
 import { PrismaService } from 'nestjs-prisma'
 
 import { generateAccessToken } from '../auth/helpers/auth.helper'
+import { UserBuilder } from './builder/user.builder'
 
 describe('UserController/update (e2e)', () => {
   let app: NestFastifyApplication
@@ -50,18 +48,11 @@ describe('UserController/update (e2e)', () => {
   })
 
   it('/users (PATCH) Should update a user', async () => {
-    const data: RegisterUserDto = {
-      name: faker.internet.userName(),
-      email: faker.internet.email(randomUUID()),
-      password: faker.internet.password(6)
-    }
     const body: UpdateUserDto = {
       name: faker.internet.userName()
     }
 
-    const user = await prisma.user.create({
-      data: { profileImage: faker.internet.avatar(), ...data }
-    })
+    const user = await new UserBuilder().persist(prisma)
 
     const token = generateAccessToken(user)
 
@@ -79,18 +70,11 @@ describe('UserController/update (e2e)', () => {
   })
 
   it('/users (PATCH) Should return 400 if the user is is invalid', async () => {
-    const data: RegisterUserDto = {
-      name: faker.internet.userName(),
-      email: faker.internet.email(randomUUID()),
-      password: faker.internet.password(6)
-    }
     const body: UpdateUserDto = {
       name: faker.internet.userName()
     }
 
-    const user = await prisma.user.create({
-      data: { profileImage: faker.internet.avatar(), ...data }
-    })
+    const user = await new UserBuilder().persist(prisma)
 
     const token = generateAccessToken(user)
 
@@ -110,26 +94,12 @@ describe('UserController/update (e2e)', () => {
   })
 
   it('/users (PATCH) Should return 403 if the user has no access rights', async () => {
-    const data: RegisterUserDto = {
-      name: faker.internet.userName(),
-      email: faker.internet.email(randomUUID()),
-      password: faker.internet.password(6)
-    }
-    const unauthorizedUserdata: RegisterUserDto = {
-      name: faker.internet.userName(),
-      email: faker.internet.email(randomUUID()),
-      password: faker.internet.password(6)
-    }
     const body: UpdateUserDto = {
       name: faker.internet.userName()
     }
 
-    const user = await prisma.user.create({
-      data: { profileImage: faker.internet.avatar(), ...data }
-    })
-    const unauthorizedUser = await prisma.user.create({
-      data: { profileImage: faker.internet.avatar(), ...unauthorizedUserdata }
-    })
+    const user = await new UserBuilder().persist(prisma)
+    const unauthorizedUser = await new UserBuilder().persist(prisma)
 
     const token = generateAccessToken(unauthorizedUser)
 

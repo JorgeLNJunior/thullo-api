@@ -1,5 +1,3 @@
-import { randomUUID } from 'node:crypto'
-
 import { faker } from '@faker-js/faker'
 import { useContainer } from '@nestjs/class-validator'
 import { ValidationPipe } from '@nestjs/common'
@@ -17,6 +15,9 @@ import { PrismaService } from 'nestjs-prisma'
 
 import { UnsplashServiceMock } from '../../mocks/unsplash.service.mock'
 import { generateAccessToken } from '../auth/helpers/auth.helper'
+import { MemberBuilder } from '../member/builder/member.builder'
+import { UserBuilder } from '../user/builder/user.builder'
+import { BoardBuilder } from './builder/board.builder'
 
 describe('BoardController/update (e2e)', () => {
   let app: NestFastifyApplication
@@ -62,31 +63,15 @@ describe('BoardController/update (e2e)', () => {
         'https://images.unsplash.com/photo-1659130933531-ce92ad5f77b5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMjA3fDB8MXxyYW5kb218fHx8fHx8fHwxNjYxMTA5ODUy&ixlib=rb-1.2.1&q=80&w=1080'
     }
 
-    const user = await prisma.user.create({
-      data: {
-        name: faker.internet.userName(),
-        email: faker.internet.email(randomUUID()),
-        password: faker.internet.password(6),
-        profileImage: faker.internet.avatar()
-      }
-    })
+    const user = await new UserBuilder().persist(prisma)
 
-    const board = await prisma.board.create({
-      data: {
-        title: faker.lorem.words(2),
-        description: faker.lorem.sentence(),
-        coverImage: faker.image.unsplash.imageUrl(),
-        ownerId: user.id
-      }
-    })
+    const board = await new BoardBuilder().setOwner(user.id).persist(prisma)
 
-    await prisma.member.create({
-      data: {
-        boardId: board.id,
-        userId: user.id,
-        role: BoardRole.ADMIN
-      }
-    })
+    await new MemberBuilder()
+      .setRole(BoardRole.ADMIN)
+      .setUser(user.id)
+      .setBoard(board.id)
+      .persist(prisma)
 
     const token = generateAccessToken(user)
 

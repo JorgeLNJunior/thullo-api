@@ -1,5 +1,3 @@
-import { randomUUID } from 'node:crypto'
-
 import { faker } from '@faker-js/faker'
 import { useContainer } from '@nestjs/class-validator'
 import { ValidationPipe } from '@nestjs/common'
@@ -15,6 +13,9 @@ import { AddMemberDto } from '@src/app/http/board/dto/addMember.dto'
 import { PrismaService } from 'nestjs-prisma'
 
 import { generateAccessToken } from '../auth/helpers/auth.helper'
+import { MemberBuilder } from '../member/builder/member.builder'
+import { UserBuilder } from '../user/builder/user.builder'
+import { BoardBuilder } from './builder/board.builder'
 
 describe('BoardController/addMember (e2e)', () => {
   let app: NestFastifyApplication
@@ -54,40 +55,19 @@ describe('BoardController/addMember (e2e)', () => {
       role: BoardRole.MEMBER
     }
 
-    const ownerUser = await prisma.user.create({
-      data: {
-        name: faker.internet.userName(),
-        email: faker.internet.email(randomUUID()),
-        password: faker.internet.password(6),
-        profileImage: faker.internet.avatar()
-      }
-    })
+    const ownerUser = await new UserBuilder().persist(prisma)
 
-    const user = await prisma.user.create({
-      data: {
-        name: faker.internet.userName(),
-        email: faker.internet.email(randomUUID()),
-        password: faker.internet.password(6),
-        profileImage: faker.internet.avatar()
-      }
-    })
+    const user = await new UserBuilder().persist(prisma)
 
-    const board = await prisma.board.create({
-      data: {
-        title: faker.lorem.words(2),
-        description: faker.lorem.sentence(),
-        coverImage: faker.image.image(),
-        ownerId: ownerUser.id
-      }
-    })
+    const board = await new BoardBuilder()
+      .setOwner(ownerUser.id)
+      .persist(prisma)
 
-    await prisma.member.create({
-      data: {
-        boardId: board.id,
-        userId: ownerUser.id,
-        role: BoardRole.ADMIN
-      }
-    })
+    await new MemberBuilder()
+      .setBoard(board.id)
+      .setUser(ownerUser.id)
+      .setRole(BoardRole.ADMIN)
+      .persist(prisma)
 
     const token = generateAccessToken(ownerUser)
 
@@ -105,40 +85,19 @@ describe('BoardController/addMember (e2e)', () => {
   })
 
   it('/boards/:id/members/:userId (PUT) Should return 400 if it receives a invalid role', async () => {
-    const ownerUser = await prisma.user.create({
-      data: {
-        name: faker.internet.userName(),
-        email: faker.internet.email(randomUUID()),
-        password: faker.internet.password(6),
-        profileImage: faker.internet.avatar()
-      }
-    })
+    const ownerUser = await new UserBuilder().persist(prisma)
 
-    const user = await prisma.user.create({
-      data: {
-        name: faker.internet.userName(),
-        email: faker.internet.email(randomUUID()),
-        password: faker.internet.password(6),
-        profileImage: faker.internet.avatar()
-      }
-    })
+    const user = await new UserBuilder().persist(prisma)
 
-    const board = await prisma.board.create({
-      data: {
-        title: faker.lorem.words(2),
-        description: faker.lorem.sentence(),
-        coverImage: faker.image.image(),
-        ownerId: ownerUser.id
-      }
-    })
+    const board = await new BoardBuilder()
+      .setOwner(ownerUser.id)
+      .persist(prisma)
 
-    await prisma.member.create({
-      data: {
-        boardId: board.id,
-        userId: ownerUser.id,
-        role: BoardRole.ADMIN
-      }
-    })
+    await new MemberBuilder()
+      .setBoard(board.id)
+      .setUser(ownerUser.id)
+      .setRole(BoardRole.ADMIN)
+      .persist(prisma)
 
     const token = generateAccessToken(ownerUser)
 
@@ -155,35 +114,19 @@ describe('BoardController/addMember (e2e)', () => {
   })
 
   it('/boards/:id/members/:userId (PUT) Should return 404 if it receives an invalid user id', async () => {
-    const id = faker.datatype.uuid()
+    const { id } = new UserBuilder().build()
 
-    const ownerUser = await prisma.user.create({
-      data: {
-        name: faker.internet.userName(),
-        email: faker.internet.email(randomUUID()),
-        password: faker.internet.password(6),
-        profileImage: faker.internet.avatar()
-      }
-    })
+    const user = await new UserBuilder().persist(prisma)
 
-    const board = await prisma.board.create({
-      data: {
-        title: faker.lorem.words(2),
-        description: faker.lorem.sentence(),
-        coverImage: faker.image.image(),
-        ownerId: ownerUser.id
-      }
-    })
+    const board = await new BoardBuilder().setOwner(user.id).persist(prisma)
 
-    await prisma.member.create({
-      data: {
-        userId: ownerUser.id,
-        boardId: board.id,
-        role: BoardRole.ADMIN
-      }
-    })
+    await new MemberBuilder()
+      .setBoard(board.id)
+      .setUser(user.id)
+      .setRole(BoardRole.ADMIN)
+      .persist(prisma)
 
-    const token = generateAccessToken(ownerUser)
+    const token = generateAccessToken(user)
 
     const result = await app.inject({
       method: 'PUT',
@@ -200,14 +143,7 @@ describe('BoardController/addMember (e2e)', () => {
   it('/boards/:id/members/:userId (PUT) Should return 404 if it receives an invalid board id', async () => {
     const id = faker.datatype.uuid()
 
-    const user = await prisma.user.create({
-      data: {
-        name: faker.internet.userName(),
-        email: faker.internet.email(randomUUID()),
-        password: faker.internet.password(6),
-        profileImage: faker.internet.avatar()
-      }
-    })
+    const user = await new UserBuilder().persist(prisma)
 
     const token = generateAccessToken(user)
 
@@ -224,31 +160,15 @@ describe('BoardController/addMember (e2e)', () => {
   })
 
   it('/boards/:id/members/:userId (PUT) Should return 400 if the user is already a member of the board', async () => {
-    const user = await prisma.user.create({
-      data: {
-        name: faker.internet.userName(),
-        email: faker.internet.email(randomUUID()),
-        password: faker.internet.password(6),
-        profileImage: faker.internet.avatar()
-      }
-    })
+    const user = await new UserBuilder().persist(prisma)
 
-    const board = await prisma.board.create({
-      data: {
-        title: faker.lorem.words(2),
-        description: faker.lorem.sentence(),
-        coverImage: faker.image.image(),
-        ownerId: user.id
-      }
-    })
+    const board = await new BoardBuilder().setOwner(user.id).persist(prisma)
 
-    await prisma.member.create({
-      data: {
-        boardId: board.id,
-        userId: user.id,
-        role: BoardRole.ADMIN
-      }
-    })
+    await new MemberBuilder()
+      .setBoard(board.id)
+      .setUser(user.id)
+      .setRole(BoardRole.ADMIN)
+      .persist(prisma)
 
     const token = generateAccessToken(user)
 
@@ -267,32 +187,13 @@ describe('BoardController/addMember (e2e)', () => {
   })
 
   it('/boards/:id/members/:userId (PUT) Should return 403 if it receives a request from a user that is not a member of the board', async () => {
-    const ownerUser = await prisma.user.create({
-      data: {
-        name: faker.internet.userName(),
-        email: faker.internet.email(randomUUID()),
-        password: faker.internet.password(6),
-        profileImage: faker.internet.avatar()
-      }
-    })
+    const ownerUser = await new UserBuilder().persist(prisma)
 
-    const user = await prisma.user.create({
-      data: {
-        name: faker.internet.userName(),
-        email: faker.internet.email(randomUUID()),
-        password: faker.internet.password(6),
-        profileImage: faker.internet.avatar()
-      }
-    })
+    const user = await new UserBuilder().persist(prisma)
 
-    const board = await prisma.board.create({
-      data: {
-        title: faker.lorem.words(2),
-        description: faker.lorem.sentence(),
-        coverImage: faker.image.image(),
-        ownerId: ownerUser.id
-      }
-    })
+    const board = await new BoardBuilder()
+      .setOwner(ownerUser.id)
+      .persist(prisma)
 
     const token = generateAccessToken(ownerUser)
 
@@ -309,42 +210,23 @@ describe('BoardController/addMember (e2e)', () => {
   })
 
   it('/boards/:id/members/:userId (PUT) Should return 403 if it receives a request from a user that is not a board admin', async () => {
-    const ownerUser = await prisma.user.create({
-      data: {
-        name: faker.internet.userName(),
-        email: faker.internet.email(randomUUID()),
-        password: faker.internet.password(6),
-        profileImage: faker.internet.avatar()
-      }
-    })
+    const user = await new UserBuilder().persist(prisma)
 
-    const user = await prisma.user.create({
-      data: {
-        name: faker.internet.userName(),
-        email: faker.internet.email(randomUUID()),
-        password: faker.internet.password(6),
-        profileImage: faker.internet.avatar()
-      }
-    })
+    const userToBeAdded = await new UserBuilder().persist(prisma)
 
-    const board = await prisma.board.create({
-      data: {
-        title: faker.lorem.words(2),
-        description: faker.lorem.sentence(),
-        coverImage: faker.image.image(),
-        ownerId: ownerUser.id
-      }
-    })
+    const board = await new BoardBuilder().setOwner(user.id).persist(prisma)
 
-    await prisma.member.create({
-      data: {
-        boardId: board.id,
-        userId: ownerUser.id,
-        role: BoardRole.MEMBER
-      }
-    })
+    await new MemberBuilder()
+      .setBoard(board.id)
+      .setUser(user.id)
+      .persist(prisma)
 
-    const token = generateAccessToken(ownerUser)
+    await new MemberBuilder()
+      .setBoard(board.id)
+      .setUser(userToBeAdded.id)
+      .persist(prisma)
+
+    const token = generateAccessToken(user)
 
     const result = await app.inject({
       method: 'PUT',

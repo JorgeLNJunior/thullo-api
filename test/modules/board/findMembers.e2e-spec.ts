@@ -1,6 +1,3 @@
-import { randomUUID } from 'node:crypto'
-
-import { faker } from '@faker-js/faker'
 import { useContainer } from '@nestjs/class-validator'
 import { ValidationPipe } from '@nestjs/common'
 import {
@@ -15,6 +12,9 @@ import { FindBoardMembersQuery } from '@src/app/http/board/query/findBoardMember
 import { PrismaService } from 'nestjs-prisma'
 
 import { generateAccessToken } from '../auth/helpers/auth.helper'
+import { MemberBuilder } from '../member/builder/member.builder'
+import { UserBuilder } from '../user/builder/user.builder'
+import { BoardBuilder } from './builder/board.builder'
 
 describe('BoardController/findMembers (e2e)', () => {
   let app: NestFastifyApplication
@@ -56,31 +56,14 @@ describe('BoardController/findMembers (e2e)', () => {
       skip: 0
     }
 
-    const user = await prisma.user.create({
-      data: {
-        name: faker.internet.userName(),
-        email: faker.internet.email(randomUUID()),
-        password: faker.internet.password(6),
-        profileImage: faker.internet.avatar()
-      }
-    })
+    const user = await new UserBuilder().persist(prisma)
 
-    const board = await prisma.board.create({
-      data: {
-        coverImage: faker.image.image(),
-        ownerId: user.id,
-        title: faker.lorem.words(2),
-        description: faker.lorem.sentence()
-      }
-    })
+    const board = await new BoardBuilder().setOwner(user.id).persist(prisma)
 
-    await prisma.member.create({
-      data: {
-        boardId: board.id,
-        userId: user.id,
-        role: BoardRole.MEMBER
-      }
-    })
+    await new MemberBuilder()
+      .setBoard(board.id)
+      .setUser(user.id)
+      .persist(prisma)
 
     const token = generateAccessToken(user)
 

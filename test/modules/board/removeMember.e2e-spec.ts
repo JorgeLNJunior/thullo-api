@@ -1,6 +1,3 @@
-import { randomUUID } from 'node:crypto'
-
-import { faker } from '@faker-js/faker'
 import { useContainer } from '@nestjs/class-validator'
 import { ValidationPipe } from '@nestjs/common'
 import {
@@ -13,6 +10,9 @@ import { AppModule } from '@src/app.module'
 import { PrismaService } from 'nestjs-prisma'
 
 import { generateAccessToken } from '../auth/helpers/auth.helper'
+import { MemberBuilder } from '../member/builder/member.builder'
+import { UserBuilder } from '../user/builder/user.builder'
+import { BoardBuilder } from './builder/board.builder'
 
 describe('BoardController/removeMember (e2e)', () => {
   let app: NestFastifyApplication
@@ -48,51 +48,24 @@ describe('BoardController/removeMember (e2e)', () => {
   })
 
   it('/boards/:id/members/:userId (DELETE) Should remove a member from a board', async () => {
-    const ownerUser = await prisma.user.create({
-      data: {
-        name: faker.internet.userName(),
-        email: faker.internet.email(randomUUID()),
-        password: faker.internet.password(6),
-        profileImage: faker.internet.avatar()
-      }
-    })
+    const ownerUser = await new UserBuilder().persist(prisma)
 
-    const userToBeRemoved = await prisma.user.create({
-      data: {
-        name: faker.internet.userName(),
-        email: faker.internet.email(randomUUID()),
-        password: faker.internet.password(6),
-        profileImage: faker.internet.avatar()
-      }
-    })
+    const userToBeRemoved = await new UserBuilder().persist(prisma)
 
-    // create the board
-    const board = await prisma.board.create({
-      data: {
-        title: faker.lorem.words(2),
-        description: faker.lorem.sentence(),
-        coverImage: faker.image.image(),
-        ownerId: ownerUser.id
-      }
-    })
+    const board = await new BoardBuilder()
+      .setOwner(ownerUser.id)
+      .persist(prisma)
 
-    // add the owner user as admin
-    await prisma.member.create({
-      data: {
-        boardId: board.id,
-        userId: ownerUser.id,
-        role: BoardRole.ADMIN
-      }
-    })
+    await new MemberBuilder()
+      .setRole(BoardRole.ADMIN)
+      .setUser(ownerUser.id)
+      .setBoard(board.id)
+      .persist(prisma)
 
-    // add the user to the board
-    await prisma.member.create({
-      data: {
-        boardId: board.id,
-        userId: userToBeRemoved.id,
-        role: BoardRole.MEMBER
-      }
-    })
+    await new MemberBuilder()
+      .setBoard(board.id)
+      .setUser(userToBeRemoved.id)
+      .persist(prisma)
 
     const token = generateAccessToken(ownerUser)
 
@@ -109,42 +82,19 @@ describe('BoardController/removeMember (e2e)', () => {
   })
 
   it('/boards/:id/members/:userId (DELETE) Should return 400 if the user to be added is not a member of the board', async () => {
-    const ownerUser = await prisma.user.create({
-      data: {
-        name: faker.internet.userName(),
-        email: faker.internet.email(randomUUID()),
-        password: faker.internet.password(6),
-        profileImage: faker.internet.avatar()
-      }
-    })
+    const ownerUser = await new UserBuilder().persist(prisma)
 
-    const userToBeRemoved = await prisma.user.create({
-      data: {
-        name: faker.internet.userName(),
-        email: faker.internet.email(randomUUID()),
-        password: faker.internet.password(6),
-        profileImage: faker.internet.avatar()
-      }
-    })
+    const userToBeRemoved = await new UserBuilder().persist(prisma)
 
-    // create the board
-    const board = await prisma.board.create({
-      data: {
-        title: faker.lorem.words(2),
-        description: faker.lorem.sentence(),
-        coverImage: faker.image.image(),
-        ownerId: ownerUser.id
-      }
-    })
+    const board = await new BoardBuilder()
+      .setOwner(ownerUser.id)
+      .persist(prisma)
 
-    // add the owner user as admin
-    await prisma.member.create({
-      data: {
-        boardId: board.id,
-        userId: ownerUser.id,
-        role: BoardRole.ADMIN
-      }
-    })
+    await new MemberBuilder()
+      .setRole(BoardRole.ADMIN)
+      .setUser(ownerUser.id)
+      .setBoard(board.id)
+      .persist(prisma)
 
     const token = generateAccessToken(ownerUser)
 
@@ -162,43 +112,14 @@ describe('BoardController/removeMember (e2e)', () => {
     )
   })
 
-  it('/boards/:id/members/:userId (DELETE) Should return 403 if the user is not a member of the board', async () => {
-    const ownerUser = await prisma.user.create({
-      data: {
-        name: faker.internet.userName(),
-        email: faker.internet.email(randomUUID()),
-        password: faker.internet.password(6),
-        profileImage: faker.internet.avatar()
-      }
-    })
+  it('/boards/:id/members/:userId (DELETE) Should return 403 if it receives a request from a user that is not a member of the board', async () => {
+    const ownerUser = await new UserBuilder().persist(prisma)
 
-    const userToBeRemoved = await prisma.user.create({
-      data: {
-        name: faker.internet.userName(),
-        email: faker.internet.email(randomUUID()),
-        password: faker.internet.password(6),
-        profileImage: faker.internet.avatar()
-      }
-    })
+    const userToBeRemoved = await new UserBuilder().persist(prisma)
 
-    // create the board
-    const board = await prisma.board.create({
-      data: {
-        title: faker.lorem.words(2),
-        description: faker.lorem.sentence(),
-        coverImage: faker.image.image(),
-        ownerId: ownerUser.id
-      }
-    })
-
-    // add the user to the board
-    await prisma.member.create({
-      data: {
-        boardId: board.id,
-        userId: userToBeRemoved.id,
-        role: BoardRole.MEMBER
-      }
-    })
+    const board = await new BoardBuilder()
+      .setOwner(ownerUser.id)
+      .persist(prisma)
 
     const token = generateAccessToken(ownerUser)
 
@@ -215,51 +136,23 @@ describe('BoardController/removeMember (e2e)', () => {
   })
 
   it('/boards/:id/members/:userId (DELETE) Should return 403 if the user is not a board admin', async () => {
-    const ownerUser = await prisma.user.create({
-      data: {
-        name: faker.internet.userName(),
-        email: faker.internet.email(randomUUID()),
-        password: faker.internet.password(6),
-        profileImage: faker.internet.avatar()
-      }
-    })
+    const ownerUser = await new UserBuilder().persist(prisma)
 
-    const userToBeRemoved = await prisma.user.create({
-      data: {
-        name: faker.internet.userName(),
-        email: faker.internet.email(randomUUID()),
-        password: faker.internet.password(6),
-        profileImage: faker.internet.avatar()
-      }
-    })
+    const userToBeRemoved = await new UserBuilder().persist(prisma)
 
-    // create the board
-    const board = await prisma.board.create({
-      data: {
-        title: faker.lorem.words(2),
-        description: faker.lorem.sentence(),
-        coverImage: faker.image.image(),
-        ownerId: ownerUser.id
-      }
-    })
+    const board = await new BoardBuilder()
+      .setOwner(ownerUser.id)
+      .persist(prisma)
 
-    // add the owner user as member
-    await prisma.member.create({
-      data: {
-        boardId: board.id,
-        userId: ownerUser.id,
-        role: BoardRole.MEMBER
-      }
-    })
+    await new MemberBuilder()
+      .setUser(ownerUser.id)
+      .setBoard(board.id)
+      .persist(prisma)
 
-    // add the user to the board
-    await prisma.member.create({
-      data: {
-        boardId: board.id,
-        userId: userToBeRemoved.id,
-        role: BoardRole.MEMBER
-      }
-    })
+    await new MemberBuilder()
+      .setUser(userToBeRemoved.id)
+      .setBoard(board.id)
+      .persist(prisma)
 
     const token = generateAccessToken(ownerUser)
 

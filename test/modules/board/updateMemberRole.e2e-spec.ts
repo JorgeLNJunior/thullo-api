@@ -1,6 +1,3 @@
-import { randomUUID } from 'node:crypto'
-
-import { faker } from '@faker-js/faker'
 import { useContainer } from '@nestjs/class-validator'
 import { ValidationPipe } from '@nestjs/common'
 import {
@@ -15,6 +12,9 @@ import { UpdateMemberRoleDto } from '@src/app/http/board/dto/updateRole.dto'
 import { PrismaService } from 'nestjs-prisma'
 
 import { generateAccessToken } from '../auth/helpers/auth.helper'
+import { MemberBuilder } from '../member/builder/member.builder'
+import { UserBuilder } from '../user/builder/user.builder'
+import { BoardBuilder } from './builder/board.builder'
 
 describe('BoardController/updateMemberRole (e2e)', () => {
   let app: NestFastifyApplication
@@ -54,51 +54,22 @@ describe('BoardController/updateMemberRole (e2e)', () => {
       role: BoardRole.ADMIN
     }
 
-    const ownerUser = await prisma.user.create({
-      data: {
-        name: faker.internet.userName(),
-        email: faker.internet.email(randomUUID()),
-        password: faker.internet.password(6),
-        profileImage: faker.internet.avatar()
-      }
-    })
+    const ownerUser = await new UserBuilder().persist(prisma)
 
-    const user = await prisma.user.create({
-      data: {
-        name: faker.internet.userName(),
-        email: faker.internet.email(randomUUID()),
-        password: faker.internet.password(6),
-        profileImage: faker.internet.avatar()
-      }
-    })
+    const user = await new UserBuilder().persist(prisma)
 
-    // create the board
-    const board = await prisma.board.create({
-      data: {
-        title: faker.lorem.words(2),
-        description: faker.lorem.sentence(),
-        coverImage: faker.image.image(),
-        ownerId: ownerUser.id
-      }
-    })
+    const board = await new BoardBuilder().setOwner(user.id).persist(prisma)
 
-    // add the owner user to th board
-    await prisma.member.create({
-      data: {
-        boardId: board.id,
-        userId: ownerUser.id,
-        role: BoardRole.ADMIN
-      }
-    })
+    await new MemberBuilder()
+      .setRole(BoardRole.ADMIN)
+      .setUser(ownerUser.id)
+      .setBoard(board.id)
+      .persist(prisma)
 
-    // add the user to th board
-    await prisma.member.create({
-      data: {
-        boardId: board.id,
-        userId: user.id,
-        role: BoardRole.MEMBER
-      }
-    })
+    await new MemberBuilder()
+      .setUser(user.id)
+      .setBoard(board.id)
+      .persist(prisma)
 
     const token = generateAccessToken(ownerUser)
 

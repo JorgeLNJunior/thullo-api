@@ -1,5 +1,3 @@
-import { randomUUID } from 'node:crypto'
-
 import { faker } from '@faker-js/faker'
 import { useContainer } from '@nestjs/class-validator'
 import { ValidationPipe } from '@nestjs/common'
@@ -14,6 +12,7 @@ import { CreateBoardDto } from '@src/app/http/board/dto/createBoard.dto'
 import { PrismaService } from 'nestjs-prisma'
 
 import { generateAccessToken } from '../auth/helpers/auth.helper'
+import { UserBuilder } from '../user/builder/user.builder'
 
 describe('BoardController/delete (e2e)', () => {
   let app: NestFastifyApplication
@@ -54,14 +53,7 @@ describe('BoardController/delete (e2e)', () => {
       description: faker.lorem.sentence()
     }
 
-    const user = await prisma.user.create({
-      data: {
-        name: faker.internet.userName(),
-        email: faker.internet.email(randomUUID()),
-        password: faker.internet.password(6),
-        profileImage: faker.internet.avatar()
-      }
-    })
+    const user = await new UserBuilder().persist(prisma)
 
     const board = await prisma.board.create({
       data: {
@@ -96,14 +88,7 @@ describe('BoardController/delete (e2e)', () => {
   it('/boards (DELETE) Should return 404 if it receives an invalid board id', async () => {
     const id = faker.datatype.uuid()
 
-    const user = await prisma.user.create({
-      data: {
-        name: faker.internet.userName(),
-        email: faker.internet.email(randomUUID()),
-        password: faker.internet.password(6),
-        profileImage: faker.internet.avatar()
-      }
-    })
+    const user = await new UserBuilder().persist(prisma)
 
     const token = generateAccessToken(user)
 
@@ -125,23 +110,9 @@ describe('BoardController/delete (e2e)', () => {
       description: faker.lorem.sentence()
     }
 
-    const user = await prisma.user.create({
-      data: {
-        name: faker.internet.userName(),
-        email: faker.internet.email(randomUUID()),
-        password: faker.internet.password(6),
-        profileImage: faker.internet.avatar()
-      }
-    })
+    const user = await new UserBuilder().persist(prisma)
 
-    const unauthorizedUser = await prisma.user.create({
-      data: {
-        name: faker.internet.userName(),
-        email: faker.internet.email(randomUUID()),
-        password: faker.internet.password(6),
-        profileImage: faker.internet.avatar()
-      }
-    })
+    const unauthorizedUser = await new UserBuilder().persist(prisma)
 
     const board = await prisma.board.create({
       data: {

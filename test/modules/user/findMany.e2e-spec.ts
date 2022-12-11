@@ -1,3 +1,5 @@
+import { UserEntity } from '@http/user/docs/user.entity'
+import { FindUsersQuery } from '@http/user/query/FindUsersQuery'
 import { useContainer } from '@nestjs/class-validator'
 import { ValidationPipe } from '@nestjs/common'
 import {
@@ -6,8 +8,6 @@ import {
 } from '@nestjs/platform-fastify'
 import { Test, TestingModule } from '@nestjs/testing'
 import { AppModule } from '@src/app.module'
-import { UserEntity } from '@src/app/http/user/docs/user.entity'
-import { FindUsersQuery } from '@src/app/http/user/query/FindUsersQuery'
 import { PrismaService } from 'nestjs-prisma'
 
 import { generateAccessToken } from '../auth/helpers/auth.helper'

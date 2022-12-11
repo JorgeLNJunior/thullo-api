@@ -1,5 +1,3 @@
-import { randomUUID } from 'node:crypto'
-
 import { faker } from '@faker-js/faker'
 import { useContainer } from '@nestjs/class-validator'
 import { ValidationPipe } from '@nestjs/common'
@@ -10,10 +8,11 @@ import {
 import { Test, TestingModule } from '@nestjs/testing'
 import { AppModule } from '@src/app.module'
 import { BoardEntity } from '@src/app/http/board/docs/board.entity'
-import { CreateBoardDto } from '@src/app/http/board/dto/createBoard.dto'
 import { PrismaService } from 'nestjs-prisma'
 
 import { generateAccessToken } from '../auth/helpers/auth.helper'
+import { UserBuilder } from '../user/builder/user.builder'
+import { BoardBuilder } from './builder/board.builder'
 
 describe('BoardController/findById (e2e)', () => {
   let app: NestFastifyApplication
@@ -49,27 +48,9 @@ describe('BoardController/findById (e2e)', () => {
   })
 
   it('/boards (GET) Should return a board', async () => {
-    const data: CreateBoardDto = {
-      title: faker.lorem.words(2),
-      description: faker.lorem.sentence()
-    }
+    const user = await new UserBuilder().persist(prisma)
 
-    const user = await prisma.user.create({
-      data: {
-        name: faker.internet.userName(),
-        email: faker.internet.email(randomUUID()),
-        password: faker.internet.password(6),
-        profileImage: faker.internet.avatar()
-      }
-    })
-
-    const board = await prisma.board.create({
-      data: {
-        coverImage: faker.image.image(),
-        ownerId: user.id,
-        ...data
-      }
-    })
+    const board = await new BoardBuilder().setOwner(user.id).persist(prisma)
 
     const token = generateAccessToken(user)
 
@@ -88,14 +69,7 @@ describe('BoardController/findById (e2e)', () => {
   it('/boards (GET) Should return 404 if the board was not found', async () => {
     const id = faker.datatype.uuid()
 
-    const user = await prisma.user.create({
-      data: {
-        name: faker.internet.userName(),
-        email: faker.internet.email(randomUUID()),
-        password: faker.internet.password(6),
-        profileImage: faker.internet.avatar()
-      }
-    })
+    const user = await new UserBuilder().persist(prisma)
 
     const token = generateAccessToken(user)
 

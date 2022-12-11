@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto'
 
 import { faker } from '@faker-js/faker'
-import { Board } from '@prisma/client'
+import { Board, BoardVisibility } from '@prisma/client'
 import { PrismaService } from 'nestjs-prisma'
 
 export class BoardBuilder {
@@ -11,6 +11,7 @@ export class BoardBuilder {
     title: faker.lorem.word(),
     description: faker.lorem.sentence(),
     coverImage: faker.image.image(),
+    visibility: BoardVisibility.PUBLIC,
     createdAt: new Date(),
     updatedAt: new Date()
   }
@@ -25,10 +26,19 @@ export class BoardBuilder {
 
   /**
    * Set the owner of the board.
-   * @param id The id of the user.
+   * @param id The id of the board.
    */
   setOwner(id: string): BoardBuilder {
     this.board.ownerId = id
+    return this
+  }
+
+  /**
+   * Set the visibility of the board.
+   * @param visibility The visibility of the board.
+   */
+  setVisibility(visibility: BoardVisibility): BoardBuilder {
+    this.board.visibility = visibility
     return this
   }
 
