@@ -3,7 +3,7 @@ import {
   Injectable,
   NotFoundException
 } from '@nestjs/common'
-import { Board, BoardRole, Member } from '@prisma/client'
+import { Board, BoardRole, BoardVisibility, Member } from '@prisma/client'
 import { UnsplashService } from '@services/unsplash.service'
 import { LabelService } from '@src/app/http/label/label.service'
 import { PrismaService } from 'nestjs-prisma'
@@ -60,10 +60,22 @@ export class BoardService {
    * @param query A query object to filter Boards.
    * @returns A list of Boards, 20 results by default.
    */
-  findMany(query: FindBoardsQuery): Promise<Board[]> {
+  findMany(
+    query: FindBoardsQuery,
+    authenticatedUserId: string
+  ): Promise<Board[]> {
     return this.prisma.board.findMany({
       where: {
-        ownerId: query.ownerId
+        ownerId: query.ownerId,
+        visibility: query.visibility || BoardVisibility.PUBLIC,
+        members: {
+          every: {
+            userId:
+              query.visibility === BoardVisibility.PRIVATE
+                ? authenticatedUserId
+                : undefined
+          }
+        }
       },
       take: query.take || 20,
       skip: query.skip || 0

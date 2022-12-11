@@ -1,5 +1,11 @@
-import { IsNotEmpty, IsOptional, MaxLength } from '@nestjs/class-validator'
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  MaxLength
+} from '@nestjs/class-validator'
 import { ApiProperty } from '@nestjs/swagger'
+import { BoardVisibility } from '@prisma/client'
 
 import { IsUnsplashImageUrl } from '../decorators/isUnsplashImageUrl.decorator'
 
@@ -18,4 +24,9 @@ export class CreateBoardDto {
   @IsOptional()
   @IsUnsplashImageUrl()
   coverImage?: string
+
+  @ApiProperty({ required: false, default: BoardVisibility.PUBLIC })
+  @IsOptional()
+  @IsEnum(BoardVisibility)
+  visibility?: BoardVisibility
 }

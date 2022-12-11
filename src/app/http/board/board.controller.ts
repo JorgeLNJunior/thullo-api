@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
   Query,
+  Req,
   Request,
   UseGuards
 } from '@nestjs/common'
@@ -64,8 +65,8 @@ export class BoardController {
     type: BadRequestResponse
   })
   @Get()
-  findMany(@Query() query: FindBoardsQuery) {
-    return this.boardService.findMany(query)
+  findMany(@Query() query: FindBoardsQuery, @Req() req) {
+    return this.boardService.findMany(query, req.user.id)
   }
 
   @ApiOperation({ summary: 'Find a board by ID' })
@@ -75,7 +76,7 @@ export class BoardController {
     type: NotFoundResponse
   })
   @Get(':boardId')
-  findOne(@Param('boardId') boardId: string) {
+  findById(@Param('boardId') boardId: string) {
     return this.boardService.findById(boardId)
   }
 

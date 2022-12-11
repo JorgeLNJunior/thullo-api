@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { Board } from '@prisma/client'
+import { Board, BoardVisibility } from '@prisma/client'
 
 export class BoardEntity implements Board {
   @ApiProperty()
@@ -16,6 +16,9 @@ export class BoardEntity implements Board {
 
   @ApiProperty()
   ownerId: string
+
+  @ApiProperty()
+  visibility: BoardVisibility
 
   @ApiProperty()
   createdAt: Date

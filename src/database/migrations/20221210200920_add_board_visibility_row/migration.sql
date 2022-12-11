@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `Board` ADD COLUMN `visibility` ENUM('PRIVATE', 'PUBLIC') NOT NULL DEFAULT 'PUBLIC';
