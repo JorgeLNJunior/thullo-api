@@ -6,7 +6,7 @@ import {
   NestFastifyApplication
 } from '@nestjs/platform-fastify'
 import { Test, TestingModule } from '@nestjs/testing'
-import { BoardRole } from '@prisma/client'
+import { BoardRole, BoardVisibility } from '@prisma/client'
 import { UnsplashService } from '@services/unsplash.service'
 import { AppModule } from '@src/app.module'
 import { BoardEntity } from '@src/app/http/board/docs/board.entity'
@@ -59,6 +59,7 @@ describe('BoardController/update (e2e)', () => {
     const body: UpdateBoardDto = {
       title: faker.lorem.words(2),
       description: faker.lorem.sentence(),
+      visibility: BoardVisibility.PUBLIC,
       coverImage:
         'https://images.unsplash.com/photo-1659130933531-ce92ad5f77b5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMjA3fDB8MXxyYW5kb218fHx8fHx8fHwxNjYxMTA5ODUy&ixlib=rb-1.2.1&q=80&w=1080'
     }
