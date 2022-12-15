@@ -78,7 +78,13 @@ export class BoardService {
         }
       },
       take: query.take || 20,
-      skip: query.skip || 0
+      skip: query.skip || 0,
+      include: {
+        owner: query.owner || false,
+        members: query.members || false,
+        lists: query.lists || false,
+        labels: query.labels || false
+      }
     })
   }
 

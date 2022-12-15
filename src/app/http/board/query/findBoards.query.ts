@@ -14,6 +14,26 @@ export class FindBoardsQuery {
   @IsEnum(BoardVisibility)
   visibility?: BoardVisibility
 
+  @ApiProperty({ required: false, description: 'Include owner' })
+  @IsOptional()
+  @Type(() => Boolean)
+  owner?: boolean
+
+  @ApiProperty({ required: false, description: 'Include members' })
+  @IsOptional()
+  @Type(() => Boolean)
+  members?: boolean
+
+  @ApiProperty({ required: false, description: 'Include lists' })
+  @IsOptional()
+  @Type(() => Boolean)
+  lists?: boolean
+
+  @ApiProperty({ required: false, description: 'Include labels' })
+  @IsOptional()
+  @Type(() => Boolean)
+  labels?: boolean
+
   @ApiProperty({ required: false })
   @IsOptional()
   @Type(() => Number)
