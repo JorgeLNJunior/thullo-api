@@ -1,4 +1,8 @@
+import { MemberEntity } from '@http/board/docs/member.entity'
 import { FindBoardsQuery } from '@http/board/query/findBoards.query'
+import { LabelEntity } from '@http/label/docs/label.entity'
+import { ListEntity } from '@http/list/docs/list.entity'
+import { UserEntity } from '@http/user/docs/user.entity'
 import { useContainer } from '@nestjs/class-validator'
 import { ValidationPipe } from '@nestjs/common'
 import {
@@ -12,6 +16,9 @@ import { BoardEntity } from '@src/app/http/board/docs/board.entity'
 import { PrismaService } from 'nestjs-prisma'
 
 import { generateAccessToken } from '../auth/helpers/auth.helper'
+import { LabelBuilder } from '../label/builder/label.builder'
+import { ListBuilder } from '../list/builder/list.builder'
+import { MemberBuilder } from '../member/builder/member.builder'
 import { UserBuilder } from '../user/builder/user.builder'
 import { BoardBuilder } from './builder/board.builder'
 
@@ -94,5 +101,43 @@ describe('BoardController/findMany (e2e)', () => {
     expect(result.statusCode).toBe(200)
     expect(result.json()[0]).toMatchObject(BoardEntity.prototype)
     expect(result.json()[0].visibility).toBe(BoardVisibility.PRIVATE)
+  })
+
+  it('/boards (GET) Should return a list of boards with children', async () => {
+    const query: FindBoardsQuery = {
+      owner: true,
+      labels: true,
+      lists: true,
+      members: true
+    }
+
+    const user = await new UserBuilder().persist(prisma)
+
+    const board = await new BoardBuilder().setOwner(user.id).persist(prisma)
+    await new LabelBuilder().setBoard(board.id).persist(prisma)
+    await new ListBuilder().setBoard(board.id).persist(prisma)
+    await new MemberBuilder()
+      .setBoard(board.id)
+      .setUser(user.id)
+      .persist(prisma)
+
+    const token = generateAccessToken(user)
+
+    const result = await app.inject({
+      method: 'GET',
+      path: '/boards',
+      headers: {
+        authorization: `Bearer ${token}`
+      },
+      query: query as any
+    })
+
+    console.log(result.json())
+
+    expect(result.statusCode).toBe(200)
+    expect(result.json()[0].owner).toMatchObject(UserEntity.prototype)
+    expect(result.json()[0].labels[0]).toMatchObject(LabelEntity.prototype)
+    expect(result.json()[0].lists[0]).toMatchObject(ListEntity.prototype)
+    expect(result.json()[0].members[0]).toMatchObject(MemberEntity.prototype)
   })
 })
