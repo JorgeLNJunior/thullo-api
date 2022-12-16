@@ -14,6 +14,7 @@ import { UpdateBoardDto } from './dto/update-board.dto'
 import { UpdateMemberRoleDto } from './dto/updateRole.dto'
 import { FindBoardMembersQuery } from './query/findBoardMembers.query'
 import { FindBoardsQuery } from './query/findBoards.query'
+import { FindOneBoardQuery } from './query/findOneBoard.query'
 
 @Injectable()
 export class BoardService {
@@ -89,7 +90,30 @@ export class BoardService {
   }
 
   /**
-   *
+   * Find a board.
+   * @param id The Board id.
+   * @param query A query object to select children.
+   * @returns A Board that matches the received id.
+   * @throws `NotFoundException`
+   */
+  async findOne(id: string, query: FindOneBoardQuery): Promise<Board> {
+    const board = await this.prisma.board.findUnique({
+      where: { id: id },
+      include: {
+        labels: query.labels || false,
+        lists: query.lists || false,
+        members: query.members || false,
+        owner: query.owner || false
+      }
+    })
+
+    if (!board) throw new NotFoundException('board not found')
+
+    return board
+  }
+
+  /**
+   * Find a board by ID.
    * @param id The Board id.
    * @returns A Board that matches the received id.
    * @throws `NotFoundException`

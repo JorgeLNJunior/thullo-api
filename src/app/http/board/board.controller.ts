@@ -35,6 +35,7 @@ import { CreateBoardDto } from './dto/createBoard.dto'
 import { UpdateBoardDto } from './dto/update-board.dto'
 import { IsBoardAdminGuard } from './guards/isBoardAdmin.guard'
 import { FindBoardsQuery } from './query/findBoards.query'
+import { FindOneBoardQuery } from './query/findOneBoard.query'
 
 @ApiTags('Boards')
 @ApiBearerAuth()
@@ -76,8 +77,11 @@ export class BoardController {
     type: NotFoundResponse
   })
   @Get(':boardId')
-  findById(@Param('boardId') boardId: string) {
-    return this.boardService.findById(boardId)
+  findOne(
+    @Param('boardId') boardId: string,
+    @Query() query: FindOneBoardQuery
+  ) {
+    return this.boardService.findOne(boardId, query)
   }
 
   @ApiOperation({ summary: 'Update a board' })
