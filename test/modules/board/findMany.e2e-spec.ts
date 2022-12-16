@@ -132,8 +132,6 @@ describe('BoardController/findMany (e2e)', () => {
       query: query as any
     })
 
-    console.log(result.json())
-
     expect(result.statusCode).toBe(200)
     expect(result.json()[0].owner).toMatchObject(UserEntity.prototype)
     expect(result.json()[0].labels[0]).toMatchObject(LabelEntity.prototype)
