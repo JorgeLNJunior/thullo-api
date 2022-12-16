@@ -10,7 +10,7 @@
 <!-- Badges -->
 <div align="center" id="badges">
 
-[![Actions Build And Test](https://img.shields.io/github/workflow/status/JorgeLNJunior/thullo-api/CI/main)](https://github.com/JorgeLNJunior/thullo-api/actions/workflows/ci.yml)
+[![Actions Build And Test](https://img.shields.io/github/actions/workflow/status/JorgeLNJunior/thullo-api/ci.yml?branch=main)](https://github.com/JorgeLNJunior/thullo-api/actions/workflows/ci.yml)
 [![Coverage Status](https://coveralls.io/repos/github/JorgeLNJunior/thullo-api/badge.svg?branch=main)](https://coveralls.io/github/JorgeLNJunior/thullo-api?branch=main)
 [![License](https://img.shields.io/github/license/JorgeLNJunior/thullo-api)](https://github.com/JorgeLNJunior/thullo-api/blob/main/LICENSE.md)
 [![Release](https://img.shields.io/github/v/release/JorgeLNJunior/thullo-api?color=lgreen)](https://github.com/JorgeLNJunior/thullo-api/releases)
