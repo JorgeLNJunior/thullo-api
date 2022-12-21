@@ -1,3 +1,4 @@
+import { FindCardsByListIdQuery } from '@http/card/query/FindCardsByListId.query'
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { Board, List } from '@prisma/client'
 import { PrismaService } from 'nestjs-prisma'
@@ -160,9 +161,14 @@ export class ListService {
     return null
   }
 
-  async findCards(listId: string) {
+  async findCards(listId: string, query: FindCardsByListIdQuery) {
     return this.prisma.card.findMany({
-      where: { listId: listId }
+      where: { listId: listId },
+      include: {
+        comments: query.comments || false
+      },
+      take: query.take || 20,
+      skip: query.skip || 0
     })
   }
 }

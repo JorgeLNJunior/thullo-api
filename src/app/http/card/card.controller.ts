@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Request,
   UseGuards
 } from '@nestjs/common'
@@ -36,6 +37,7 @@ import { MemberService } from '@src/app/http/member/member.service'
 
 import { ListService } from '../list/list.service'
 import { IsValidListPipe } from '../list/pipes/isValidList.pipe'
+import { FindCardsByListIdQuery } from './query/FindCardsByListId.query'
 
 @ApiTags('Cards', 'Lists')
 @ApiBearerAuth()
@@ -96,6 +98,7 @@ export class CardController {
   @Get()
   async findCardsByListId(
     @Param('listId', IsValidListPipe) listId: string,
+    @Query() query: FindCardsByListIdQuery,
     @Request() req
   ) {
     const board = await this.listService.findBoardByListId(listId)
@@ -108,7 +111,7 @@ export class CardController {
       throw new ForbiddenException('you are not a member of this board')
     }
 
-    return this.listService.findCards(listId)
+    return this.listService.findCards(listId, query)
   }
 
   @ApiOperation({ summary: 'Update a card' })
