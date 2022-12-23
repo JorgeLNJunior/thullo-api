@@ -16,8 +16,8 @@ export class UpdateBoardDto {
   description?: string
 
   @ApiProperty({ required: false })
-  @IsUnsplashImageUrl()
   @IsOptional()
+  @IsUnsplashImageUrl()
   coverImage?: string
 
   @ApiProperty({ enum: BoardVisibility, required: false })

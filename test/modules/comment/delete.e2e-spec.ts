@@ -77,6 +77,30 @@ describe('CommentController/delete (e2e)', () => {
     expect(result.json().message).toBe('the comment has been deleted')
   })
 
+  it('/cards/:id/comments (DELETE) Should 404 if the comment does not exist', async () => {
+    const user = await new UserBuilder().persist(prisma)
+    const board = await new BoardBuilder().setOwner(user.id).persist(prisma)
+    await new MemberBuilder()
+      .setBoard(board.id)
+      .setUser(user.id)
+      .persist(prisma)
+    const list = await new ListBuilder().setBoard(board.id).persist(prisma)
+    const card = await new CardBuilder().setList(list.id).persist(prisma)
+
+    const token = generateAccessToken(user)
+
+    const result = await app.inject({
+      method: 'DELETE',
+      path: `/cards/${card.id}/comments/invalidID`,
+      headers: {
+        authorization: `Bearer ${token}`
+      }
+    })
+
+    expect(result.statusCode).toBe(404)
+    expect(result.json().message).toBe('comment not found')
+  })
+
   it('/cards/:id/comments (DELETE) Should return 403 if the user is not a member of the board', async () => {
     const user = await new UserBuilder().persist(prisma)
     const board = await new BoardBuilder().setOwner(user.id).persist(prisma)

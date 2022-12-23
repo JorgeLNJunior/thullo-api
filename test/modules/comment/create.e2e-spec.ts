@@ -80,6 +80,60 @@ describe('CommentController/create (e2e)', () => {
     expect(result.json()).toMatchObject(CommentEntity.prototype)
   })
 
+  it('/cards/:id/comments (POST) Should return 400 if the content lenght is greater than 500', async () => {
+    const body: CreateCommentDto = {
+      content: faker.datatype.string(501)
+    }
+
+    const user = await new UserBuilder().persist(prisma)
+    const board = await new BoardBuilder().setOwner(user.id).persist(prisma)
+    await new MemberBuilder()
+      .setBoard(board.id)
+      .setUser(user.id)
+      .persist(prisma)
+    const list = await new ListBuilder().setBoard(board.id).persist(prisma)
+    const card = await new CardBuilder().setList(list.id).persist(prisma)
+
+    const token = generateAccessToken(user)
+
+    const result = await app.inject({
+      method: 'POST',
+      path: `/cards/${card.id}/comments`,
+      payload: body,
+      headers: {
+        authorization: `Bearer ${token}`
+      }
+    })
+
+    expect(result.statusCode).toBe(400)
+  })
+
+  it('/cards/:id/comments (POST) Should return 404 if the card does not exist', async () => {
+    const body: CreateCommentDto = {
+      content: faker.lorem.paragraph(1)
+    }
+
+    const user = await new UserBuilder().persist(prisma)
+    const board = await new BoardBuilder().setOwner(user.id).persist(prisma)
+    await new MemberBuilder()
+      .setBoard(board.id)
+      .setUser(user.id)
+      .persist(prisma)
+
+    const token = generateAccessToken(user)
+
+    const result = await app.inject({
+      method: 'POST',
+      path: `/cards/invalidID/comments`,
+      payload: body,
+      headers: {
+        authorization: `Bearer ${token}`
+      }
+    })
+
+    expect(result.statusCode).toBe(404)
+  })
+
   it('/cards/:id/comments (POST) Should return 403 if the user is not a member of the board', async () => {
     const body: CreateCommentDto = {
       content: faker.lorem.paragraph(1)

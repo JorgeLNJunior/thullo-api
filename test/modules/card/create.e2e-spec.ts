@@ -128,4 +128,86 @@ describe('CardController/create (e2e)', () => {
 
     expect(result.statusCode).toBe(400)
   })
+
+  it('/lists/:id/cards (POST) Should return 400 if the title lenght is greater than 30', async () => {
+    const body: CreateCardDto = {
+      title: faker.datatype.string(31)
+    }
+
+    const user = await new UserBuilder().persist(prisma)
+    const board = await new BoardBuilder().setOwner(user.id).persist(prisma)
+    await new MemberBuilder()
+      .setBoard(board.id)
+      .setUser(user.id)
+      .persist(prisma)
+    const list = await new ListBuilder().setBoard(board.id).persist(prisma)
+
+    const token = generateAccessToken(user)
+
+    const result = await app.inject({
+      method: 'POST',
+      path: `/lists/${list.id}/cards`,
+      payload: body,
+      headers: {
+        authorization: `Bearer ${token}`
+      }
+    })
+
+    expect(result.statusCode).toBe(400)
+  })
+
+  it('/lists/:id/cards (POST) Should return 400 if the description lenght is greater than 1500', async () => {
+    const body: CreateCardDto = {
+      title: faker.lorem.word(),
+      description: faker.datatype.string(1501)
+    }
+
+    const user = await new UserBuilder().persist(prisma)
+    const board = await new BoardBuilder().setOwner(user.id).persist(prisma)
+    await new MemberBuilder()
+      .setBoard(board.id)
+      .setUser(user.id)
+      .persist(prisma)
+    const list = await new ListBuilder().setBoard(board.id).persist(prisma)
+
+    const token = generateAccessToken(user)
+
+    const result = await app.inject({
+      method: 'POST',
+      path: `/lists/${list.id}/cards`,
+      payload: body,
+      headers: {
+        authorization: `Bearer ${token}`
+      }
+    })
+
+    expect(result.statusCode).toBe(400)
+  })
+
+  it('/lists/:id/cards (POST) Should return 404 if the list does not exist', async () => {
+    const body: CreateCardDto = {
+      title: faker.lorem.word()
+    }
+
+    const user = await new UserBuilder().persist(prisma)
+    const board = await new BoardBuilder().setOwner(user.id).persist(prisma)
+    await new MemberBuilder()
+      .setBoard(board.id)
+      .setUser(user.id)
+      .persist(prisma)
+
+    const token = generateAccessToken(user)
+
+    const result = await app.inject({
+      method: 'POST',
+      path: `/lists/invalidID/cards`,
+      payload: body,
+      headers: {
+        authorization: `Bearer ${token}`
+      }
+    })
+
+    expect(result.statusCode).toBe(404)
+    expect(result.json().message).toBe('list not found')
+  })
 })

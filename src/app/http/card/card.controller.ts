@@ -150,7 +150,7 @@ export class CardController {
 
   @ApiOperation({ summary: 'Delete a card' })
   @ApiOkResponse({
-    description: 'Delted',
+    description: 'Deleted',
     type: DeleteCardResponse
   })
   @ApiNotFoundResponse({

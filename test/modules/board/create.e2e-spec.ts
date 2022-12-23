@@ -1,4 +1,6 @@
 import { faker } from '@faker-js/faker'
+import { BoardEntity } from '@http/board/docs/board.entity'
+import { CreateBoardDto } from '@http/board/dto/createBoard.dto'
 import { useContainer } from '@nestjs/class-validator'
 import { ValidationPipe } from '@nestjs/common'
 import {
@@ -7,13 +9,9 @@ import {
 } from '@nestjs/platform-fastify'
 import { Test, TestingModule } from '@nestjs/testing'
 import { BoardVisibility } from '@prisma/client'
-import { UnsplashService } from '@services/unsplash.service'
 import { AppModule } from '@src/app.module'
-import { BoardEntity } from '@src/app/http/board/docs/board.entity'
-import { CreateBoardDto } from '@src/app/http/board/dto/createBoard.dto'
 import { PrismaService } from 'nestjs-prisma'
 
-import { UnsplashServiceMock } from '../../mocks/unsplash.service.mock'
 import { generateAccessToken } from '../auth/helpers/auth.helper'
 import { UserBuilder } from '../user/builder/user.builder'
 
@@ -24,10 +22,7 @@ describe('BoardController/create (e2e)', () => {
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule]
-    })
-      .overrideProvider(UnsplashService)
-      .useClass(UnsplashServiceMock)
-      .compile()
+    }).compile()
 
     app = moduleFixture.createNestApplication<NestFastifyApplication>(
       new FastifyAdapter()
@@ -129,6 +124,96 @@ describe('BoardController/create (e2e)', () => {
     const body: CreateBoardDto = {
       title: faker.lorem.words(2),
       description: faker.lorem.paragraphs(10)
+    }
+
+    const user = await new UserBuilder().persist(prisma)
+
+    const token = generateAccessToken(user)
+
+    const result = await app.inject({
+      method: 'POST',
+      path: '/boards',
+      payload: body,
+      headers: {
+        authorization: `Bearer ${token}`
+      }
+    })
+
+    expect(result.statusCode).toBe(400)
+  })
+
+  it('/boards (POST) Should return 400 if the title is not provided', async () => {
+    const body: CreateBoardDto = {
+      title: undefined,
+      description: faker.lorem.sentence()
+    }
+
+    const user = await new UserBuilder().persist(prisma)
+
+    const token = generateAccessToken(user)
+
+    const result = await app.inject({
+      method: 'POST',
+      path: '/boards',
+      payload: body,
+      headers: {
+        authorization: `Bearer ${token}`
+      }
+    })
+
+    expect(result.statusCode).toBe(400)
+  })
+
+  it('/boards (POST) Should return 400 if the description is not provided', async () => {
+    const body: CreateBoardDto = {
+      title: faker.lorem.word(),
+      description: undefined
+    }
+
+    const user = await new UserBuilder().persist(prisma)
+
+    const token = generateAccessToken(user)
+
+    const result = await app.inject({
+      method: 'POST',
+      path: '/boards',
+      payload: body,
+      headers: {
+        authorization: `Bearer ${token}`
+      }
+    })
+
+    expect(result.statusCode).toBe(400)
+  })
+
+  it('/boards (POST) Should return 400 if coverImage is not a unsplash url', async () => {
+    const body: CreateBoardDto = {
+      title: faker.lorem.words(2),
+      description: faker.lorem.sentence(),
+      coverImage: 'http://invalid-unsplash.com'
+    }
+
+    const user = await new UserBuilder().persist(prisma)
+
+    const token = generateAccessToken(user)
+
+    const result = await app.inject({
+      method: 'POST',
+      path: '/boards',
+      payload: body,
+      headers: {
+        authorization: `Bearer ${token}`
+      }
+    })
+
+    expect(result.statusCode).toBe(400)
+  })
+
+  it('/boards (POST) Should return 400 if it receives an invalid visibility', async () => {
+    const body: CreateBoardDto = {
+      title: faker.lorem.words(2),
+      description: faker.lorem.sentence(),
+      visibility: 'INVALID' as any
     }
 
     const user = await new UserBuilder().persist(prisma)

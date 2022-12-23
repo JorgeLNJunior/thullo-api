@@ -1,19 +1,20 @@
-import { IsNumber, IsOptional, IsString } from '@nestjs/class-validator'
+import { IsNumber, IsOptional, MaxLength, Min } from '@nestjs/class-validator'
 import { ApiProperty } from '@nestjs/swagger'
 
 export class UpdateCardDto {
   @ApiProperty({ maxLength: 30 })
   @IsOptional()
-  @IsString()
-  title: string
+  @MaxLength(30)
+  title?: string
 
   @IsOptional()
-  @IsString()
+  @MaxLength(1500)
   @ApiProperty({ maxLength: 1500, required: false })
   description?: string
 
   @ApiProperty({ required: false })
   @IsOptional()
   @IsNumber()
+  @Min(0)
   position?: number
 }

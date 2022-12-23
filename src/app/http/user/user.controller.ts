@@ -72,7 +72,7 @@ export class UserController {
   @ApiForbiddenResponse({ description: 'Forbidden', type: ForbiddenResponse })
   @UseGuards(CanModifyUserGuard)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() dto: UpdateUserDto) {
+  update(@Param('id', IsValidUserPipe) id: string, @Body() dto: UpdateUserDto) {
     return this.userService.update(id, dto)
   }
 
@@ -85,7 +85,7 @@ export class UserController {
   @ApiForbiddenResponse({ description: 'Forbidden', type: ForbiddenResponse })
   @UseGuards(CanModifyUserGuard)
   @Delete(':id')
-  async remove(@Param('id') id: string) {
+  async remove(@Param('id', IsValidUserPipe) id: string) {
     await this.userService.remove(id)
     return {
       message: 'The user has been deleted'

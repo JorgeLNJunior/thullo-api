@@ -37,6 +37,7 @@ import { CommentEntity } from './docs/comment.entity'
 import { DeleteCommentResponse } from './docs/deleteComment.response'
 import { CreateCommentDto } from './dto/createComment.dto'
 import { UpdateCommentDto } from './dto/updateComment.dto'
+import { IsValidCommentPipe } from './pipes/isValidComment.pipe'
 import { CommentByCardIdQuery } from './query/commentByCardId.query'
 
 @ApiTags('Cards', 'Comments')
@@ -138,7 +139,7 @@ export class CommentController {
   @Patch(':commentId')
   async update(
     @Param('cardId') cardId: string,
-    @Param('commentId') commentId: string,
+    @Param('commentId', IsValidCommentPipe) commentId: string,
     @Body() dto: UpdateCommentDto,
     @Request() req
   ) {
@@ -181,7 +182,7 @@ export class CommentController {
   @Delete(':commentId')
   async delete(
     @Param('cardId') cardId: string,
-    @Param('commentId') commentId: string,
+    @Param('commentId', IsValidCommentPipe) commentId: string,
     @Request() req
   ) {
     const card = await this.cardService.findById(cardId)

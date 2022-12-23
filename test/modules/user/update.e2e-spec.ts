@@ -69,7 +69,7 @@ describe('UserController/update (e2e)', () => {
     expect(result.json()).toMatchObject(UserEntity.prototype)
   })
 
-  it('/users (PATCH) Should return 400 if the user is is invalid', async () => {
+  it('/users (PATCH) Should return 404 if the user id is invalid', async () => {
     const body: UpdateUserDto = {
       name: faker.internet.userName()
     }
@@ -89,8 +89,8 @@ describe('UserController/update (e2e)', () => {
       }
     })
 
-    expect(result.statusCode).toBe(400)
-    expect(result.json().message[0]).toBe('invalid user id')
+    expect(result.statusCode).toBe(404)
+    expect(result.json().message).toBe('user not found')
   })
 
   it('/users (PATCH) Should return 403 if the user has no access rights', async () => {

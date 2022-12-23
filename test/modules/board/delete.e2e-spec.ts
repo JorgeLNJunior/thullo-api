@@ -8,11 +8,12 @@ import {
 import { Test, TestingModule } from '@nestjs/testing'
 import { BoardRole } from '@prisma/client'
 import { AppModule } from '@src/app.module'
-import { CreateBoardDto } from '@src/app/http/board/dto/createBoard.dto'
 import { PrismaService } from 'nestjs-prisma'
 
 import { generateAccessToken } from '../auth/helpers/auth.helper'
+import { MemberBuilder } from '../member/builder/member.builder'
 import { UserBuilder } from '../user/builder/user.builder'
+import { BoardBuilder } from './builder/board.builder'
 
 describe('BoardController/delete (e2e)', () => {
   let app: NestFastifyApplication
@@ -48,28 +49,15 @@ describe('BoardController/delete (e2e)', () => {
   })
 
   it('/boards (DELETE) Should delete a board', async () => {
-    const data: CreateBoardDto = {
-      title: faker.lorem.words(2),
-      description: faker.lorem.sentence()
-    }
-
     const user = await new UserBuilder().persist(prisma)
 
-    const board = await prisma.board.create({
-      data: {
-        coverImage: faker.image.image(),
-        ownerId: user.id,
-        ...data
-      }
-    })
+    const board = await new BoardBuilder().setOwner(user.id).persist(prisma)
 
-    await prisma.member.create({
-      data: {
-        userId: user.id,
-        boardId: board.id,
-        role: BoardRole.ADMIN
-      }
-    })
+    await new MemberBuilder()
+      .setBoard(board.id)
+      .setUser(user.id)
+      .setRole(BoardRole.ADMIN)
+      .persist(prisma)
 
     const token = generateAccessToken(user)
 
@@ -105,29 +93,22 @@ describe('BoardController/delete (e2e)', () => {
   })
 
   it('/boards (DELETE) Should return 403 if the user do not have delete rights', async () => {
-    const data: CreateBoardDto = {
-      title: faker.lorem.words(2),
-      description: faker.lorem.sentence()
-    }
-
     const user = await new UserBuilder().persist(prisma)
 
     const unauthorizedUser = await new UserBuilder().persist(prisma)
 
-    const board = await prisma.board.create({
-      data: {
-        coverImage: faker.image.image(),
-        ownerId: user.id,
-        ...data
-      }
-    })
+    const board = await new BoardBuilder().setOwner(user.id).persist(prisma)
 
-    await prisma.member.create({
-      data: {
-        userId: unauthorizedUser.id,
-        boardId: board.id
-      }
-    })
+    await new MemberBuilder()
+      .setBoard(board.id)
+      .setUser(user.id)
+      .setRole(BoardRole.ADMIN)
+      .persist(prisma)
+    await new MemberBuilder()
+      .setBoard(board.id)
+      .setUser(unauthorizedUser.id)
+      .setRole(BoardRole.MEMBER)
+      .persist(prisma)
 
     const token = generateAccessToken(unauthorizedUser)
 

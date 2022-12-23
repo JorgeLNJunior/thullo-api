@@ -61,7 +61,7 @@ describe('UserController/remove (e2e)', () => {
     expect(result.json().message).toBe('The user has been deleted')
   })
 
-  it('/users (DELETE) Should return 400 if the user is is invalid', async () => {
+  it('/users (DELETE) Should return 404 if the user does not exist', async () => {
     const user = await new UserBuilder().persist(prisma)
 
     const token = generateAccessToken(user)
@@ -76,8 +76,8 @@ describe('UserController/remove (e2e)', () => {
       }
     })
 
-    expect(result.statusCode).toBe(400)
-    expect(result.json().message[0]).toBe('invalid user id')
+    expect(result.statusCode).toBe(404)
+    expect(result.json().message).toBe('user not found')
   })
 
   it('/users (DELETE) Should return 403 if the user has no access rights', async () => {

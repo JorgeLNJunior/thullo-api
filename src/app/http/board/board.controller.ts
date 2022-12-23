@@ -85,7 +85,7 @@ export class BoardController {
   }
 
   @ApiOperation({ summary: 'Update a board' })
-  @ApiOkResponse({ description: 'Deleted', type: BoardEntity })
+  @ApiOkResponse({ description: 'Updated', type: BoardEntity })
   @ApiForbiddenResponse({ description: 'Forbidden', type: ForbiddenResponse })
   @ApiNotFoundResponse({
     description: 'Board not found',

@@ -3,7 +3,7 @@ import {
   InternalServerErrorException,
   Logger
 } from '@nestjs/common'
-import axios, { AxiosError, AxiosInstance } from 'axios'
+import axios, { AxiosInstance } from 'axios'
 
 @Injectable()
 export class UnsplashService {
@@ -59,18 +59,7 @@ export class UnsplashService {
    * @param url The url to be verified.
    * @returns `true` if the url is a valid unsplash image, `false` if not.
    */
-  async isUnsplashImageUrl(url: string): Promise<boolean> {
-    if (!url.startsWith('https://images.unsplash.com/photo-')) return false
-
-    try {
-      await axios.create().get(url)
-      return true
-    } catch (error) {
-      if (error instanceof AxiosError && error.response.status === 404) {
-        return false
-      }
-      this.logger.error(error.message, error.stack)
-      throw new InternalServerErrorException()
-    }
+  isUnsplashImageUrl(url: string): boolean {
+    return url.startsWith('https://images.unsplash.com/photo-')
   }
 }

@@ -1,4 +1,6 @@
 import { faker } from '@faker-js/faker'
+import { CommentEntity } from '@http/comment/docs/comment.entity'
+import { UpdateCommentDto } from '@http/comment/dto/updateComment.dto'
 import { useContainer } from '@nestjs/class-validator'
 import { ValidationPipe } from '@nestjs/common'
 import {
@@ -7,8 +9,6 @@ import {
 } from '@nestjs/platform-fastify'
 import { Test, TestingModule } from '@nestjs/testing'
 import { AppModule } from '@src/app.module'
-import { CommentEntity } from '@src/app/http/comment/docs/comment.entity'
-import { UpdateCommentDto } from '@src/app/http/comment/dto/updateComment.dto'
 import { BoardBuilder } from '@test/modules/board/builder/board.builder'
 import { MemberBuilder } from '@test/modules/member/builder/member.builder'
 import { UserBuilder } from '@test/modules/user/builder/user.builder'
@@ -83,6 +83,67 @@ describe('CommentController/update (e2e)', () => {
 
     expect(result.statusCode).toBe(200)
     expect(result.json()).toMatchObject(CommentEntity.prototype)
+  })
+
+  it('/cards/:id/comments (PATCH) Should return 400 if the content lenght is greater than 500', async () => {
+    const body: UpdateCommentDto = {
+      content: faker.datatype.string(501)
+    }
+
+    const user = await new UserBuilder().persist(prisma)
+    const board = await new BoardBuilder().setOwner(user.id).persist(prisma)
+    await new MemberBuilder()
+      .setBoard(board.id)
+      .setUser(user.id)
+      .persist(prisma)
+    const list = await new ListBuilder().setBoard(board.id).persist(prisma)
+    const card = await new CardBuilder().setList(list.id).persist(prisma)
+    const comment = await new CommentBuilder()
+      .setCard(card.id)
+      .setUser(user.id)
+      .persist(prisma)
+
+    const token = generateAccessToken(user)
+
+    const result = await app.inject({
+      method: 'PATCH',
+      path: `/cards/${card.id}/comments/${comment.id}`,
+      payload: body,
+      headers: {
+        authorization: `Bearer ${token}`
+      }
+    })
+
+    expect(result.statusCode).toBe(400)
+  })
+
+  it('/cards/:id/comments (PATCH) Should return 404 if the comment does not exist', async () => {
+    const body: UpdateCommentDto = {
+      content: faker.lorem.paragraph(1)
+    }
+
+    const user = await new UserBuilder().persist(prisma)
+    const board = await new BoardBuilder().setOwner(user.id).persist(prisma)
+    await new MemberBuilder()
+      .setBoard(board.id)
+      .setUser(user.id)
+      .persist(prisma)
+    const list = await new ListBuilder().setBoard(board.id).persist(prisma)
+    const card = await new CardBuilder().setList(list.id).persist(prisma)
+
+    const token = generateAccessToken(user)
+
+    const result = await app.inject({
+      method: 'PATCH',
+      path: `/cards/${card.id}/comments/invalidID`,
+      payload: body,
+      headers: {
+        authorization: `Bearer ${token}`
+      }
+    })
+
+    expect(result.statusCode).toBe(404)
+    expect(result.json().message).toBe('comment not found')
   })
 
   it('/cards/:id/comments (PATCH) Should return 403 if the user is not a member of the board', async () => {

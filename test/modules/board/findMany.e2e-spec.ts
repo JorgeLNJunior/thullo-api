@@ -132,10 +132,14 @@ describe('BoardController/findMany (e2e)', () => {
       query: query as any
     })
 
+    console.log(result.json())
+
     expect(result.statusCode).toBe(200)
-    expect(result.json()[0].owner).toMatchObject(UserEntity.prototype)
-    expect(result.json()[0].labels[0]).toMatchObject(LabelEntity.prototype)
-    expect(result.json()[0].lists[0]).toMatchObject(ListEntity.prototype)
-    expect(result.json()[0].members[0]).toMatchObject(MemberEntity.prototype)
+    expect(result.json().at(-1).owner).toMatchObject(UserEntity.prototype)
+    expect(result.json().at(-1).labels[0]).toMatchObject(LabelEntity.prototype)
+    expect(result.json().at(-1).lists[0]).toMatchObject(ListEntity.prototype)
+    expect(result.json().at(-1).members[0]).toMatchObject(
+      MemberEntity.prototype
+    )
   })
 })

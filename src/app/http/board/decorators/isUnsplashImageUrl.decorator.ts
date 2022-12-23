@@ -8,15 +8,14 @@ import { Injectable } from '@nestjs/common'
 import { UnsplashService } from '@services/unsplash.service'
 
 @Injectable()
-@ValidatorConstraint({ async: true })
+@ValidatorConstraint()
 export class IsUnsplashImageUrlConstraint
   implements ValidatorConstraintInterface
 {
   constructor(private unsplash: UnsplashService) {}
 
-  async validate(url: string): Promise<boolean> {
-    const isValid = await this.unsplash.isUnsplashImageUrl(url)
-    return isValid
+  validate(url: string): boolean {
+    return this.unsplash.isUnsplashImageUrl(url)
   }
   defaultMessage?(): string {
     return '$property should be a valid unsplash image url'

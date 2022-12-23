@@ -86,4 +86,40 @@ describe('BoardController/updateMemberRole (e2e)', () => {
     expect(result.json()).toMatchObject(MemberEntity.prototype)
     expect(result.json().role).toBe(BoardRole.ADMIN)
   })
+
+  it('/boards/:id/members/:userId/roles (PUT) Should return 400 if it receives an invalid role', async () => {
+    const body: UpdateMemberRoleDto = {
+      role: 'ANVALID_ROLE' as any
+    }
+
+    const ownerUser = await new UserBuilder().persist(prisma)
+
+    const user = await new UserBuilder().persist(prisma)
+
+    const board = await new BoardBuilder().setOwner(user.id).persist(prisma)
+
+    await new MemberBuilder()
+      .setRole(BoardRole.ADMIN)
+      .setUser(ownerUser.id)
+      .setBoard(board.id)
+      .persist(prisma)
+
+    await new MemberBuilder()
+      .setUser(user.id)
+      .setBoard(board.id)
+      .persist(prisma)
+
+    const token = generateAccessToken(ownerUser)
+
+    const result = await app.inject({
+      method: 'PUT',
+      path: `/boards/${board.id}/members/${user.id}/roles`,
+      payload: body,
+      headers: {
+        authorization: `Bearer ${token}`
+      }
+    })
+
+    expect(result.statusCode).toBe(400)
+  })
 })

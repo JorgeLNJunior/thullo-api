@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException
-} from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { Board } from '@prisma/client'
 import { PrismaService } from 'nestjs-prisma'
 
@@ -34,9 +30,6 @@ export class UserService {
   }
 
   async update(id: string, dto: UpdateUserDto) {
-    const user = await this.prisma.user.findUnique({ where: { id: id } })
-    if (!user) throw new BadRequestException(['invalid user id'])
-
     return this.prisma.user.update({
       where: { id: id },
       data: dto
@@ -44,9 +37,6 @@ export class UserService {
   }
 
   async remove(id: string) {
-    const user = await this.prisma.user.findUnique({ where: { id: id } })
-    if (!user) throw new BadRequestException(['invalid user id'])
-
     await this.prisma.refreshToken.deleteMany({
       where: { userId: id }
     })

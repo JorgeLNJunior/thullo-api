@@ -81,7 +81,7 @@ describe('BoardController/removeMember (e2e)', () => {
     expect(result.json().message).toBe('the member has been removed')
   })
 
-  it('/boards/:id/members/:userId (DELETE) Should return 400 if the user to be added is not a member of the board', async () => {
+  it('/boards/:id/members/:userId (DELETE) Should return 400 if the user to be removed is not a member of the board', async () => {
     const ownerUser = await new UserBuilder().persist(prisma)
 
     const userToBeRemoved = await new UserBuilder().persist(prisma)
@@ -168,5 +168,24 @@ describe('BoardController/removeMember (e2e)', () => {
     expect(result.json().message).toBe(
       'you are not an administrator of this board'
     )
+  })
+
+  it('/boards/:id/members/:userId (DELETE) Should return 404 if the board does not exist', async () => {
+    const ownerUser = await new UserBuilder().persist(prisma)
+
+    const userToBeRemoved = await new UserBuilder().persist(prisma)
+
+    const token = generateAccessToken(ownerUser)
+
+    const result = await app.inject({
+      method: 'DELETE',
+      path: `/boards/invalidID/members/${userToBeRemoved.id}`,
+      headers: {
+        authorization: `Bearer ${token}`
+      }
+    })
+
+    expect(result.statusCode).toBe(404)
+    expect(result.json().message).toBe('board not found')
   })
 })
