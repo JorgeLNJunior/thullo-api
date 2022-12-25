@@ -72,28 +72,6 @@ describe('CardController/delete (e2e)', () => {
     expect(result.json().message).toBe('the card has been deleted')
   })
 
-  it('/lists/:id/cards (DELETE) Should return 404 if the list does not exist', async () => {
-    const user = await new UserBuilder().persist(prisma)
-    const board = await new BoardBuilder().setOwner(user.id).persist(prisma)
-    await new MemberBuilder()
-      .setBoard(board.id)
-      .setUser(user.id)
-      .persist(prisma)
-
-    const token = generateAccessToken(user)
-
-    const result = await app.inject({
-      method: 'DELETE',
-      path: `/lists/invalidID/cards/ID`,
-      headers: {
-        authorization: `Bearer ${token}`
-      }
-    })
-
-    expect(result.statusCode).toBe(404)
-    expect(result.json().message).toBe('list not found')
-  })
-
   it('/lists/:id/cards (DELETE) Should return 404 if the card does not exist', async () => {
     const user = await new UserBuilder().persist(prisma)
     const board = await new BoardBuilder().setOwner(user.id).persist(prisma)

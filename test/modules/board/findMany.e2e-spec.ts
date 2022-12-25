@@ -10,7 +10,7 @@ import {
   NestFastifyApplication
 } from '@nestjs/platform-fastify'
 import { Test, TestingModule } from '@nestjs/testing'
-import { BoardVisibility } from '@prisma/client'
+import { Board, BoardVisibility } from '@prisma/client'
 import { AppModule } from '@src/app.module'
 import { BoardEntity } from '@src/app/http/board/docs/board.entity'
 import { PrismaService } from 'nestjs-prisma'
@@ -132,14 +132,18 @@ describe('BoardController/findMany (e2e)', () => {
       query: query as any
     })
 
-    console.log(result.json())
-
     expect(result.statusCode).toBe(200)
-    expect(result.json().at(-1).owner).toMatchObject(UserEntity.prototype)
-    expect(result.json().at(-1).labels[0]).toMatchObject(LabelEntity.prototype)
-    expect(result.json().at(-1).lists[0]).toMatchObject(ListEntity.prototype)
-    expect(result.json().at(-1).members[0]).toMatchObject(
-      MemberEntity.prototype
-    )
+    expect(
+      result.json().find((v: Board) => v.id === board.id).owner
+    ).toMatchObject(UserEntity.prototype)
+    expect(
+      result.json().find((v: Board) => v.id === board.id).labels[0]
+    ).toMatchObject(LabelEntity.prototype)
+    expect(
+      result.json().find((v: Board) => v.id === board.id).lists[0]
+    ).toMatchObject(ListEntity.prototype)
+    expect(
+      result.json().find((v: Board) => v.id === board.id).members[0]
+    ).toMatchObject(MemberEntity.prototype)
   })
 })

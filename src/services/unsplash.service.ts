@@ -3,7 +3,7 @@ import {
   InternalServerErrorException,
   Logger
 } from '@nestjs/common'
-import axios, { AxiosInstance } from 'axios'
+import axios, { AxiosError, AxiosInstance } from 'axios'
 
 @Injectable()
 export class UnsplashService {
@@ -31,6 +31,9 @@ export class UnsplashService {
       return response.data.urls.small
     } catch (error) {
       this.logger.error(error.message, error.stack)
+      if (error instanceof AxiosError) {
+        this.logger.error(error.response.data.errors)
+      }
       throw new InternalServerErrorException()
     }
   }
@@ -50,6 +53,9 @@ export class UnsplashService {
       return response.data.urls.regular
     } catch (error) {
       this.logger.error(error.message, error.stack)
+      if (error instanceof AxiosError) {
+        this.logger.error(error.response.data.errors)
+      }
       throw new InternalServerErrorException()
     }
   }
