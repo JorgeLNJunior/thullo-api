@@ -1,8 +1,8 @@
 import { randomUUID } from 'node:crypto'
 
 import { faker } from '@faker-js/faker'
+import { LabelColor } from '@http/label/labelColor.enum'
 import { Label } from '@prisma/client'
-import { LabelColor } from '@src/app/http/label/labelColor.enum'
 import { PrismaService } from 'nestjs-prisma'
 
 export class LabelBuilder {

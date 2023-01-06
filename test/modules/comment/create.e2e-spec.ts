@@ -1,4 +1,6 @@
 import { faker } from '@faker-js/faker'
+import { CommentEntity } from '@http/comment/docs/comment.entity'
+import { CreateCommentDto } from '@http/comment/dto/createComment.dto'
 import { useContainer } from '@nestjs/class-validator'
 import { ValidationPipe } from '@nestjs/common'
 import {
@@ -7,8 +9,6 @@ import {
 } from '@nestjs/platform-fastify'
 import { Test, TestingModule } from '@nestjs/testing'
 import { AppModule } from '@src/app.module'
-import { CommentEntity } from '@src/app/http/comment/docs/comment.entity'
-import { CreateCommentDto } from '@src/app/http/comment/dto/createComment.dto'
 import { BoardBuilder } from '@test/modules/board/builder/board.builder'
 import { MemberBuilder } from '@test/modules/member/builder/member.builder'
 import { UserBuilder } from '@test/modules/user/builder/user.builder'

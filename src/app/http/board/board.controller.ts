@@ -1,3 +1,8 @@
+import { BadRequestResponse } from '@docs/BadRequest.response'
+import { ForbiddenResponse } from '@docs/Forbidden.response'
+import { NotFoundResponse } from '@docs/NotFound.response'
+import { UnauthorizedResponse } from '@docs/Unauthorized.response'
+import { JwtAuthGuard } from '@http/auth/guards/JwtAuth.guard'
 import {
   Body,
   Controller,
@@ -22,11 +27,6 @@ import {
   ApiTags,
   ApiUnauthorizedResponse
 } from '@nestjs/swagger'
-import { BadRequestResponse } from '@src/app/docs/BadRequest.response'
-import { ForbiddenResponse } from '@src/app/docs/Forbidden.response'
-import { NotFoundResponse } from '@src/app/docs/NotFound.response'
-import { UnauthorizedResponse } from '@src/app/docs/Unauthorized.response'
-import { JwtAuthGuard } from '@src/app/http/auth/guards/JwtAuth.guard'
 
 import { BoardService } from './board.service'
 import { BoardEntity } from './docs/board.entity'

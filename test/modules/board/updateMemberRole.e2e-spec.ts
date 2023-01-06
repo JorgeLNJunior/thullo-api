@@ -1,3 +1,5 @@
+import { MemberEntity } from '@http/board/docs/member.entity'
+import { UpdateMemberRoleDto } from '@http/board/dto/updateRole.dto'
 import { useContainer } from '@nestjs/class-validator'
 import { ValidationPipe } from '@nestjs/common'
 import {
@@ -7,8 +9,6 @@ import {
 import { Test, TestingModule } from '@nestjs/testing'
 import { BoardRole } from '@prisma/client'
 import { AppModule } from '@src/app.module'
-import { MemberEntity } from '@src/app/http/board/docs/member.entity'
-import { UpdateMemberRoleDto } from '@src/app/http/board/dto/updateRole.dto'
 import { PrismaService } from 'nestjs-prisma'
 
 import { generateAccessToken } from '../auth/helpers/auth.helper'

@@ -1,4 +1,6 @@
 import { faker } from '@faker-js/faker'
+import { BoardEntity } from '@http/board/docs/board.entity'
+import { UpdateBoardDto } from '@http/board/dto/update-board.dto'
 import { useContainer } from '@nestjs/class-validator'
 import { ValidationPipe } from '@nestjs/common'
 import {
@@ -8,8 +10,6 @@ import {
 import { Test, TestingModule } from '@nestjs/testing'
 import { BoardRole, BoardVisibility } from '@prisma/client'
 import { AppModule } from '@src/app.module'
-import { BoardEntity } from '@src/app/http/board/docs/board.entity'
-import { UpdateBoardDto } from '@src/app/http/board/dto/update-board.dto'
 import { PrismaService } from 'nestjs-prisma'
 
 import { generateAccessToken } from '../auth/helpers/auth.helper'

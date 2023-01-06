@@ -1,3 +1,4 @@
+import { LabelService } from '@http/label/label.service'
 import {
   BadRequestException,
   Injectable,
@@ -5,7 +6,6 @@ import {
 } from '@nestjs/common'
 import { Board, BoardRole, BoardVisibility, Member } from '@prisma/client'
 import { UnsplashService } from '@services/unsplash.service'
-import { LabelService } from '@src/app/http/label/label.service'
 import { PrismaService } from 'nestjs-prisma'
 
 import { AddMemberDto } from './dto/addMember.dto'

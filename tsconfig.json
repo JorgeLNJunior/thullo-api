@@ -11,6 +11,7 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "paths": {
+      "@docs/*": ["src/app/docs/*"],
       "@http/*": ["src/app/http/*"],
       "@services/*": ["src/services/*"],
       "@src/*": ["src/*"],

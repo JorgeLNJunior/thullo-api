@@ -1,3 +1,4 @@
+import { BoardEntity } from '@http/board/docs/board.entity'
 import { MemberEntity } from '@http/board/docs/member.entity'
 import { FindBoardsQuery } from '@http/board/query/findBoards.query'
 import { LabelEntity } from '@http/label/docs/label.entity'
@@ -12,7 +13,6 @@ import {
 import { Test, TestingModule } from '@nestjs/testing'
 import { Board, BoardVisibility } from '@prisma/client'
 import { AppModule } from '@src/app.module'
-import { BoardEntity } from '@src/app/http/board/docs/board.entity'
 import { PrismaService } from 'nestjs-prisma'
 
 import { generateAccessToken } from '../auth/helpers/auth.helper'

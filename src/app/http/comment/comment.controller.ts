@@ -1,3 +1,12 @@
+import { BadRequestResponse } from '@docs/BadRequest.response'
+import { ForbiddenResponse } from '@docs/Forbidden.response'
+import { NotFoundResponse } from '@docs/NotFound.response'
+import { UnauthorizedResponse } from '@docs/Unauthorized.response'
+import { JwtAuthGuard } from '@http/auth/guards/JwtAuth.guard'
+import { BoardService } from '@http/board/board.service'
+import { CardService } from '@http/card/card.service'
+import { ListService } from '@http/list/list.service'
+import { MemberService } from '@http/member/member.service'
 import {
   Body,
   Controller,
@@ -22,15 +31,6 @@ import {
   ApiTags,
   ApiUnauthorizedResponse
 } from '@nestjs/swagger'
-import { BadRequestResponse } from '@src/app/docs/BadRequest.response'
-import { ForbiddenResponse } from '@src/app/docs/Forbidden.response'
-import { NotFoundResponse } from '@src/app/docs/NotFound.response'
-import { UnauthorizedResponse } from '@src/app/docs/Unauthorized.response'
-import { JwtAuthGuard } from '@src/app/http/auth/guards/JwtAuth.guard'
-import { BoardService } from '@src/app/http/board/board.service'
-import { CardService } from '@src/app/http/card/card.service'
-import { ListService } from '@src/app/http/list/list.service'
-import { MemberService } from '@src/app/http/member/member.service'
 
 import { CommentService } from './comment.service'
 import { CommentEntity } from './docs/comment.entity'

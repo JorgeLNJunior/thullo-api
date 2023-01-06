@@ -1,6 +1,6 @@
+import { UserEntity } from '@http/user/docs/user.entity'
 import { ApiProperty } from '@nestjs/swagger'
 import { BoardRole, Prisma, User } from '@prisma/client'
-import { UserEntity } from '@src/app/http/user/docs/user.entity'
 
 type MemberWithUser = Prisma.MemberGetPayload<{
   include: { user: true }

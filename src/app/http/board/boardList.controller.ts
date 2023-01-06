@@ -1,3 +1,7 @@
+import { BadRequestResponse } from '@docs/BadRequest.response'
+import { ForbiddenResponse } from '@docs/Forbidden.response'
+import { NotFoundResponse } from '@docs/NotFound.response'
+import { UnauthorizedResponse } from '@docs/Unauthorized.response'
 import { JwtAuthGuard } from '@http/auth/guards/JwtAuth.guard'
 import { IsBoardMemberGuard } from '@http/board/guards/isBoardMember.guard'
 import { IsValidBoardPipe } from '@http/board/pipes/isValidBoard.pipe'
@@ -28,10 +32,6 @@ import {
   ApiTags,
   ApiUnauthorizedResponse
 } from '@nestjs/swagger'
-import { BadRequestResponse } from '@src/app/docs/BadRequest.response'
-import { ForbiddenResponse } from '@src/app/docs/Forbidden.response'
-import { NotFoundResponse } from '@src/app/docs/NotFound.response'
-import { UnauthorizedResponse } from '@src/app/docs/Unauthorized.response'
 
 @ApiTags('Boards', 'Lists')
 @ApiBearerAuth()

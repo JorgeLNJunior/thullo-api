@@ -1,6 +1,8 @@
 import { randomUUID } from 'node:crypto'
 
 import { faker } from '@faker-js/faker'
+import { LoginDto } from '@http/auth/dto/login.dto'
+import { RegisterUserDto } from '@http/auth/dto/registerUser.dto'
 import { useContainer } from '@nestjs/class-validator'
 import { ValidationPipe } from '@nestjs/common'
 import {
@@ -10,8 +12,6 @@ import {
 import { Test, TestingModule } from '@nestjs/testing'
 import { BcryptService } from '@services/bcrypt.service'
 import { AppModule } from '@src/app.module'
-import { LoginDto } from '@src/app/http/auth/dto/login.dto'
-import { RegisterUserDto } from '@src/app/http/auth/dto/registerUser.dto'
 import { PrismaService } from 'nestjs-prisma'
 
 describe('AuthController/login (e2e)', () => {

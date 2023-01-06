@@ -1,3 +1,4 @@
+import { CardEntity } from '@http/card/docs/card.entity'
 import { FindCardsByListIdQuery } from '@http/card/query/FindCardsByListId.query'
 import { CommentEntity } from '@http/comment/docs/comment.entity'
 import { useContainer } from '@nestjs/class-validator'
@@ -8,7 +9,6 @@ import {
 } from '@nestjs/platform-fastify'
 import { Test, TestingModule } from '@nestjs/testing'
 import { AppModule } from '@src/app.module'
-import { CardEntity } from '@src/app/http/card/docs/card.entity'
 import { BoardBuilder } from '@test/modules/board/builder/board.builder'
 import { MemberBuilder } from '@test/modules/member/builder/member.builder'
 import { UserBuilder } from '@test/modules/user/builder/user.builder'

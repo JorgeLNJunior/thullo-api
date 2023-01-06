@@ -1,3 +1,5 @@
+import { BoardEntity } from '@http/board/docs/board.entity'
+import { FindUserBoardsQuery } from '@http/user/query/FindUserBoardsQuery'
 import { useContainer } from '@nestjs/class-validator'
 import { ValidationPipe } from '@nestjs/common'
 import {
@@ -6,8 +8,6 @@ import {
 } from '@nestjs/platform-fastify'
 import { Test, TestingModule } from '@nestjs/testing'
 import { AppModule } from '@src/app.module'
-import { BoardEntity } from '@src/app/http/board/docs/board.entity'
-import { FindUserBoardsQuery } from '@src/app/http/user/query/FindUserBoardsQuery'
 import { PrismaService } from 'nestjs-prisma'
 
 import { generateAccessToken } from '../auth/helpers/auth.helper'

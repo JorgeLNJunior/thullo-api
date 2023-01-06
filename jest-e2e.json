@@ -7,6 +7,7 @@
       "^.+\\.(t|j)s$": "ts-jest"
     },
     "moduleNameMapper": {
+      "@docs/(.*)": "<rootDir>/src/app/http/$1",
       "@http/(.*)": "<rootDir>/src/app/http/$1",
       "@services/(.*)": "<rootDir>/src/services/$1",
       "@src/(.*)": "<rootDir>/src/$1",

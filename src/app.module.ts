@@ -1,6 +1,6 @@
+import { AuthModule } from '@http/auth/auth.module'
+import { UserModule } from '@http/user/user.module'
 import { Module } from '@nestjs/common'
-import { AuthModule } from '@src/app/http/auth/auth.module'
-import { UserModule } from '@src/app/http/user/user.module'
 
 import { AppController } from './app.controller'
 import { BoardModule } from './app/http/board/board.module'

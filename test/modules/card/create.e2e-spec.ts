@@ -1,4 +1,6 @@
 import { faker } from '@faker-js/faker'
+import { CardEntity } from '@http/card/docs/card.entity'
+import { CreateCardDto } from '@http/card/dto/createCard.dto'
 import { useContainer } from '@nestjs/class-validator'
 import { ValidationPipe } from '@nestjs/common'
 import {
@@ -7,8 +9,6 @@ import {
 } from '@nestjs/platform-fastify'
 import { Test, TestingModule } from '@nestjs/testing'
 import { AppModule } from '@src/app.module'
-import { CardEntity } from '@src/app/http/card/docs/card.entity'
-import { CreateCardDto } from '@src/app/http/card/dto/createCard.dto'
 import { BoardBuilder } from '@test/modules/board/builder/board.builder'
 import { MemberBuilder } from '@test/modules/member/builder/member.builder'
 import { UserBuilder } from '@test/modules/user/builder/user.builder'
