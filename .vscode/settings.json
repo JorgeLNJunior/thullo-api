@@ -1,0 +1,13 @@
+{
+    // eslint extension status
+    "eslint.alwaysShowStatus": true,
+
+    // eslint auto fix
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true,
+    },
+
+    // atualizar automaticamente os imports
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "javascript.updateImportsOnFileMove.enabled": "always"
+}
